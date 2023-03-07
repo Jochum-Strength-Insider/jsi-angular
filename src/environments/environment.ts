@@ -11,6 +11,16 @@
 // import { en } from 'dotenv';
 
 export const environment = {
+  firebase: {
+    projectId: 'jochumstrengthdev',
+    appId: '1:405036422508:web:90816a350634bfec94cf49',
+    databaseURL: 'https://jochumstrengthdev.firebaseio.com',
+    storageBucket: 'jochumstrengthdev.appspot.com',
+    locationId: 'us-central',
+    apiKey: 'AIzaSyB_oNNqhZ1lOfAf4gScyXr-XtqktvKaxsQ',
+    authDomain: 'jochumstrengthdev.firebaseapp.com',
+    messagingSenderId: '405036422508',
+  },
   production: false,
   hmr: true,
   version: '1.0',

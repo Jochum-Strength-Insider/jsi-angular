@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthComponent } from './auth.component';
-import { EmailSigninComponent } from './components/email-signin/email-signin.component';
-import { PasswordForgetComponent } from './components/password-forget/password-forget.component';
-import { SigninComponent } from './components/signin/signin.component';
-import { SignupComponent } from './components/signup/signup.component';
-import { SubscribeComponent } from './components/subscribe/subscribe.component';
+import { EmailSigninComponent } from './pages/email-signin/email-signin.component';
+import { PasswordForgetComponent } from './pages/password-forget/password-forget.component';
+import { SigninComponent } from './pages/signin/signin.component';
+import { SignupComponent } from './pages/signup/signup.component';
+import { SubscribeComponent } from './pages/subscribe/subscribe.component';
 
 const routes: Routes = [
   { path: '', component: AuthComponent },
