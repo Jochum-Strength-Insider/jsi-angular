@@ -8,6 +8,7 @@ import { EmailSigninComponent } from './pages/email-signin/email-signin.componen
 import { PasswordForgetComponent } from './pages/password-forget/password-forget.component';
 import { SubscribeComponent } from './pages/subscribe/subscribe.component';
 import { SignupComponent } from './pages/signup/signup.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { SignupComponent } from './pages/signup/signup.component';
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     AuthRoutingModule
   ]
 })

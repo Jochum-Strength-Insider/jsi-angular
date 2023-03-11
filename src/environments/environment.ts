@@ -12,19 +12,20 @@
 
 export const environment = {
   firebase: {
-    projectId: 'jochumstrengthdev',
-    appId: '1:405036422508:web:90816a350634bfec94cf49',
-    databaseURL: 'https://jochumstrengthdev.firebaseio.com',
-    storageBucket: 'jochumstrengthdev.appspot.com',
-    locationId: 'us-central',
-    apiKey: 'AIzaSyB_oNNqhZ1lOfAf4gScyXr-XtqktvKaxsQ',
-    authDomain: 'jochumstrengthdev.firebaseapp.com',
-    messagingSenderId: '405036422508',
+    projectId: process.env['PROJECT_ID_DEV'],
+    appId: process.env['APP_ID_DEV'],
+    databaseURL: process.env['DATABASE_URL_DEV'],
+    storageBucket: process.env['STORATE_BUCKET_DEV'],
+    locationId: process.env['LOCATION_ID_DEV'],
+    apiKey: process.env['API_KEY_DEV'],
+    authDomain: process.env['AUTH_DOMAIN_DEV'],
+    messagingSenderId: process.env['MESSAGING_SENDER_ID_DEV']
   },
   production: false,
   hmr: true,
   version: '1.0',
   serverUrl: 'http://localhost:3000',
+  test: process.env['TEST_DEV']
 };
 
 /*

@@ -1,1 +1,26 @@
 <p>signin works!</p>
+
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-control">
+        <label>Email</label>
+        <input matInput formControlName="email" type="text" required />
+        <div *ngIf="email?.hasError('required')">
+            Email is required
+        </div>
+        <div *ngIf="email?.hasError('email')">
+            Email isn't valid. Please enter a valid email.
+        </div>
+    </div>
+    <div class="form-control">
+        <label>Password</label>
+        <input matInput formControlName="password" type="password" required />
+        <div *ngIf="password?.hasError('required')">
+            Password is required
+        </div>
+    </div>
+    <div class="form-footer">
+        <button [disabled]="form.invalid" type="submit">
+            Submit
+        </button>
+    </div>
+</form>

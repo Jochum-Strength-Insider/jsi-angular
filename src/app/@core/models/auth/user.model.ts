@@ -1,4 +1,4 @@
-import { Message } from "./message.model"
+import { Message } from "../program/workout-id.model";
 
 export class User {
     active: boolean;

@@ -1,4 +1,4 @@
-import { Day } from "./day.model";
+import { Day } from "./program/day.model";
 
 export class Phase {
     id: string;
