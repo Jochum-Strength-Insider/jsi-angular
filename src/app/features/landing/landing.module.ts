@@ -14,4 +14,6 @@ import { LandingComponent } from './landing.component';
     LandingRoutingModule
   ]
 })
-export class LandingModule { }
+export class LandingModule { 
+  // test
+}
