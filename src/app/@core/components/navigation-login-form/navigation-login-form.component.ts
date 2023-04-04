@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '@app/@shared/services/auth.service';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-navigation-login-form',
@@ -13,8 +14,8 @@ export class NavigationLoginFormComponent {
   password: string = '';
   error: Error | null;
 
-  testEmail : string = 'speedyneppl@gmail.com';
-  testPassword : string = 'Ins1derTr@ding';
+  testEmail : string = environment?.login || "";
+  testPassword : string = environment?.password || "";
 
   loginForm: FormGroup;
   
