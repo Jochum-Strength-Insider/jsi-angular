@@ -1,0 +1,14 @@
+<div class="nav">
+    <a class="nav-link d-none d-lg-block d-xl-block nav-link my-auto ml-2" [routerLink]="['/subscribe']" (click)="onSelect()">Sign Up</a>
+</div>
+
+<div class="navbar-toggle" aria-controls="basic-navbar-nav" label="Navbar menu toggle"></div>
+    <div class="navbar-collapse" id="basic-navbar-nav">
+    <div class="nav ml-auto" (select)="onSelect()">
+        <div class="nav-login d-none d-sm-none d-md-none d-lg-inline-flex d-xl-inline-flex" >
+            <app-navigation-login-form ></app-navigation-login-form>
+        </div>
+        <a class="nav-link d-lg-none d-xl-none nav-link my-auto" [routerLink]="['/subscribe']" (click)="onSelect()">Sign Up</a>
+        <a class="nav-link d-lg-none d-xl-none nav-link my-auto" [routerLink]="['/signup']" (click)="onSelect()">Sign In</a>
+    </div>
+</div>

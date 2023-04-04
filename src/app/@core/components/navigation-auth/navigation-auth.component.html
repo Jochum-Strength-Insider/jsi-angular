@@ -1,0 +1,58 @@
+<div class="navbar d-flex">
+    <a [routerLink]="['/messages']" class="d-flex justify-content-center align-items-center mr-3 px-2">
+        <div *ngIf="authUser.emailVerified">
+            <app-message-icon [uid]="authUser.id" />
+        </div>
+    </a>
+    <div class="navbar-toggle" aria-controls="basic-navbar-nav" label="Navbar menu toggle"></div>
+</div>
+<div id="navbar-collapse basic-navbar-nav">
+    <div class="nav mr-auto" (select)="onSelect()">
+        <a class="nav-link" [routerLink]="['/program']" (click)="onSelect()">Program</a>
+
+        <div *ngIf="authUser.ACTIVE">
+            <a class="nav-link" [routerLink]="['/weigh-in']" (click)="onSelect()">Weight</a>
+            <a class="nav-link" [routerLink]="['/diet-sheet']" (click)="onSelect()">Diet</a>
+            <a class="nav-link" [routerLink]="['/messages']" (click)="onSelect()">Messages</a>
+        </div>
+
+        <div *ngIf="authUser.ADMIN">
+            <div class="nav">
+                <div class="dropdown">
+                    <div class='dropdown-toggle nav-link' variant="link" id="dropdown-basic">
+                        Admin
+                    </div>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item ignore-active" [routerLink]="['/admin']"
+                            (click)="onSelect()">Users</a>
+                        <a class="dropdown-item ignore-active" [routerLink]="['/create-program']"
+                            (click)="onSelect()">Programs</a>
+                        <a class="dropdown-item ignore-active" [routerLink]="['/create-exercise']"
+                            (click)="onSelect()">Exercises</a>
+                        <a class="dropdown-item ignore-active" [routerLink]="['/create-code']"
+                            (click)="onSelect()">Codes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav">
+        <div *ngIf="authUser.isAdmin">        
+            <app-admin-unread />
+        </div>
+        <div class="dropdown" alignRight>
+            <div class='dropdown-toggle nav-link' variant="link" id="dropdown-basic">
+                {{authUser.username}}
+            </div>
+            <div class="dropdown-menu">
+                <a class="dropdown-item ignore-active" [routerLink]="['/account']"
+                (click)="onSelect()">Account</a>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item">
+                    <app-auth-sign-out-button></app-auth-sign-out-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

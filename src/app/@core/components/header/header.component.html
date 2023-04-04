@@ -1,0 +1,22 @@
+
+<div class="navbar justify-content-center on-top" style="background-color: purple">
+    <!-- variant="dark" bg="purple" fixed="top" expand="md" expanded={isExpanded} onToggle={onToggle} -->
+
+    <div style="display: flex; width: 100%; max-width: 1000px; flex: 1; justify-content: space-between; flex-wrap: wrap;">
+    <a class="navbar-brand" [routerLink]="(authUser$ | async) ? ['/program'] : ['/']">
+        <img
+            src="../../../../assets/images/logo.png"
+            width="120"
+            height="40"
+            class="d-inline-block align-top"
+            alt="Jochum Strength"
+        />
+    </a>
+    <div *ngIf="authUser$ | async as authUser ; else nonAuth;">
+        <app-navigation-auth [onToggle]="onToggle" [onSelect]="onSelect" [isExpanded]="isExpanded" [authUser]="authUser"></app-navigation-auth>
+    </div>
+    <ng-template #nonAuth>
+        <app-navigation [onToggle]="onToggle" [onSelect]="onSelect" [isExpanded]="isExpanded"></app-navigation>
+    </ng-template>
+    </div>
+</div>

@@ -30,7 +30,7 @@ const routes: Routes = [
     ...canActivate(redirectLoggedInToProgram),
   },
   { 
-    path: 'diet',
+    path: 'diet-sheet',
     loadChildren: () => import('./features/diet/diet.module').then(m => m.DietModule),
     ...canActivate(redirectUnauthorizedToLogin)
   },
@@ -45,8 +45,8 @@ const routes: Routes = [
     ...canActivate(redirectUnauthorizedToLogin)
   },
   { 
-    path: 'user',
-    loadChildren: () => import('./features/user/user.module').then(m => m.UserModule),
+    path: 'account',
+    loadChildren: () => import('./features/account/account.module').then(m => m.AccountModule),
     ...canActivate(redirectUnauthorizedToLogin)
   },
   { 

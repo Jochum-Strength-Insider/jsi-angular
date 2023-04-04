@@ -1,5 +1,5 @@
 export class WeighIn {
-    id: string;
+    id?: string;
     date: number;
     weight: number;
 }

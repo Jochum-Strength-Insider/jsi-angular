@@ -1,4 +1,5 @@
 export class Code {
+    id: string;
     active: boolean;
     codeType: string;
     distountCode: string;
