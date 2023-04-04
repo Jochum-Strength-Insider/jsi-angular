@@ -7,7 +7,8 @@ export const environment = {
     locationId: process.env['LOCATION_ID_PROD'],
     apiKey: process.env['API_KEY_PROD'],
     authDomain: process.env['AUTH_DOMAIN_PROD'],
-    messagingSenderId: process.env['MESSAGING_SENDER_ID_PROD']
+    messagingSenderId: process.env['MESSAGING_SENDER_ID_PROD'],
+    confirmationEmailRedirect: process.env['CONFIRMATION_EMAIL_REDIRECT']
   },
   production: true,
   hmr: false,
