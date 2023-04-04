@@ -29,7 +29,7 @@ export const environment = {
   test: process.env['TEST_DEV'],
   crytoKey: 'Ins1d3r!',
   login: process.env['TEST_USER_LOGIN'],
-  password: process.env['TEST_USER_PASSWORD']
+  password: process.env['TEST_USER_PASSWORD'],
 };
 
 /*

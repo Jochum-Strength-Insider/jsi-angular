@@ -15,5 +15,7 @@ export const environment = {
   version: '1.0',
   serverUrl: 'https://api.jochumstrengthinsider.com',
   test: process.env['TEST_PROD'],
-  crytoKey: 'Ins1d3r!'
+  crytoKey: 'Ins1d3r!',
+  login: process.env['TEST_USER_LOGIN'],
+  password: process.env['TEST_USER_PASSWORD'],
 };
