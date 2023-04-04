@@ -14,8 +14,8 @@ export class NavigationLoginFormComponent {
   password: string = '';
   error: Error | null;
 
-  testEmail : string = environment?.login || "";
-  testPassword : string = environment?.password || "";
+  testEmail : string = environment['login'] || "";
+  testPassword : string = environment['password'] || "";
 
   loginForm: FormGroup;
   
