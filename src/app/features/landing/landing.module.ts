@@ -14,6 +14,7 @@ import { LandingCarouselComponent } from './components/landing-carousel/landing-
 import { LandingSignupComponent } from './components/landing-signup/landing-signup.component';
 import { LandingFooterComponent } from './components/landing-footer/landing-footer.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
+import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
   ],
   imports: [
     CommonModule,
-    LandingRoutingModule
+    LandingRoutingModule,
+    NgbCarouselModule
   ]
 })
 export class LandingModule { }

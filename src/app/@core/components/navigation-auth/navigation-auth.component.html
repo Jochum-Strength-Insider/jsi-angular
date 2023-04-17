@@ -1,58 +1,105 @@
-<div class="navbar d-flex">
-    <a [routerLink]="['/messages']" class="d-flex justify-content-center align-items-center mr-3 px-2">
-        <div *ngIf="authUser.emailVerified">
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+	<div class="container-fluid">
+		<a class="navbar-brand" [routerLink]="'.'">Responsive navbar</a>
+		<button class="navbar-toggler" type="button" (click)="onToggle()">&#9776;</button>
+		<div [ngbCollapse]="isExpanded" class="collapse navbar-collapse">
+			<ul class="navbar-nav">
+				<li class="nav-item active">
+					<a class="nav-link" [routerLink]="'.'" (click)="onSelect()">Features</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" [routerLink]="'.'" (click)="onSelect()">Examples</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" [routerLink]="'.'" (click)="onSelect()">About</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav> -->
+
+<!-- <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
+        <button
+            type="button"
+            class="btn btn-outline-primary me-2"
+            id="dropdownManual"
+            ngbDropdownAnchor
+            (focus)="myDrop.open()"
+        >
+            Toggle dropdown
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownManual">
+            <button ngbDropdownItem>Action - 1</button>
+            <button ngbDropdownItem>Another Action</button>
+            <button ngbDropdownItem>Something else is here</button>
+        </div>
+    </div> -->
+
+<ng-template #template>
+    <div class="d-flex">
+        <a *ngIf="authUser.emailVerified" [routerLink]="['/messages']" class="d-flex justify-content-center align-items-center me-3 px-2">
             <app-message-icon [uid]="authUser.id" />
-        </div>
-    </a>
-    <div class="navbar-toggle" aria-controls="basic-navbar-nav" label="Navbar menu toggle"></div>
-</div>
-<div id="navbar-collapse basic-navbar-nav">
-    <div class="nav mr-auto" (select)="onSelect()">
-        <a class="nav-link" [routerLink]="['/program']" (click)="onSelect()">Program</a>
+        </a>
+        <button class="navbar-toggler"
+                type="button"
+                label="Navbar menu toggle"
+                (click)="onToggle()">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+    <div [ngbCollapse]="isExpanded" class="collapse navbar-collapse">
+        <div class="navbar-nav me-auto">
+            <a class="nav-link" [routerLink]="['/program']" (click)="onSelect()">Program</a>
+            <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/weigh-in']" (click)="onSelect()">Weight</a>
+            <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/diet-sheet']" (click)="onSelect()">Diet</a>
+            <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/messages']" (click)="onSelect()">Messages</a>
 
-        <div *ngIf="authUser.ACTIVE">
-            <a class="nav-link" [routerLink]="['/weigh-in']" (click)="onSelect()">Weight</a>
-            <a class="nav-link" [routerLink]="['/diet-sheet']" (click)="onSelect()">Diet</a>
-            <a class="nav-link" [routerLink]="['/messages']" (click)="onSelect()">Messages</a>
+            <div *ngIf="authUser.ADMIN" class="d-inline-block" ngbDropdown #adminDrop="ngbDropdown">
+                <button 
+                    id="adminDropdown"
+                    type="button"
+                    class="nav-link dropdown-toggle btn btn-link"
+                    ngbDropdownAnchor
+                    (focus)="adminDrop.open()"
+                    >
+                    Admin
+                </button>
+                <div ngbDropdownMenu aria-labelledby="adminDropdown" class="dropdown-menu dropdown-menu-end">
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin']"
+                        (click)="onSelect()">Users</a>
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/create-program']"
+                        (click)="onSelect()">Programs</a>
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/create-exercise']"
+                        (click)="onSelect()">Exercises</a>
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/create-code']"
+                        (click)="onSelect()">Codes</a>
+                </div>
+            </div>
         </div>
-
-        <div *ngIf="authUser.ADMIN">
-            <div class="nav">
-                <div class="dropdown">
-                    <div class='dropdown-toggle nav-link' variant="link" id="dropdown-basic">
-                        Admin
-                    </div>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item ignore-active" [routerLink]="['/admin']"
-                            (click)="onSelect()">Users</a>
-                        <a class="dropdown-item ignore-active" [routerLink]="['/create-program']"
-                            (click)="onSelect()">Programs</a>
-                        <a class="dropdown-item ignore-active" [routerLink]="['/create-exercise']"
-                            (click)="onSelect()">Exercises</a>
-                        <a class="dropdown-item ignore-active" [routerLink]="['/create-code']"
-                            (click)="onSelect()">Codes</a>
+        <div class="navbar-nav">
+            <div class="d-inline-block">
+                <div *ngIf="authUser.isAdmin">        
+                    <app-admin-unread />
+                </div>
+                <div class="d-inline-block" ngbDropdown #userDrop="ngbDropdown">
+                    <button 
+                        id="userDropdown"
+                        type="button"
+                        class="nav-link dropdown-toggle btn btn-link"
+                        ngbDropdownAnchor
+                        (focus)="userDrop.open()"
+                    >
+                            {{authUser.username}}
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="userDropdown" class="dropdown-menu dropdown-menu-end">
+                        <a ngbDropdownItem [routerLink]="['/account']">Account</a>
+                        <div class="dropdown-divider" role="separator"></div>
+                        <div ngbDropdownItem>
+                            <app-auth-sign-out-button></app-auth-sign-out-button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="nav">
-        <div *ngIf="authUser.isAdmin">        
-            <app-admin-unread />
-        </div>
-        <div class="dropdown" alignRight>
-            <div class='dropdown-toggle nav-link' variant="link" id="dropdown-basic">
-                {{authUser.username}}
-            </div>
-            <div class="dropdown-menu">
-                <a class="dropdown-item ignore-active" [routerLink]="['/account']"
-                (click)="onSelect()">Account</a>
-                <div class="dropdown-divider"></div>
-                <div class="dropdown-item">
-                    <app-auth-sign-out-button></app-auth-sign-out-button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+</ng-template>

@@ -9,7 +9,7 @@ import { NavigationLoginFormComponent } from './components/navigation-login-form
 import { AppRoutingModule } from '@app/app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@app/@shared/shared.module';
-
+import { NgbCollapse, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -26,7 +26,9 @@ import { SharedModule } from '@app/@shared/shared.module';
     SharedModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbDropdownModule,
+    NgbCollapse
   ],
   exports: [
     HeaderComponent

@@ -1,1 +1,58 @@
-<p>landing-carousel works!</p>
+<div id="transformation" class="text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col col-md-12 transformation-title">
+                <h2>Transformations</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <ngb-carousel
+                    #carousel
+                    [animation]="false"
+                    [interval]="30000"
+                    [pauseOnHover]="true"
+                    [pauseOnFocus]="true"
+                    [wrap]="true"
+                    [showNavigationIndicators]="false"
+                >
+                    <ng-template ngbSlide *ngFor="let resultGroup of resultsGrouped">
+                        <div class="d-flex justify-content-center px-0 mx-0" style="gap: 12px;">
+                            <div *ngFor="let item of resultGroup" class="d-flex justify-content-center px-0 mx-0 col-xs-6 col-md-3 col-lg-2">
+                                <div class="img-container">
+                                    <img draggable="false" class="carousel-img" [src]="item.img" [alt]="item.alt" />
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-carousel>
+
+                <!-- <div class="row">
+                    <div *ngFor="let col of columns; index as i" class="col-xs-12 col-md-6 col-lg-4">
+                        <div *ngFor="let drop of drops; index as j">
+                            <div class="mb-4" *ngIf="j % colCount == i">
+                                <app-drop-card [drop]="drop" [activeDrop]="showActiveDrops"></app-drop-card>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="flicking flicking1">
+    <div class="flicking-viewport" #flickingRef>
+        <div class="flicking-camera">
+            <div *ngFor="let result of results; let i = index"
+            class="panel d-flex justify-content-center px-0 mx-0 col col-xs-6 col-md-3 col-lg-2"
+            [ngClass]="'flick-' + i"
+            >
+                <div class="img-container">
+                    <img draggable="false" class="carousel-img" [src]="result.img" [alt]="result.alt" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

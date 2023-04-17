@@ -1,14 +1,90 @@
-<div class="nav">
-    <a class="nav-link d-none d-lg-block d-xl-block nav-link my-auto ml-2" [routerLink]="['/subscribe']" (click)="onSelect()">Sign Up</a>
-</div>
-
-<div class="navbar-toggle" aria-controls="basic-navbar-nav" label="Navbar menu toggle"></div>
-    <div class="navbar-collapse" id="basic-navbar-nav">
-    <div class="nav ml-auto" (select)="onSelect()">
-        <div class="nav-login d-none d-sm-none d-md-none d-lg-inline-flex d-xl-inline-flex" >
-            <app-navigation-login-form ></app-navigation-login-form>
-        </div>
-        <a class="nav-link d-lg-none d-xl-none nav-link my-auto" [routerLink]="['/subscribe']" (click)="onSelect()">Sign Up</a>
-        <a class="nav-link d-lg-none d-xl-none nav-link my-auto" [routerLink]="['/signup']" (click)="onSelect()">Sign In</a>
+<ng-template #template>
+    <div class="navbar-nav">
+        <a class="d-none d-lg-block d-xl-block nav-link my-auto ms-2" [routerLink]="['/auth/subscribe']" (click)="onSelect()">
+            Sign Up
+        </a>
     </div>
-</div>
+
+    <button class="navbar-toggler"
+        type="button"
+        label="Navbar menu toggle"
+        (click)="onToggle()">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div [ngbCollapse]="isExpanded" class="collapse navbar-collapse justify-content-end">
+        <div class="ms-auto navbar-nav" (select)="onSelect()">
+            <app-navigation-login-form ngbDropdownItem></app-navigation-login-form>
+            <a ngbDropdownItem class="d-lg-none d-xl-none nav-link my-auto" [routerLink]="['/auth/subscribe']" (click)="onSelect()">Sign Up</a>
+            <a ngbDropdownItem class="d-lg-none d-xl-none nav-link my-auto" [routerLink]="['/auth/signin']" (click)="onSelect()">Sign In</a>
+        </div>
+    </div>
+</ng-template>
+
+<!-- 
+    <div class="d-flex">
+        <a *ngIf="authUser.emailVerified" [routerLink]="['/messages']" class="d-flex justify-content-center align-items-center me-3 px-2">
+            <app-message-icon [uid]="authUser.id" />
+        </a>
+        <button class="navbar-toggler"
+                type="button"
+                label="Navbar menu toggle"
+                (click)="onToggle()">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+    <div [ngbCollapse]="isExpanded" class="collapse navbar-collapse justify-content-end">
+        <div class="navbar-nav">
+            <a class="nav-link" [routerLink]="['/program']" (click)="onSelect()">Program</a>
+            <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/weigh-in']" (click)="onSelect()">Weight</a>
+            <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/diet-sheet']" (click)="onSelect()">Diet</a>
+            <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/messages']" (click)="onSelect()">Messages</a>
+
+            <div *ngIf="authUser.ADMIN" class="d-inline-block" ngbDropdown #adminDrop="ngbDropdown">
+                <button 
+                    id="adminDropdown"
+                    type="button"
+                    class="nav-link dropdown-toggle btn btn-link"
+                    ngbDropdownAnchor
+                    (focus)="adminDrop.open()"
+                    >
+                    Admin
+                </button>
+                <div ngbDropdownMenu aria-labelledby="adminDropdown" class="dropdown-menu dropdown-menu-end">
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin']"
+                        (click)="onSelect()">Users</a>
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/create-program']"
+                        (click)="onSelect()">Programs</a>
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/create-exercise']"
+                        (click)="onSelect()">Exercises</a>
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/create-code']"
+                        (click)="onSelect()">Codes</a>
+                </div>
+            </div>
+
+            <div class="d-inline-block">
+                <div *ngIf="authUser.isAdmin">        
+                    <app-admin-unread />
+                </div>
+                <div class="d-inline-block" ngbDropdown #userDrop="ngbDropdown">
+                    <button 
+                        id="userDropdown"
+                        type="button"
+                        class="nav-link dropdown-toggle btn btn-link"
+                        ngbDropdownAnchor
+                        (focus)="userDrop.open()"
+                    >
+                            {{authUser.username}}
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="userDropdown" class="dropdown-menu dropdown-menu-end">
+                        <a ngbDropdownItem [routerLink]="['/account']">Account</a>
+                        <div class="dropdown-divider" role="separator"></div>
+                        <div ngbDropdownItem>
+                            <app-auth-sign-out-button></app-auth-sign-out-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div> -->
