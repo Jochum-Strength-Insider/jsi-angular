@@ -1,0 +1,9 @@
+.user-unread-icon {
+    fill: rgb(255, 255, 255, 0.5);
+    transition: fill 150ms;
+  }
+  
+  .user-unread-icon:hover,
+  .user-unread:focus .user-unread-icon {
+    fill: rgb(255, 255, 255, 0.75);
+  }

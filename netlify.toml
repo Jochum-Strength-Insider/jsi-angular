@@ -6,3 +6,11 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[context.development]
+  command="ng build"
+  base = "development"
+
+[context.staging]
+  command="ng build --configuration=staging"
+  base = "staging"

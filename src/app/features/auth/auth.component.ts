@@ -5,11 +5,8 @@ import { AuthService } from '@app/@shared/services/auth.service';
 
 @Component({
   selector: 'app-auth',
-  template: `
-    <app-signin (formData)="login($event)">
-  `,
-  styles: [
-  ]
+  templateUrl: './auth.component.html',
+  styleUrls: []
 })
 export class AuthComponent {
   constructor(

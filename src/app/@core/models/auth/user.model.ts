@@ -11,4 +11,7 @@ export class User {
     username: string;
     programDate: number;
     unread: Message;
+    emailVerified: boolean;
+    ACTIVE: boolean;
+    ADMIN: boolean;
 }

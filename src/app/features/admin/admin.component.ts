@@ -2,14 +2,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-admin',
-  template: `
-    <p>
-      admin works!
-    </p>
-  `,
-  styles: [
-  ]
+  templateUrl: './admin.component.html',
+  styleUrls: []
 })
 export class AdminComponent {
 
 }
+

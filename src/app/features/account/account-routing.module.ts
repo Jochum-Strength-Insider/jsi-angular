@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UserComponent } from './user.component';
+import { AccountComponent } from './account.component';
 
-const routes: Routes = [{ path: '', component: UserComponent }];
+const routes: Routes = [{ path: '', component: AccountComponent }];
 
 // <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
 
