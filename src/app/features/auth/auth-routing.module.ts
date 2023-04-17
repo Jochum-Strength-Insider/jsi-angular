@@ -6,13 +6,23 @@ import { PasswordForgetComponent } from './pages/password-forget/password-forget
 import { SigninComponent } from './pages/signin/signin.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { SubscribeComponent } from './pages/subscribe/subscribe.component';
+import { canActivate, redirectLoggedInTo } from '@angular/fire/auth-guard';
+
+const redirectLoggedInToProgram = () => redirectLoggedInTo(['program']);
+
 
 const routes: Routes = [
   { path: '', component: AuthComponent },
-  { path: 'signin', component: SigninComponent },
+  {
+     path: 'signin', component: SigninComponent,
+    ...canActivate(redirectLoggedInToProgram),
+  },
   { path: 'signup', component: SignupComponent },
   { path: 'subscribe', component: SubscribeComponent },
-  { path: 'email-signin', component: EmailSigninComponent },
+  {
+    path: 'email-signin', component: EmailSigninComponent,
+    ...canActivate(redirectLoggedInToProgram),
+  },
   { path: 'forgot-password', component: PasswordForgetComponent },
 ];
 

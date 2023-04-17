@@ -9,6 +9,9 @@ import { PasswordForgetComponent } from './pages/password-forget/password-forget
 import { SubscribeComponent } from './pages/subscribe/subscribe.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DotsComponent } from './components/dots/dots.component';
+import { StepsComponent } from './components/steps/steps.component';
+import { PaymentComponent } from './components/payment/payment.component';
 
 
 @NgModule({
@@ -19,6 +22,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     PasswordForgetComponent,
     SubscribeComponent,
     SignupComponent,
+    DotsComponent,
+    StepsComponent,
+    PaymentComponent,
   ],
   imports: [
     CommonModule,
