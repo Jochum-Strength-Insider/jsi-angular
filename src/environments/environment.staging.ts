@@ -8,6 +8,7 @@ export const environment = {
     apiKey: process.env['API_KEY_DEV'],
     authDomain: process.env['AUTH_DOMAIN_DEV'],
     messagingSenderId: process.env['MESSAGING_SENDER_ID_DEV'],
+    emailSignInRedirect: process.env['EMAIL_SIGN_IN_REDIRECT_DEV'],
     confirmationEmailRedirect: process.env['CONFIRMATION_EMAIL_REDIRECT_DEV']
   },
   production: false,
@@ -16,8 +17,9 @@ export const environment = {
   serverUrl: 'https://api.jochumstrengthinsider.com',
   test: process.env['TEST_STAGING'],
   crytoKey: 'Ins1d3r!',
-  login: process.env['TEST_USER_LOGIN'],
-  password: process.env['TEST_USER_PASSWORD'],
-  paypalId: process.env['PAYPAL_CLIENT_ID_DEV'],
+  login: '',
+  password: '',
   paypalSecret: process.env['PAYPAL_CLIENT_SECRET_DEV'],
+  subscriptionId: process.env['SUBSCRIPTION_ID_DEV'],
+  subscriptionPrice: process.env['SUBSCRIPTION_PRICE_DEV'],
 };

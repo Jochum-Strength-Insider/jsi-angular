@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-dots',
@@ -6,25 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./dots.component.css']
 })
 export class DotsComponent {
-
+  @Input() step: number = 1;
 }
-
-// import React from 'react';
-// import './main.css';
-
-// const Dots2 = ({ step }) => {
-//   return (
-//     <>
-//       <div className="dots-contain">
-//         <ul className="custom-dots progressbar">
-//           <li className={`first ${step === 1 ? "active" : ""}`}>Account</li>
-//           <li className={`first ${step === 2 ? "active" : ""}`}>Payment</li>
-//           <li className={`first ${step === 3 ? "active" : ""}`}>Welcome</li>
-//         </ul>
-//       </div>
-//     </>
-//   )
-// };
-
-
-// export default Dots2;
