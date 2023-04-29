@@ -14,11 +14,9 @@ export class NavigationComponent implements OnInit {
 
   @Input() onSelect: Function;
   @Input() onToggle: Function;
-  @Input() isExpanded: boolean;
+  @Input() collapsed: boolean;
 
   ngOnInit() {
     this.viewContainerRef.createEmbeddedView(this.template);
-    console.log('isExpanded', this.isExpanded);
-
   }
 }

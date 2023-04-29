@@ -26,6 +26,7 @@
     "bootstrap": "^5.2.3",
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.3",
+    "ngx-paypal": "^11.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

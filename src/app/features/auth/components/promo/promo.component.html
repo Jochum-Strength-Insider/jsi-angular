@@ -1,0 +1,55 @@
+<div class="mb-4">
+    <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between lh-condensed px-3 py-3">
+            <div>
+                <h6 class="my-0">Insider Subscription</h6>
+                <small class="text-muted">Three Week Program *</small>
+            </div>
+            <span class="text-muted">$50</span>
+        </li>
+        <ng-container *ngIf="discountApplied">
+            <li class="list-group-item d-flex justify-content-between bg-light px-3 py-3">
+                <div class="text-success">
+                    <h6 class="my-0">Promo code</h6>
+                    <small>{{appliedCode.title}}</small>
+                </div>
+                <span class="text-success">${{discountedAmount}}</span>
+            </li>
+        </ng-container>
+        <li class="list-group-item d-flex justify-content-between px-3 py-3">
+            <span>Total (USD)</span>
+            <strong>${{appliedCode.price}}*</strong>
+        </li>
+    </ul>
+</div>
+
+<div>
+    <div class="card">
+        <form class="px-2 py-2" [formGroup]="promoForm" (ngSubmit)="applyDiscount()" novalidate>
+            <div class="input-group">
+                <input 
+                    class="form-control"
+                    formControlName="promo"
+                    type="text"
+                    placeholder="Enter Promo Code"
+                    [ngClass]="{ 'is-invalid': f['promo'].touched && discountFailed, 'is-valid': f['promo'].touched && discountApplied }"
+                />
+                <button 
+                    class="btn px-3"
+                    [ngClass]="{
+                        'btn-success': discountApplied,
+                        'btn-danger' : discountFailed,
+                        'btn-primary': !discountApplied && !discountFailed
+                    }"
+                    [disabled]="promoForm.invalid || discountApplied"
+                    type="submit">
+                    Apply
+                </button>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="discountFailed" >
+        <div class="is-invalid"></div>
+        <div class="invalid-feedback">Invalid Promo Code</div>
+    </div>
+</div>

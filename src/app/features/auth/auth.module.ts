@@ -10,8 +10,11 @@ import { SubscribeComponent } from './pages/subscribe/subscribe.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DotsComponent } from './components/dots/dots.component';
-import { StepsComponent } from './components/steps/steps.component';
 import { PaymentComponent } from './components/payment/payment.component';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '@app/@shared/shared.module';
+import { NgxPayPalModule } from 'ngx-paypal';
+import { PromoComponent } from './components/promo/promo.component';
 
 
 @NgModule({
@@ -23,13 +26,16 @@ import { PaymentComponent } from './components/payment/payment.component';
     SubscribeComponent,
     SignupComponent,
     DotsComponent,
-    StepsComponent,
     PaymentComponent,
+    PromoComponent,
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    AuthRoutingModule
+    NgbAlertModule,
+    AuthRoutingModule,
+    SharedModule,
+    NgxPayPalModule
   ]
 })
 export class AuthModule { }

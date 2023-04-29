@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@env/environment';
-import  *  as CryptoJS from  'crypto-js';
+import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +22,7 @@ export class LocalStorageService {
   // data: JSON.parse(localStorage.getItem('chartData')) || initialData,
   // localStorage.removeItem('program');
   // localStorage.removeItem('programKey');
-
-  // Encrypt localstorage - https://blog.jscrambler.com/working-with-angular-local-storage
-
+  
   public saveData(key: string, value: string) {
     localStorage.setItem(key, this.encrypt(value));
   }

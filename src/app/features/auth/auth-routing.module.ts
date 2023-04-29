@@ -12,7 +12,7 @@ const redirectLoggedInToProgram = () => redirectLoggedInTo(['program']);
 
 
 const routes: Routes = [
-  { path: '', component: AuthComponent },
+  { path: '',   redirectTo: '/auth/signin', pathMatch: 'full' },
   {
      path: 'signin', component: SigninComponent,
     ...canActivate(redirectLoggedInToProgram),

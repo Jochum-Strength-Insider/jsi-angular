@@ -15,7 +15,7 @@ export class NavigationAuthComponent implements OnInit {
 
   @Input() onSelect: Function;
   @Input() onToggle: Function;
-  @Input() isExpanded: boolean = false;
+  @Input() collapsed: boolean;
   @Input() authUser: User;
 
   ngOnInit() {
