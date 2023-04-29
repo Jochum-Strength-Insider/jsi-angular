@@ -29,6 +29,11 @@ body::-webkit-scrollbar {
   padding-top: 1rem;
 }
 
+.no-padding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 .contain {
   min-height: calc(100vh - 66px);
 }

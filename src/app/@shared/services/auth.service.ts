@@ -137,10 +137,6 @@ export class AuthService {
 
   // doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
   sendPasswordReset(email: string) : Observable<void> {
-    const RESET_OPTIONS = {
-      url: environment.firebase.confirmationEmailRedirect
-      || environment.firebase.confirmationEmailRedirect
-    }
     return from(sendPasswordResetEmail(this.auth, email));
   }
 
@@ -183,7 +179,7 @@ export class AuthService {
   // }
   sendSignInLinkToEmail(email: string): Observable<void> {
     const actionCodeSettings: ActionCodeSettings = {
-      url: environment.firebase.confirmationEmailRedirect || '',
+      url: environment.firebase.emailSignInRedirect || '',
       handleCodeInApp: true
     }
     return from(sendSignInLinkToEmail(this.auth, email, actionCodeSettings));
