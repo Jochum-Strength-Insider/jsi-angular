@@ -6,8 +6,8 @@ export interface ObjectWithId {
 }
 
    
-export const mapKeyToObjectOperator = (): OperatorFunction<any, ObjectWithId> => map( mapKeyToObject() );
-export const mapKeysToObjectArrayOperator = (): OperatorFunction<any[], ObjectWithId[]> =>
+export const mapKeyToObjectOperator = (): OperatorFunction<any, any> => map( mapKeyToObject() );
+export const mapKeysToObjectArrayOperator = (): OperatorFunction<any[], any[]> =>
     map(changes => changes.map( mapKeyToObject() )
 );
 

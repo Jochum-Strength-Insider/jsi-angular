@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { LoginRequestModel } from '../models/auth/login-request.model';
-import { BehaviorSubject, from, Observable, ObservedValueOf } from 'rxjs';
+import { BehaviorSubject, from, Observable, ReplaySubject, Subject } from 'rxjs';
 import { User as UserModel } from '@app/@core/models/auth/user.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import {
@@ -30,12 +30,13 @@ import { environment } from '@env/environment';
   providedIn: 'root',
 })
 export class AuthService {
+  public userIsLoggedIn: boolean = false;
 
-  authStatus = new BehaviorSubject<User | null>(null);
-  currentAuthStatus$ = this.authStatus.asObservable();
+  private authStatus = new BehaviorSubject<User | null>(null);
+  readonly currentAuthStatus$ = this.authStatus.asObservable();
 
-  currentUserSub = new BehaviorSubject<UserModel | null>(null);
-  currentUser$ = this.currentUserSub.asObservable();
+  private currentUserSub = new BehaviorSubject<UserModel | null>(null);
+  readonly currentUser$ = this.currentUserSub.asObservable();
   
   constructor(
     private auth: Auth,
@@ -44,32 +45,9 @@ export class AuthService {
     this.onAuthStatusListener();
   }
 
-  // onAuthUserListener = (next, fallback) =>
-  //   this.auth.onAuthStateChanged(authUser => {
-  //     if (authUser) {
-  //       this.user(authUser.uid)
-  //         .once('value')
-  //         .then(snapshot => {
-  //           const dbUser = snapshot.val();
-
-  //           // merge auth and db user
-  //           authUser = {
-  //             uid: authUser.uid,
-  //             email: authUser.email,
-  //             emailVerified: authUser.emailVerified,
-  //             providerData: authUser.providerData,
-  //             ...dbUser,
-  //           };
-
-  //           next(authUser);
-  //         });
-  //     } else {
-  //       fallback();
-  //     }
-  //   });
   onAuthStatusListener(){
-    this.auth.onAuthStateChanged((credential)=>{
-      if(credential){
+    this.auth.onAuthStateChanged((credential)=> {
+      if(credential) {
         console.log('User is logged in');
         this.getUserById(credential.uid)
           .subscribe(( userResponse: UserModel ) => {
@@ -87,12 +65,12 @@ export class AuthService {
     })
   }
 
-  clearUserInformation(){
+  clearUserInformation() {
     this.authStatus.next(null);
     this.currentUserSub.next(null);
     console.log('User is logged out');
   }
-
+  
   // doSignInWithEmailAndPassword = (email, password) =>
   //   this.auth.signInWithEmailAndPassword(email, password);
   login({ email, password }: LoginRequestModel) {
@@ -114,7 +92,7 @@ export class AuthService {
     return signOut(this.auth);
   }
 
-  getCurrentAuthUser(){
+  public getCurrentAuthUser(){
     return this.auth.currentUser;
   }
 

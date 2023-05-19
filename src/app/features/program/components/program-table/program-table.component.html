@@ -1,0 +1,14 @@
+<div ngbNav #nav="ngbNav" [(activeId)]="active" class="workout-tabs mt-3 mb-4">
+    <div class="workout-tab" *ngFor="let phase of phases; let i = index" [ngbNavItem]="i">
+        <button class="workout-tabs-button" ngbNavLink>{{phase.title | titlecase}}</button>
+		<ng-template ngbNavContent>
+            <app-phase-table
+                [phase]="phase"
+                [uid]="uid"
+                [programKey]="program.id">
+            </app-phase-table>
+		</ng-template>
+	</div>
+</div>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>

@@ -1,2 +1,53 @@
-<p>program works!</p>
-<app-auth-sign-out-button></app-auth-sign-out-button>
+<ng-container *ngIf="authUser$ | async as authUser">
+    <div *ngIf="authUser.ACTIVE; else active" class="container-fluid" >
+        <div class="d-flex justify-content-center">
+            <div class="contain-width">
+
+                <div class="app-top">
+                    <div *ngIf="program; else noProgram">
+                        <h1>{{ program.title }}</h1>
+                        <h4>{{ program.createdAt | date }}</h4>
+                        <app-program-table
+                            [program]="program"
+                            [uid]="uid"
+                        />
+                    </div>
+                    <ng-template #noProgram>
+                        <div class="container-fluid">
+                            <ngb-alert *ngIf="error" #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
+                
+                            <div class="row d-flex justify-content-center mt-5">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <strong>No Programs</strong>
+                                </div>
+                                <div class="card-body text-center">
+                                    You have no available programs at this time.
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                 </div>
+
+            </div>
+        </div>
+    </div>
+
+    <ng-template #active>
+        <div class="container-fluid">
+            <div class="d-flex justify-content-center mt-5">
+                <div class="card" style="width: 30rem;">
+                    <div class="card-header text-center">
+                        <strong>Account Status</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text text-center">
+                            Your Account is currently deactivated. To reactivate your account reapply for Jochum Strength Insider or contact jochumstrength@gmail.com for more information.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</ng-container>

@@ -1,0 +1,18 @@
+<div class="day-table list-group flush">
+    <div class="list-group-item d-none d-sm-none d-md-block">
+       <div class="row">
+          <div class="col col-xs-12 col-md-1">#</div>
+          <div class="col col-xs-12 col-md-3">Description</div>
+          <div class="col col-xs-12 col-md-1">Link</div>
+          <div class="col col-xs-12 col-md-1">Sets</div>
+          <div class="col col-xs-12 col-md-2">Reps</div>
+          <div class="col col-xs-12 col-md-2">Tempo</div>
+          <div class="col col-xs-12 col-md-1">Rest</div>
+          <div class="col col-xs-12 col-md-1"></div>
+       </div>
+    </div>
+
+    <div *ngFor="let exercise of day.exercises" class="list-group-item">
+        <app-exercise-row [exercise]="exercise" (saveTracking)="handleSaveTracking()" (showModal)="handleShowModal($event)" />
+    </div>
+</div>

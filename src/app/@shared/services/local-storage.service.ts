@@ -27,9 +27,20 @@ export class LocalStorageService {
     localStorage.setItem(key, this.encrypt(value));
   }
 
+  public saveStringifyData(key: string, value: any){
+    const data = JSON.stringify(value);
+    localStorage.setItem(key, this.encrypt(data));
+  }
+
   public getData(key: string) {
-    let data = localStorage.getItem(key)|| "";
+    let data = localStorage.getItem(key) || "";
     return this.decrypt(data);
+  }
+
+  public getParseData(key: string) {
+    let data = localStorage.getItem(key) || "";
+    const dataStringified = this.decrypt(data);
+    return dataStringified ? JSON.parse(dataStringified) : data;
   }
   
   public removeData(key: string) {

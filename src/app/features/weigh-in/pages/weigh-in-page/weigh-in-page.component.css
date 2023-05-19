@@ -1,0 +1,13 @@
+.canvas-container {
+    position: relative;
+}
+
+.weigh-button {
+    font-weight: 400;
+    border: none;
+    border-radius: 500px;
+}
+
+.weigh-button .plus {
+    font-size: 1.5rem;
+}

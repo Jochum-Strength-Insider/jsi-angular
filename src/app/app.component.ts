@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterEvent } from '@angular/router';
-import { Event, NavigationEnd, Router } from '@angular/router';
+import { Event, NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { environment } from '@env/environment';
-import { NavigationEvent } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-view-model';
-import { filter, map } from 'rxjs';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +9,7 @@ import { filter, map } from 'rxjs';
     <div [class.switch-container]="showNav">
       <app-header *ngIf="showNav"/>
       <div class="container-fluid contain no-padding">
+        <app-toasts></app-toasts>
         <router-outlet></router-outlet>
       </div>
     </div>

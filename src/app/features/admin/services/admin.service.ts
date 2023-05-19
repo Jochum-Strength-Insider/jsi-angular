@@ -5,6 +5,7 @@ import { CodeDetails } from '@app/@core/models/codes/code-details.model';
 import { Code } from '@app/@core/models/codes/code.model';
 import { Message } from '@app/@core/models/messages/message.model';
 import { Folder } from '@app/@core/models/program/folder.model';
+import { Program } from '@app/@core/models/program/program.model';
 import { Tasks } from '@app/@core/models/program/task.model';
 import { Workout } from '@app/@core/models/program/workout.model';
 import { mapKeysToObjectArrayOperator, mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
@@ -96,36 +97,35 @@ export class AdminService {
       .pipe( mapKeysToObjectArrayOperator() );
   }
 
-  // // *** WorkoutIds API ***
+  // // *** Program API ***
 
-  // workoutIds = uid => this.db.ref(`workoutids/${uid}`);
-  getWorkoutIds(uid: string):Observable<Workout[]> {
-    return <Observable<Workout[]>>this.db.list(`workoutids/${uid}`)
-      .snapshotChanges()
-      .pipe( mapKeysToObjectArrayOperator() );
+  // program = (pid) => this.db.ref(`programs/${pid}`);
+  getProgram(pid: string):Observable<Program> {
+    return <Observable<Program>>this.db.object(`programs/${pid}`)
+    .snapshotChanges()
+    .pipe( mapKeyToObjectOperator() );
   }
 
-  // workoutId = (uid, wid) => this.db.ref(`workoutids/${uid}/${wid}`);
-  getWorkoutId(uid: string, wid: string):Observable<Workout> {
-    return <Observable<Workout>>this.db.object(`workoutids/${uid}/${wid}`)
-      .snapshotChanges()
-      .pipe( mapKeyToObjectOperator() );
+  // programs = () => this.db.ref('programs');
+  getPrograms(): Observable<Program[]> {
+  return <Observable<Program[]>>this.db.list(`programs`)
+    .snapshotChanges()
+    .pipe( mapKeysToObjectArrayOperator() )
   }
 
-  // // *** Workout API ***
-
-  // workouts = (uid) => this.db.ref(`workouts/${uid}`);
-  getWorkouts(uid: string):Observable<Workout[]> {
-    return <Observable<Workout[]>>this.db.list(`workouts/${uid}`)
-      .snapshotChanges()
-      .pipe( mapKeysToObjectArrayOperator() );
+   // programId = (pid) => this.db.ref(`programIds/${pid}`);
+   getProgramId(pid: string):Observable<Program> {
+    return <Observable<Program>>this.db.object(`programIds/${pid}`)
+    .snapshotChanges()
+    .pipe( mapKeyToObjectOperator() );
   }
-
-  // workout = (uid, wid) => this.db.ref(`workouts/${uid}/${wid}`);
-  getWorkout(uid: string, wid: string):Observable<Workout> {
-    return <Observable<Workout>>this.db.list(`workouts/${uid}/${wid}`)
-      .snapshotChanges()
-      .pipe( mapKeyToObjectOperator() );
+  
+  
+  // programIds = () => this.db.ref('programIds');
+  getProgramIds(): Observable<Program[]> {
+  return <Observable<Program[]>>this.db.list(`programIds`)
+    .snapshotChanges()
+    .pipe( mapKeysToObjectArrayOperator() )
   }
 
   // // *** quickSave API ***
