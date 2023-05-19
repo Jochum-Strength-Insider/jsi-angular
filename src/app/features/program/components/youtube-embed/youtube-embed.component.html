@@ -1,0 +1,19 @@
+<div class="video-modal">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ title }}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="video">
+            <iframe *ngIf="videoIdDelay"
+            title="Youtube Embed"
+            [src]="videoIdDelay | youtubePipe"
+            frameBorder="0">
+        </iframe>
+        <div class="black-box"></div>
+    </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="activeModal.close()">Close</button>
+    </div>
+</div>
