@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { LoginRequestModel } from '../models/auth/login-request.model';
-import { BehaviorSubject, from, Observable, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { User as UserModel } from '@app/@core/models/auth/user.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import {

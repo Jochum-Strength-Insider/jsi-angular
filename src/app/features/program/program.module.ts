@@ -14,6 +14,7 @@ import { DayTableComponent } from './components/day-table/day-table.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { YoutubePipePipe } from './pipes/youtube-pipe.pipe';
 import { YoutubeEmbedComponent } from './components/youtube-embed/youtube-embed.component';
+import { ProgramContainerComponent } from './components/program-container/program-container.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { YoutubeEmbedComponent } from './components/youtube-embed/youtube-embed.
     PhaseTableComponent,
     DayTableComponent,
     YoutubePipePipe,
-    YoutubeEmbedComponent
+    YoutubeEmbedComponent,
+    ProgramContainerComponent
   ],
   imports: [
     CommonModule,

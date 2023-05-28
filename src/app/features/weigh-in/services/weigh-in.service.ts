@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { formatDate } from '@angular/common';
-import { BehaviorSubject, from, Observable } from 'rxjs';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
-import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import { WeighIn } from '@app/@core/models/weigh-in/weigh-in.model';
+import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
+import * as moment from 'moment';
+import { BehaviorSubject, Observable, from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -34,27 +34,29 @@ export class WeighInService {
       .pipe( mapKeyToObjectOperator() );
   }
 
-  //  addWeighIn = (e) => {
-  //   e.preventDefault();
-  //   const timestamp = Number(moment(this.state.date).format("x"));
-  //   const nowString = moment(this.state.date).format("MMM D");
-  //   const lastDatestring = moment(this.state.lastDate).format("MMM D");
+  getWeighInsByMonthAndUser(uid: string, month: Date):Observable<WeighIn[]> {
+    let startOf = Number(moment(month).startOf("month").format("x"));
+    let endOf = Number(moment(month).endOf("month").format("x"));
+    const weighInsRef = this.db.list(
+      `weighIns/${uid}`,
+      ref => ref.orderByChild("date").startAt(startOf).endAt(endOf)
+    );
 
-  //   // this check need to be redone. Maybe do a checkQuery function like in the diet page.
-  //   if (lastDatestring === nowString) {
-  //      this.setState({ invalid: true })
-  //   } else {
-  //      this.props.firebase.weighIn(this.props.authUser.uid).push({ date: timestamp, weight: this.state.weight })
-  //         .then(this.hideAndValidateModal)
-  //         .catch(error => this.setState({ error }))
-  //   }
-  // }
-  addUserWeighIn(uid: string, weight: number): Observable<any> {
-    const date = new Date();
-    const timestamp = date.valueOf();
-    // const nowString = formatDate(date, "MMM D", "en-US");
-    // const lastDatestring = moment(this.state.lastDate).format("MMM D");
-    return from(this.userWeighInListRef(uid).push({ date: timestamp, weight }))
+    return <Observable<WeighIn[]>>weighInsRef
+    .valueChanges([], { idField: 'id' });
   }
 
+  getMostRecentUserWeighIn(uid: string) : Observable<WeighIn[]> {
+    const weighInsRef = this.db.list(
+      `weighIns/${uid}`,
+      ref => ref.orderByChild("date").limitToLast(1)
+    );
+
+    return <Observable<WeighIn[]>>weighInsRef
+    .valueChanges([], { idField: 'id' });
+  }
+
+  addUserWeighIn(uid: string, weighIn: WeighIn): Observable<any> {
+    return from(this.userWeighInListRef(uid).push(weighIn))
+  }
 }

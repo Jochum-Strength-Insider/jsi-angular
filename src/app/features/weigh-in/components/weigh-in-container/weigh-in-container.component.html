@@ -1,0 +1,56 @@
+<ng-template #addModal let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Add Weigh In?</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+	</div>
+	<div class="modal-body">
+		<form class="form" id="weightForm" [formGroup]="weightForm" (ngSubmit)="addWeighIn()">
+            <div class="mb-1">{{currentDate | date: 'fullDate'}}</div>
+			<div class="form-group mb-3">
+				<label class="sr-only" for="weighIn">Add weigh in</label>
+                <input
+                    class="form-control"
+                    formControlName="weight"
+                    type="number"
+                    step="1"
+                    min="1"
+                    max="999"
+                    [ngClass]="{
+                        'is-invalid': weight?.errors,
+                        'is-valid': alreadyCheckedIn
+                    }"
+                />
+                <div *ngIf="alreadyCheckedIn" class="valid-feedback">
+                    Already Checked In Today.
+                 </div>
+                 <div *ngIf="weight && weight.touched && weight.errors" class="invalid-feedback">
+                    <div *ngIf="weight.errors['required']">
+                        Please Enter A Valid Weight.
+                    </div>
+                </div>
+			</div>
+            <button [disabled]="alreadyCheckedIn" type="submit" class="btn btn-primary" [class.disabled]="alreadyCheckedIn || weightForm.invalid">Add</button>
+		</form>
+	</div>
+</ng-template>
+
+<app-weight-chart [weighIns]="weighIns"></app-weight-chart>
+<div class="list-group mt-3">
+    <div class="list-group-item">
+        <app-month-circles [queryDate]="queryDate" (queryDateChanged)="handleChangeQueryDate($event)"></app-month-circles>
+    </div>
+    <ng-container *ngIf="weighIns.length > 0; else noWeighIns">
+        <div *ngFor="let item of weighIns;" class="list-group-item d-flex justify-content-between">
+            <div>{{item.date | date:'fullDate'}}</div>
+            <div><b>{{item.weight}}lbs</b></div>
+        </div>
+    </ng-container>
+    <ng-template #noWeighIns>
+        <div class="list-group-item">
+            No Weigh Ins This Month
+        </div>
+    </ng-template>
+    <div *ngIf="!isAdmin" class="list-group-item d-flex justify-content-center">
+        <button [disabled]="!isCurrentMonth" class="py-2 weigh-button btn btn-primary" variant="primary" (click)="open(addModal)">+ Weigh In</button>
+    </div>
+</div>
