@@ -1,0 +1,102 @@
+.date .day {
+    font-size: 1rem;
+ }
+ 
+ .date .month {
+    font-size: 1rem;
+    text-transform: uppercase;
+ }
+ 
+ .date {
+    font-weight: 400;
+    background: white;
+    width: 4rem;
+    height: 4rem;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    color: var(--js-purple);
+    text-align: center;
+    -webkti-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    transition: color 500ms ease-in, background-color 500ms ease-in, border 500ms ease-in;
+ }
+ 
+
+.date-circles .date {
+    border: 2px solid var(--js-purple);
+    cursor: pointer;
+ }
+ 
+ .date-circles .date.current-date {
+    background: var(--js-purple-light);
+    border: 2px solid var(--js-purple-light);
+ }
+ 
+ .date-circles .date.current-date .day,
+ .date-circles .date.current-date .month {
+    color: white;
+ }
+ 
+ .date-circles .date.future-date {
+    background: white;
+    border: 2px solid rgba(128, 128, 128, 0.516);
+ }
+ 
+ .date-circles .date.future-date .day,
+ .date-circles .date.future-date .month {
+    color: rgba(128, 128, 128, 0.516);
+ }
+ 
+ .date-circles .date.future-date:hover {
+    border: 2px solid rgba(128, 128, 128, 0.516);
+    background: white;
+    color: rgba(128, 128, 128, 0.516);
+    cursor: default;
+ }
+ 
+ .date-circles .date.future-date:hover .day,
+ .date-circles .date.future-date:hover .month {
+    color: rgba(128, 128, 128, 0.516);
+ }
+ 
+ .date-circles .date:hover {
+    border: 2px solid var(--js-purple);
+    background: var(--js-purple);
+    color: white;
+    cursor: pointer;
+ }
+ 
+ .date-circles .date:hover .day,
+ .date-circles .date:hover .month {
+    color: white;
+ }
+ 
+ .date-circles .day,
+ .date-circles .month {
+    color: var(--js-purple);
+ }
+ 
+ .date-circles .date.next,
+ .date-circles .date.previous {
+    font-size: 2rem;
+    border: none;
+    height: 4rem;
+ }
+ 
+ .date-circles .date.next:hover,
+ .date-circles .date.previous:hover {
+    border: none;
+    background-color: white;
+    color: gray;
+ }
+ 
+ .date-circles .date.next.disabled:hover {
+    color: rgba(128, 128, 128, 0.516);
+    cursor: default;
+ }
+ 
+ .date-circles .date.next.disabled {
+    color: rgba(128, 128, 128, 0.516);
+ }

@@ -1,0 +1,77 @@
+<div class="d-flex justify-content-between date-circles">
+
+    <button (click)="changeQueryDate(prevMonth)"
+        class="date previous d-flex align-items-center justify-content-center">
+        <div>
+            <div>&#8249;</div>
+        </div>
+    </button>
+
+    <ng-container *ngFor="let month of pastMonths; let i = index;">
+        <button
+            *ngIf="i === 1; else past"
+            (click)="changeQueryDate(month.unix)"
+            [disabled]="month.unix > nowUnix"
+            class="date d-none d-sm-flex align-items-center justify-content-center"
+            [class.disabled]="month.unix > nowUnix">
+            <div>
+                <div class="month">{{month.month}}</div>
+            </div>
+        </button>
+        <ng-template #past>
+            <button
+                (click)="changeQueryDate(month.unix)"
+                [disabled]="month.unix > nowUnix"
+                class="date d-none d-md-flex align-items-center justify-content-center"
+                [class.disabled]="month.unix > nowUnix">
+                <div>
+                    <div class="month">{{month.month}}</div>
+                </div>
+            </button>
+        </ng-template>
+    </ng-container>
+
+    <button
+        [disabled]="thisMonth.unix > nowUnix"
+        class="date d-flex align-items-center justify-content-center current-date">
+        <div>
+            <div class="month">{{thisMonth.month}}</div>
+        </div>
+    </button>
+
+    <ng-container *ngFor="let month of futureMonths; let i = index;">
+        <button
+            *ngIf="i === 1; else future"
+            (click)="changeQueryDate(month.unix)"
+            [disabled]="month.unix > nowUnix"
+            class="date d-none d-md-flex align-items-center justify-content-center"
+            [class.future-date]="month.unix > nowUnix">
+            <div>
+                <div class="month">{{month.month}}</div>
+            </div>
+        </button>
+        <ng-template #future>
+            <button
+                (click)="changeQueryDate(month.unix)"
+                [disabled]="month.unix > nowUnix"
+                class="date d-none d-sm-flex align-items-center justify-content-center"
+                [class.future-date]="month.unix > nowUnix"
+                >
+                <div>
+                    <div class="month">{{month.month}}</div>
+                </div>
+            </button>
+        </ng-template>
+    </ng-container>
+
+   <button
+      (click)="changeQueryDate(nextMonth)"
+      [disabled]="disabled"      
+      class="date next d-flex align-items-center justify-content-center"
+      [class.disabled]="disabled"
+      >
+      <div>
+         <div>&#8250;</div>
+      </div>
+   </button>
+</div>
