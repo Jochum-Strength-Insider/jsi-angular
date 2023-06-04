@@ -51,6 +51,6 @@
         </div>
     </ng-template>
     <div *ngIf="!isAdmin" class="list-group-item d-flex justify-content-center">
-        <button [disabled]="!isCurrentMonth" class="py-2 weigh-button btn btn-primary" variant="primary" (click)="open(addModal)">+ Weigh In</button>
+        <button [disabled]="!isCurrentMonth" class="py-2 weigh-button btn btn-primary" variant="primary" (click)="openAddModal(addModal)">+ Weigh In</button>
     </div>
 </div>

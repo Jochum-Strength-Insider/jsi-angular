@@ -5,7 +5,6 @@ export interface ObjectWithId {
     [key: string]: any;
 }
 
-   
 export const mapKeyToObjectOperator = (): OperatorFunction<any, any> => map( mapKeyToObject() );
 export const mapKeysToObjectArrayOperator = (): OperatorFunction<any[], any[]> =>
     map(changes => changes.map( mapKeyToObject() )

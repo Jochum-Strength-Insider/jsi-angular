@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import * as moment from 'moment';
 
 interface IMonthCircle {
@@ -31,9 +32,7 @@ export class MonthCirclesComponent implements OnInit, OnChanges {
    }
 
    ngOnChanges(changes: SimpleChanges): void {
-     if(!changes['queryDate']?.firstChange && changes['queryDate']?.currentValue){
-      this.setDateCircles();
-     }
+     ifPropChanged(changes['queryDate'], () =>  this.setDateCircles())
    }
 
    setDateCircles() {
