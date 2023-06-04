@@ -57,8 +57,7 @@
 </div>
 
  <div class="collapse" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
-    <form class="exercise-row-form" onSubmit={handleSave}>
-       <div class="form-row">
+    <div class="form-row mb-3">
         <form class="form w-100 needs-validation" [formGroup]="trackingForm" (ngSubmit)="onSubmit()" novalidate>
             <div class="form-group mb-3 col">
                 <label class="form-label">Week 1</label>
@@ -78,9 +77,8 @@
                 <button *ngIf="!saved" type="submit" class="btn btn-outline-primary w-100">Save</button>
             </div>
         </form>
-       </div>
         <div *ngIf="error" class="form-row">   
             <ngb-alert #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
         </div>
-    </form>
+    </div>
  </div>

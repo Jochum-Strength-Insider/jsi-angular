@@ -1,3 +1,3 @@
 export class DietId {
-    id: string;
+    [key: string]: number;
 }

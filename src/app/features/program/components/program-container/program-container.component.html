@@ -11,14 +11,14 @@
         <ngb-alert *ngIf="error" #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
 
         <div class="row d-flex justify-content-center mt-5">
-        <div class="card">
-            <div class="card-header text-center">
-                <strong>No Programs</strong>
+            <div class="card">
+                <div class="card-header text-center">
+                    <strong>No Programs</strong>
+                </div>
+                <div class="card-body text-center">
+                    You have no available programs at this time.
+                </div>
             </div>
-            <div class="card-body text-center">
-                You have no available programs at this time.
-            </div>
-        </div>
         </div>
     </div>
 </ng-template>

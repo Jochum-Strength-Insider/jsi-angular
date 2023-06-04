@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { Day } from '@app/@core/models/program/day.model';
 import { Phase } from '@app/@core/models/program/phase.model';
 import { Workout } from '@app/@core/models/program/workout.model';
+import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 
 @Component({
   selector: 'app-program-table',
@@ -20,11 +21,7 @@ export class ProgramTableComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('onChanges')
-    const currentProgram = changes['program']?.currentValue;
-    if(currentProgram){
-      this.mapWorkoutToPhases(currentProgram)
-    }
+    ifPropChanged(changes['program'], () => this.mapWorkoutToPhases(changes['program'].currentValue))
   }
 
   mapWorkoutToPhases(program: Workout){

@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WeighIn } from '@app/@core/models/weigh-in/weigh-in.model';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { Subscription, delay, finalize } from 'rxjs';
 import { WeighInService } from '../../services/weigh-in.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-weigh-in-container',
@@ -59,14 +59,20 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
           this.weightForm.patchValue({ weight: mostRecent.weight });
           const nowString = moment(this.currentDate).format("MMM D");
           const lastDatestring = moment(mostRecent.date).format("MMM D");
+
+          if(this.alreadyCheckedIn){
+            this.weight?.disable();
+            return;
+          }
+
           if (lastDatestring === nowString) {
             this.alreadyCheckedIn = true;
             this.weight?.disable();
           } else {
             this.alreadyCheckedIn = false;
             this.weight?.enable();
-            if(this.modalService.activeInstances.length === 0){
-              this.open(this.addModal);
+            if(!this.modalService.hasOpenModals()){
+              this.openAddModal(this.addModal);
             }
           }
         }
@@ -79,9 +85,6 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   getWeighIns(){
-    // Unsubsribe to complete any existing observable before changing the query dates
-    // This could be refactored to use an switchmap and subject tracking the queryDate
-    this.weignInSub?.unsubscribe();
     this.weignInSub = this.weighInService
       .getWeighInsByMonthAndUser(this.uid, this.queryDate)
       .subscribe({
@@ -89,7 +92,6 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
           this.weighIns = result;
         },
         error: error => {
-          console.log(error)
           this.error = error;
           this.clearWeighIns();
         }
@@ -98,7 +100,7 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
     this.checkIsCurrentMonth();
   }
 
-  open(content: any) {
+  openAddModal(content: any) {
     this.modalService.open(content, {
       size: 'lg',
       centered: true,
@@ -121,6 +123,7 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
       .subscribe({
         next: () => {
           this.alreadyCheckedIn = true;
+          this.getWeighIns();
         },
         error: (err: Error) => {
           this.error = err

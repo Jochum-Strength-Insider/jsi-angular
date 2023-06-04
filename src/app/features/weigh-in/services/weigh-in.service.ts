@@ -4,7 +4,7 @@ import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angula
 import { WeighIn } from '@app/@core/models/weigh-in/weigh-in.model';
 import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import * as moment from 'moment';
-import { BehaviorSubject, Observable, from } from 'rxjs';
+import { BehaviorSubject, Observable, first, from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class WeighInService {
     return this.db.object(`weighIns/${uid}`)
   }
 
-   userWeighInListRef(uid: string):  AngularFireList<WeighIn> {
+  userWeighInListRef(uid: string):  AngularFireList<WeighIn> {
     return this.db.list(`weighIns/${uid}`)
   }
 
@@ -43,7 +43,8 @@ export class WeighInService {
     );
 
     return <Observable<WeighIn[]>>weighInsRef
-    .valueChanges([], { idField: 'id' });
+    .valueChanges([], { idField: 'id' })
+    .pipe(first());
   }
 
   getMostRecentUserWeighIn(uid: string) : Observable<WeighIn[]> {
