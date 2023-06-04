@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Diet } from '@app/@core/models/diet/diet.model';
 
 @Component({
@@ -17,12 +17,12 @@ export class DietFormRowComponent {
 
   ngOnInit() {
     this.dietForm = this.fb.group({
-      breakfast: this.diet.meals.Breakfast,
-      lunch: this.diet.meals.Lunch,
-      dinner: this.diet.meals.Dinner,
-      snack1: this.diet.meals.Snack1,
-      snack2: this.diet.meals.Snack2,
-      snack3: this.diet.meals.Snack3,
+      breakfast: [this.diet.meals.Breakfast, [Validators.maxLength(499)]],
+      lunch: [this.diet.meals.Lunch, [Validators.maxLength(499)]],
+      dinner: [this.diet.meals.Dinner, [Validators.maxLength(499)]],
+      snack1: [this.diet.meals.Snack1, [Validators.maxLength(499)]],
+      snack2: [this.diet.meals.Snack2, [Validators.maxLength(499)]],
+      snack3: [this.diet.meals.Snack3, [Validators.maxLength(499)]],
       rating: this.diet.rating
     });
   }
