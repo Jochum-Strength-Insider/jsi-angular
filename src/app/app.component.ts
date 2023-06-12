@@ -8,7 +8,7 @@ import { filter } from 'rxjs';
   template: `
     <div [class.switch-container]="showNav">
       <app-header *ngIf="showNav"/>
-      <div class="container-fluid contain no-padding">
+      <div class="contain container-fluid no-padding">
         <app-toasts></app-toasts>
         <router-outlet></router-outlet>
       </div>

@@ -1,0 +1,52 @@
+
+.chat-form {
+    /* min-height: 60px; */
+    display: flex;
+    width: 100%;
+    height: auto;
+    margin-top: 16px;
+    /* border: 1px solid #ced4da; */
+    background-color: white;
+    border-radius: 500px;
+ }
+ 
+ .chat-form-input::-webkit-scrollbar {
+    width: 0px;
+    /* Remove scrollbar space */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
+ }
+ 
+ .chat-form-input {
+    flex-grow: 9;
+    flex-basis: 0;
+    margin-left: 31px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    overflow: auto;
+    border: none;
+    resize: none;
+    max-height: 58px;
+    font-size: 1rem;
+ }
+ 
+ .chat-form-submit {
+    flex-basis: 0;
+    flex-grow: 1;
+    background-color: white;
+    border-radius: 500px;
+    color: #007BFF;
+    border: none;
+    border-left: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+ }
+ 
+ .chat-form-submit:focus-visible,
+ .chat-form-submit:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+ }

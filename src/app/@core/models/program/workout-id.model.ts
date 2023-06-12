@@ -1,4 +1,4 @@
-export class Message {
+export class WorkoutId {
     id: string;
     createdAt: number;
     title: string;

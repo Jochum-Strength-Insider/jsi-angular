@@ -5,7 +5,7 @@ import { DietId } from '@app/@core/models/diet/diet-id.model';
 import { Diet } from '@app/@core/models/diet/diet.model';
 import { ToastService } from '@app/@core/services/toast.service';
 import { NgbAccordionDirective, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, finalize, tap } from 'rxjs';
+import { Subscription, finalize, tap, timer } from 'rxjs';
 import { DietService } from '../../services/diet.service';
 
 @Component({
@@ -15,7 +15,6 @@ import { DietService } from '../../services/diet.service';
 })
 export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() uid : string;
-  
   @Input() isAdmin: boolean = false;
   @Output() showAddModal = new EventEmitter();
   @ViewChild('addModal') addModal: any;
@@ -25,6 +24,7 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   diets: Diet[] = [];
   dietSub: Subscription;
   mostRecentSub: Subscription;
+  timerSub: Subscription;
   dateForm: FormGroup;
   error: Error | null;
   currentDate: Date = new Date();
@@ -57,12 +57,13 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit(): void {
-    this.checkDietSheet();
+    this.timerSub = timer(1000).subscribe(() => this.checkDietSheet());
   }
 
   ngOnDestroy(): void {
     this.dietSub?.unsubscribe();
     this.mostRecentSub?.unsubscribe();
+    this.timerSub?.unsubscribe();
   }
 
   get date() {
@@ -179,7 +180,7 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  toggleDietSheetPanel(dietId: string){
+  toggleDietSheetPanel(dietId: string) {
     const isExpanded = this.accItem.isExpanded(dietId);
     if(isExpanded){
       this.accItem.collapseAll();

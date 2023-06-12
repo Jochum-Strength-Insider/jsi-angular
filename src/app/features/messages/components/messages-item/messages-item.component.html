@@ -1,0 +1,28 @@
+<div *ngIf="first" class="row">
+  <div class="col" class="d-flex justify-content-center">
+      <div class="messageDate mt-3">{{ dateString === today ? "today" : dateString }}</div>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col d-flex" [ngClass]="isSender ? 'justify-content-end' : 'justify-content-start'">
+        <div class="message" [ngClass]="isSender ? 'messageSender' : 'messageReceiver'">
+            <div *ngIf="showName" class="messageUsername">{{message.username}}</div>
+            <div class="messageText">
+                {{message.text}}
+            </div>
+      </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="showDate">
+  <div class="col d-flex" [ngClass]="isSender ? 'justify-content-end' : 'justify-content-start'">
+      <div class="messageDate">{{ timeString }}</div>
+  </div>
+</div>
+
+<div class="row" *ngIf="isLastMessage">
+  <div class="col" class="d-flex justify-content-center">
+      <div class="messageDate">{{ recent ? fromNow: dateString + " " + timeString }}</div>
+  </div>
+</div>
