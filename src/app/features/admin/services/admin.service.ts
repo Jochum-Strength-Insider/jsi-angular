@@ -55,13 +55,13 @@ export class AdminService {
       createdAt: new Date().valueOf(),
     };
 
-    this.messageService.addMessage(messageObject)
-      .subscribe((snap: any) => {
-        if (currentlyMessaging !== roomId) {
-          const key = snap.key;
-          this.adminUnreadMessageRef(key).update(messageObject);
-        }
-      })
+    // this.messageService.addMessage(messageObject)
+    //   .subscribe((snap: any) => {
+    //     if (currentlyMessaging !== roomId) {
+    //       const key = snap.key;
+    //       this.adminUnreadMessageRef(key).update(messageObject);
+    //     }
+    //   })
   }
 
   // adminUnreadMessages = () => this.db.ref(`adminUnread`);

@@ -61,7 +61,6 @@ export class DietService {
     const diet = new Diet(startOfDate);
     return of(this.userDietsListRef(uid).push(diet).key)
       .pipe(
-        tap(key => console.log(key)),
         filter(isNonNull),
         switchMap(
           (key: string) => from(this.userDietIdObjectRef(uid).update({ [key]: diet.createdAt })).pipe(

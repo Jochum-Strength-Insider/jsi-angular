@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Message } from '@app/@core/models/program/workout-id.model';
+import { Message } from '@app/@core/models/messages/message.model';
 
 @Component({
   selector: 'app-message-icon',

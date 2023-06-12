@@ -1,0 +1,30 @@
+.messages {
+    max-height: calc(100vh - 99px);
+    height: calc(100vh - 99px);
+    min-height: calc(100vh - 99px);
+    display: flex;
+    flex-direction: column;
+ }
+ 
+ .messageContainer {
+    flex: 1 1 0;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    border-radius: 1rem;
+ }
+ 
+ 
+ .messageContainer::-webkit-scrollbar {
+    width: 0px;
+    /* Remove scrollbar space */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
+ }
+
+.messageLoadMore {
+    border-radius: 500px;
+ }
+ 
