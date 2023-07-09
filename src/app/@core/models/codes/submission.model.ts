@@ -1,8 +1,7 @@
 export class Submission {
     id: string;
-    createdAt: Date;
-    emailAddress: string;
-    transactionId: string;
+    create_time: string;
+    email_address: string;
+    transaction_id: string;
     user: string;
   }
-  

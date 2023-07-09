@@ -1,0 +1,12 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-center">
+        <div class="contain-width">
+            <div class="app-top">
+                <ng-container *ngIf="authUser$ | async as authUser">
+                    <p>admin-programs-page works!</p>
+                    <router-outlet></router-outlet>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

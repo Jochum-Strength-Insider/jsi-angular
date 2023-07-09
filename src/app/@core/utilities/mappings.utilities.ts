@@ -10,4 +10,4 @@ export const mapKeysToObjectArrayOperator = (): OperatorFunction<any[], any[]> =
     map(changes => changes.map( mapKeyToObject() )
 );
 
-const mapKeyToObject = () => (change: any) => ({ id: change.payload.key, ...change.payload.toJSON() })
+const mapKeyToObject = () => (change: any) => change.key ? ({ id: change.payload.key, ...change.payload.toJSON() }) : null

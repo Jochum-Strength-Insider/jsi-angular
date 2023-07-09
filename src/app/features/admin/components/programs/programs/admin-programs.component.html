@@ -1,0 +1,99 @@
+<ng-template #addModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ selectedTask ? selectedTask.e : "Add Exercise" }}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <form #form class="form" id="taskForm" [formGroup]="taskForm" (ngSubmit)="addTasks()">
+            <div class="form-group mb-3">
+                <label for="title">Exercise</label>
+                <input class="form-control" formControlName="exercise" id="exercise" type="text" placeholder="New Exercise" maxlength="200"/>
+            </div>
+            <div class="form-group mb-3">
+                <label for="link">Link</label>
+                <input class="form-control" formControlName="link" id="link" type="text"
+                    placeholder="aBCdefGHiJ" maxlength="100"/>
+            </div>
+            <ng-container *ngIf="selectedTask; else addButton;">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <button [disabled]="!taskForm.valid" type="button" class="btn btn-outline-success me-2" (click)="updateTask()">Save</button>
+                        <button type="button" class="btn btn-outline-warning" (click)="resetTaskForm()">Reset</button>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+                </div>
+            </ng-container>
+            <ng-template #addButton>
+                <button [disabled]="!taskForm.valid" type="submit" class="btn btn-primary">Add Exercise</button>
+            </ng-template>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #deleteModal let-modal>
+    <ng-container *ngIf="selectedTask">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Delete {{ selectedTask.e }}?</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body submissions-modal-body">
+            <p>Are you sure you want to delete this exercise?</p>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100 d-flex justify-content-between">
+                <button type="button" class="btn btn-danger" (click)="deleteSelectedTask()">Delete</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openTasksModal(addModal, filteredTasks.length === 1 ? filteredTasks[0] : null)">
+    <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search..." maxlength="50" aria-label="Search Tasks"/>
+    <div class="input-group-append">
+        <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">
+            {{filteredTasks.length === 1 ? "Edit" : "Add"}}
+        </button>
+    </div>
+</form>
+<div class="list-group mt-3 mb-5">
+    <ng-container *ngIf="filteredTasks.length > 0; else noTasks;">
+        <div *ngFor="let task of filteredTasks | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item d-flex justify-content-between">
+            <span class="d-flex align-items-center">
+                <strong class="mr-2">{{task.e}}</strong>
+            </span>
+            <span>
+                <button class="ml-2 btn btn-outline-primary ms-2" (click)="openTasksModal(addModal, task)">Edit</button>
+                <button class="ml-2 btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(task)">
+                    Delete
+                </button>
+            </span>
+        </div>
+    </ng-container>
+    <ng-template #noTasks>
+        <div class="list-group-item">
+            No Exercises
+        </div>
+    </ng-template>
+
+    <div class="list-group-item">
+        <div>
+            <button type="button"
+                class="btn btn-primary me-2"
+                (click)="page > 1 ? page = page - 1 : page;"
+                [disabled]="page === 1">
+                <svg viewBox="-100.9 99.1 61.9 105.9" style="width: 7px; margin-right: 4px;"><path d="m-98.2 158.8 43.5 43.5c1.7 1.7 4 2.7 6.5 2.7s4.8-1 6.5-2.7c1.7-1.7 2.7-4 2.7-6.5s-1-4.8-2.7-6.5l-37.2-37.2 37.2-37.2c1.7-1.7 2.7-4 2.7-6.5s-1-4.8-2.6-6.5c-1.8-1.9-4.2-2.8-6.6-2.8-2.3 0-4.6.9-6.5 2.6-11.5 11.4-41.2 41-43.3 43l-.2.2c-3.6 3.6-3.6 10.3 0 13.9z" fill="#ffffff"></path></svg>
+                Prev
+            </button>
+            <button type="button"
+                class="btn btn-primary"
+                (click)="page = page * pageSize >= filteredTasks.length ? page : page = page + 1;"
+                [disabled]="page * pageSize >= filteredTasks.length">
+                Next
+                <svg viewBox="-100.9 99.1 61.9 105.9" style="width: 7px; margin-left: 4px;"><path d="m-41.7 145.3-43.5-43.5c-1.7-1.7-4-2.7-6.5-2.7s-4.8 1-6.5 2.7c-1.7 1.7-2.7 4-2.7 6.5s1 4.8 2.7 6.5L-61 152l-37.2 37.2c-1.7 1.7-2.7 4-2.7 6.5s1 4.8 2.6 6.5c1.8 1.9 4.2 2.8 6.6 2.8 2.3 0 4.6-.9 6.5-2.6 11.5-11.4 41.2-41 43.3-43l.2-.2c3.6-3.6 3.6-10.4 0-13.9z" fill="#ffffff" ></path></svg>
+            </button>
+        </div>
+    </div>
+
+</div>

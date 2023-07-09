@@ -154,7 +154,7 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
 
   loadMore() {
     if (this.firstDate !== undefined) {
-      this.messageService.getFirtUserMessage(this.uid)
+      this.messageService.getFirstUserMessage(this.uid)
       .subscribe({
         next: (message) => {
           if (message) {
