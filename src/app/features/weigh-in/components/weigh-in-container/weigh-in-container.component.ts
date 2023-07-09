@@ -51,7 +51,7 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
 
   ngAfterViewInit(){
     this.mostRecentSub = this.weighInService.getMostRecentUserWeighIn(this.uid)
-    .pipe(delay(1000))
+    .pipe(delay(500))
     .subscribe({
       next: (weighIns: WeighIn[]) => {
         if(weighIns.length > 0){

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, from, map, Observable, of, tap } from 'rxjs';
+import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
 import { User as UserModel } from '@app/@core/models/auth/user.model';
-import { AngularFireDatabase, AngularFireList, AngularFireObject, snapshotChanges } from '@angular/fire/compat/database';
 import { mapKeysToObjectArrayOperator, mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
+import { BehaviorSubject, defer, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -59,13 +59,13 @@ export class UserService {
   // activate = (uid) => this.db.ref(`users/${uid}`).update({ ACTIVE: true });
   activateUser(userId: string): Observable<void> {
     const userRef = this.db.object(`users/${userId}`)
-    return from(userRef.update({ "ACTIVE": true }));
+    return defer( () => userRef.update({ "ACTIVE": true }));
   }
 
   // deactivate = (uid) => this.db.ref(`users/${uid}`).update({ ACTIVE: false });
   deActivateUser(userId: string): Observable<void> {
     const userRef = this.db.object(`users/${userId}`)
-    return from(userRef.update({ "ACTIVE": false }));
+    return defer( () => userRef.update({ "ACTIVE": false }));
   }
 
 // const UploadBefore = ({ firebase, uid }) => {

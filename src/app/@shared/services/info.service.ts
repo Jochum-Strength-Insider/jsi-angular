@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
-import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
-import { from, map, Observable, tap } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 import { UserStatusModel } from '../models/auth/user-status.model';
 
 @Injectable({
@@ -32,12 +31,12 @@ export class InfoService {
     // connect = (uid) => this.db.ref(`status/${uid}`).update({ online: true });
     connectUser(userId: string): Observable<void> {
       const userRef = this.db.object(`status/${userId}`)
-      return from(userRef.update({ "online": true }));
+      return defer( () => userRef.update({ "online": true }));
     }
   
     // disconnect = (uid) => this.db.ref(`status/${uid}`).update({ online: false });
     disconnectUser(userId: string): Observable<void> {
       const userRef = this.db.object(`status/${userId}`)
-      return from(userRef.update({ "online": true }));
+      return defer( () => userRef.update({ "online": true }));
     }
 }

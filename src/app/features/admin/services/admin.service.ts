@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
 import { User } from '@app/@core/models/auth/user.model';
-import { CodeDetails } from '@app/@core/models/codes/code-details.model';
-import { Code } from '@app/@core/models/codes/code.model';
 import { Message } from '@app/@core/models/messages/message.model';
 import { Folder } from '@app/@core/models/program/folder.model';
 import { Program } from '@app/@core/models/program/program.model';
 import { Tasks } from '@app/@core/models/program/task.model';
 import { Workout } from '@app/@core/models/program/workout.model';
-import { mapKeysToObjectArrayOperator, mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
+import { mapKeyToObjectOperator, mapKeysToObjectArrayOperator } from '@app/@core/utilities/mappings.utilities';
 import { MessageService } from '@app/features/messages/services/message.service';
-import { from, Observable } from 'rxjs';
+import { Observable, defer } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -79,7 +77,7 @@ export class AdminService {
   }
 
   clearAdminUnread(): Observable<void>{
-    return from(this.adminUnreadMessagesRef().remove());
+    return defer( () => this.adminUnreadMessagesRef().remove());
   }
 
   // currentlyMessaging = () => this.db.ref(`currentlyMessaging`);

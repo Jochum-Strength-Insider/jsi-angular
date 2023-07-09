@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { LoginRequestModel } from '../models/auth/login-request.model';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { BehaviorSubject, defer, from, Observable } from 'rxjs';
 import { User as UserModel } from '@app/@core/models/auth/user.model';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import {
@@ -110,12 +110,12 @@ export class AuthService {
   // *** Auth API ***
   // fetchSignInMethodsForEmail = (email) => this.auth.fetchSignInMethodsForEmail(email);
   getSignInMethodsFormEmail(email: string): Observable<string[]> {
-    return from(fetchSignInMethodsForEmail(this.auth, email));
+    return defer( () => fetchSignInMethodsForEmail(this.auth, email));
   }
 
   // doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
   sendPasswordReset(email: string) : Observable<void> {
-    return from(sendPasswordResetEmail(this.auth, email));
+    return defer( () => sendPasswordResetEmail(this.auth, email));
   }
 
   // // can you send this to a non current user?
@@ -128,7 +128,7 @@ export class AuthService {
       url: environment.firebase.confirmationEmailRedirect
       || environment.firebase.confirmationEmailRedirect
     }
-    return from(sendEmailVerification(user));
+    return defer( () => sendEmailVerification(user));
   }
 
   // doSendNewUserEmailVerification = (authUser) =>
@@ -139,13 +139,13 @@ export class AuthService {
     const actionCodeSettings: ActionCodeSettings = {
       url: environment.firebase.confirmationEmailRedirect || ''
     }
-    return from(sendEmailVerification(user, actionCodeSettings));
+    return defer( () => sendEmailVerification(user, actionCodeSettings));
   }
 
   // doPasswordUpdate = password =>
   //   this.auth.currentUser.updatePassword(password);
   updatePassword(user: User, password: string): Observable<void>{
-    return from(updatePassword(user, password));
+    return defer( () => updatePassword(user, password));
   }
 
   // doSendSignInLinkToEmail = (email) => {
@@ -160,13 +160,13 @@ export class AuthService {
       url: environment.firebase.emailSignInRedirect || '',
       handleCodeInApp: true
     }
-    return from(sendSignInLinkToEmail(this.auth, email, actionCodeSettings));
+    return defer( () => sendSignInLinkToEmail(this.auth, email, actionCodeSettings));
   }
 
   // doSignInWithEmailLink = (email, location) =>
   //   this.auth.signInWithEmailLink(email, location);
   doSignInWithEmailLink(email: string): Observable<UserCredential> {
-    return from(signInWithEmailLink(this.auth, email, window.location.href));
+    return defer( () => signInWithEmailLink(this.auth, email, window.location.href));
   }
 
   // doIsSignInWithEmailLink = (location) =>

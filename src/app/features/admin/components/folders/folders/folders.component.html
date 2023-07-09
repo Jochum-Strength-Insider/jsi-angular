@@ -1,0 +1,107 @@
+<ng-template #addModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ selectedFolder ? selectedFolder.title : "Add Folder" }}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <form #form class="form" id="folderForm" [formGroup]="folderForm" (ngSubmit)="addFolder()">
+            <div class="form-group mb-3">
+                <label for="title">Title</label>
+                <input class="form-control" formControlName="title" id="title" type="text" placeholder="Folder" maxlength="200"/>
+            </div>
+            <ng-container *ngIf="selectedFolder; else addButton;">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <button [disabled]="!folderForm.valid" type="button" class="btn btn-outline-success me-2" (click)="updateFolder()">Save</button>
+                        <button type="button" class="btn btn-outline-warning" (click)="resetFolderForm()">Reset</button>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+                </div>
+            </ng-container>
+            <ng-template #addButton>
+                <button [disabled]="!folderForm.valid" type="submit" class="btn btn-primary">Add Folder</button>
+            </ng-template>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #deleteModal let-modal>
+    <ng-container *ngIf="selectedFolder">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Delete {{ selectedFolder.title }}?</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body submissions-modal-body">
+            <p>Are you sure you want to delete this folder?</p>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100 d-flex justify-content-between">
+                <button type="button" class="btn btn-danger" (click)="deleteSelectedFolder()">Delete</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<h3>Folders</h3>
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openFoldersModal(addModal, filteredFolders.length === 1 ? filteredFolders[0] : null)">
+    <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search..." maxlength="50" aria-label="Search Tasks"/>
+    <div class="input-group-append">
+        <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">
+            {{filteredFolders.length === 1 ? "Edit" : "Add"}}
+        </button>
+    </div>
+</form>
+<div class="list-group mt-3 mb-5">
+    <div class="list-group-item d-flex justify-content-between">
+        <span class="d-flex align-items-center">
+            <strong class="me-2">Folder:</strong>
+            <a [routerLink]="['../all']">All</a>
+        </span>
+    </div>
+    <div class="list-group-item d-flex justify-content-between">
+        <span class="d-flex align-items-center">
+            <strong class="me-2">Folder:</strong>
+            <a [routerLink]="['../uncategorized']">Uncategorized</a>
+        </span>
+    </div>
+    <ng-container *ngIf="filteredFolders.length > 0; else noTasks;">
+        <div *ngFor="let folder of filteredFolders | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item d-flex justify-content-between">
+            <span class="d-flex align-items-center">
+                <strong class="me-2">Folder:</strong>
+                <a [routerLink]="['../', folder.id]">{{folder.title}}</a>
+            </span>
+            <span>
+                <button class="btn btn-outline-primary ms-2" (click)="openFoldersModal(addModal, folder)">Edit</button>
+                <button class="btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(folder)">
+                    Delete
+                </button>
+            </span>
+        </div>
+    </ng-container>
+    <ng-template #noTasks>
+        <div class="list-group-item">
+            No Folders
+        </div>
+    </ng-template>
+
+    <div class="list-group-item">
+        <div>
+            <button type="button"
+                class="btn btn-primary me-2"
+                (click)="page > 1 ? page = page - 1 : page;"
+                [disabled]="page === 1">
+                <svg viewBox="-100.9 99.1 61.9 105.9" style="width: 7px; margin-right: 4px;"><path d="m-98.2 158.8 43.5 43.5c1.7 1.7 4 2.7 6.5 2.7s4.8-1 6.5-2.7c1.7-1.7 2.7-4 2.7-6.5s-1-4.8-2.7-6.5l-37.2-37.2 37.2-37.2c1.7-1.7 2.7-4 2.7-6.5s-1-4.8-2.6-6.5c-1.8-1.9-4.2-2.8-6.6-2.8-2.3 0-4.6.9-6.5 2.6-11.5 11.4-41.2 41-43.3 43l-.2.2c-3.6 3.6-3.6 10.3 0 13.9z" fill="#ffffff"></path></svg>
+                Prev
+            </button>
+            <button type="button"
+                class="btn btn-primary"
+                (click)="page = page * pageSize >= filteredFolders.length ? page : page = page + 1;"
+                [disabled]="page * pageSize >= filteredFolders.length">
+                Next
+                <svg viewBox="-100.9 99.1 61.9 105.9" style="width: 7px; margin-left: 4px;"><path d="m-41.7 145.3-43.5-43.5c-1.7-1.7-4-2.7-6.5-2.7s-4.8 1-6.5 2.7c-1.7 1.7-2.7 4-2.7 6.5s1 4.8 2.7 6.5L-61 152l-37.2 37.2c-1.7 1.7-2.7 4-2.7 6.5s1 4.8 2.6 6.5c1.8 1.9 4.2 2.8 6.6 2.8 2.3 0 4.6-.9 6.5-2.6 11.5-11.4 41.2-41 43.3-43l.2-.2c3.6-3.6 3.6-10.4 0-13.9z" fill="#ffffff" ></path></svg>
+            </button>
+        </div>
+    </div>
+
+</div>

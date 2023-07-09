@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
 import { Message } from '@app/@core/models/messages/message.model';
-import { BehaviorSubject, Observable, first, from, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, defer, first, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +44,7 @@ export class MessageService {
       .valueChanges([], { idField: 'id' })
   }
 
-  getFirtUserMessage(uid: string): Observable<Message | null>  {
+  getFirstUserMessage(uid: string): Observable<Message | null>  {
     const messageRef = this.db.list(
       `messages/${uid}`,
       ref => ref.orderByChild("createdAt").limitToFirst(1)
@@ -63,7 +63,7 @@ export class MessageService {
   }
 
   removeUserMessage(uid: string, message: Message): Observable<any> {
-    return from(this.userMessageObjectRef(uid, message.id).remove());
+    return defer( () => this.userMessageObjectRef(uid, message.id).remove());
   }
 
   // *** AdminUnreadMessage API ***
@@ -77,7 +77,7 @@ export class MessageService {
   }
 
   addAdminUnreadMessage(messageKey: string, message: Message): Observable<any> {
-    return from(this.adminUnreadObjectRef().update({ [messageKey]: message }))
+    return defer( () => this.adminUnreadObjectRef().update({ [messageKey]: message }))
   }
 
   // *** CurrentlyMessaging API ***
@@ -87,11 +87,11 @@ export class MessageService {
   }
 
   setCurrentlyMessaging(uid: string): Observable<any> {
-    return from(this.currentlyMessagingObjectRef().update({ uid }));
+    return defer( () => this.currentlyMessagingObjectRef().update({ uid }));
   }
 
   clearCurrentlyMessaging(): Observable<any> {
-    return from(this.currentlyMessagingObjectRef().remove());
+    return defer( () => this.currentlyMessagingObjectRef().remove());
   }
 
   getCurrentlyMessaging(): Observable<string | undefined> {

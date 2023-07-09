@@ -28,20 +28,22 @@
                     Admin
                 </button>
                 <div ngbDropdownMenu aria-labelledby="adminDropdown" class="dropdown-menu dropdown-menu-end">
-                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin']"
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/users']"
                         (click)="onSelect()">Users</a>
-                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/create-program']"
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/folders/list']"
                         (click)="onSelect()">Programs</a>
-                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/create-exercise']"
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/resources']"
+                        (click)="onSelect()">Resources</a>
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/exercises']"
                         (click)="onSelect()">Exercises</a>
-                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/create-code']"
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/codes']"
                         (click)="onSelect()">Codes</a>
                 </div>
             </div>
         </div>
         <div class="navbar-nav">
             <div class="d-inline-block">
-                <div *ngIf="authUser.isAdmin">        
+                <div *ngIf="authUser.isAdmin">
                     <app-admin-unread />
                 </div>
                 <div class="d-inline-block" ngbDropdown #userDrop="ngbDropdown">

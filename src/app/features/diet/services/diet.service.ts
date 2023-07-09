@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
 import { DietId } from '@app/@core/models/diet/diet-id.model';
 import { Diet } from '@app/@core/models/diet/diet.model';
-import { mapKeyToObjectOperator, mapKeysToObjectArrayOperator } from '@app/@core/utilities/mappings.utilities';
+import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import { isNonNull } from '@app/@core/utilities/type-check.utilities';
 import * as moment from 'moment';
-import { BehaviorSubject, Observable, filter, first, from, map, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, defer, filter, first, map, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -36,9 +36,8 @@ export class DietService {
   }
 
   getUserDiets(uid: string): Observable<Diet[]> {
-    return <Observable<Diet[]>>this.db.list(`diets/${uid}`)
-      .snapshotChanges()
-      .pipe(mapKeysToObjectArrayOperator())
+    return this.userDietsListRef(`diets/${uid}`)
+      .valueChanges([], { idField: 'id' })
   }
 
   getUserDietsForWeekByDate(uid: string, date: Date): Observable<Diet[]> {
@@ -51,9 +50,7 @@ export class DietService {
 
     return <Observable<Diet[]>>dietsRef
       .valueChanges([], { idField: 'id' })
-      .pipe(
-        first(),
-      );
+      .pipe(first());
   }
 
   addUserDietSheet(uid: string, date: number): Observable<DietId> {
@@ -63,18 +60,18 @@ export class DietService {
       .pipe(
         filter(isNonNull),
         switchMap(
-          (key: string) => from(this.userDietIdObjectRef(uid).update({ [key]: diet.createdAt })).pipe(
-            map(() => ({ [key]: diet.createdAt }))
-          )
+          (key: string) => defer( () => this.userDietIdObjectRef(uid).update({ [key]: diet.createdAt }))
+          .pipe( map(() => ({ [key]: diet.createdAt })) )
         )
       );
   }
 
-  saveUserDiet(uid: string, diet: Diet){
+  saveUserDiet(uid: string, diet: Diet): Observable<void> {
     const updateRef = this.userDietObjectRef(uid, diet.id);
-    return from(updateRef.update({ meals: diet.meals, rating: diet.rating }));
+    return defer( () => updateRef.update({ meals: diet.meals, rating: diet.rating }));
   }
   
+
   // // *** DietIds API ***
   
   userDietIdsListRef(uid: string): AngularFireList<DietId> {
@@ -93,11 +90,10 @@ export class DietService {
     );
 
     return <Observable<DietId | null>>dietsRef
-      .snapshotChanges()
+      .valueChanges([], { idField: 'id' })
       .pipe(
-        first(),
-        map(changes => changes.map((change: any) => ({ [change.payload.key]: change.payload.toJSON() }))),
         map(dietIds => dietIds.length > 0 ? dietIds[0] : null),
+        first()
       )
   }
 }
