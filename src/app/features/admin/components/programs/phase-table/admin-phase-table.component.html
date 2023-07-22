@@ -1,0 +1,248 @@
+<ng-template #deleteDayModal let-modal>
+    <ng-container *ngIf="selectedDay">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Delete {{ selectedDay.title }}?</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body submissions-modal-body">
+            <p>Are you sure you want to delete this day?</p>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100 d-flex justify-content-between">
+                <button type="button" class="btn btn-danger" (click)="removeSelectedDay()">Delete</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #addEditDayModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ selectedDay ? selectedDay.title : "Add Day" }}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <form #form class="dayForm" id="dayForm" [formGroup]="dayForm" (ngSubmit)="handleAddDay()" autocomplete="off">
+            <div class="form-group mb-3">
+                <label for="title">Day Title</label>
+                <input class="form-control" formControlName="title" id="exercise" type="text" placeholder="New Day" />
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Image</label>
+                <select class="form-control" formControlName="image">
+                    <option *ngFor="let option of imageOptions; let first = first" [selected]="first" [value]="option.value">{{option.title}}</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <ng-container *ngIf="selectedDay; else addButton;">
+            <div class="w-100 d-flex justify-content-between">
+                <div>
+                    <button [disabled]="!dayForm.valid" type="button" class="btn btn-outline-success me-2" (click)="handleEditDay()">Save</button>
+                    <button type="button" class="btn btn-outline-warning" (click)="resetDayForm()">Reset</button>
+                </div>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </ng-container>
+        <ng-template #addButton>
+            <div class="w-100 d-flex justify-content-between">
+                <button [disabled]="!dayForm.valid" form="dayForm" type="submit" class="btn btn-primary">Add Day</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </ng-template>
+    </div>
+</ng-template>
+
+<ngb-alert *ngIf="error" #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
+
+<div class="pb-5">
+    <div [formGroup]="phaseForm" class="list-group program-accordion" ngbAccordion #accordion="ngbAccordion" [destroyOnHide]="false" >
+        <ng-container formArrayName="days">
+            <ng-container *ngFor="let day of phaseForm.controls['days'].controls; let dayIndex = index; let first = first;">
+                <div class="list-group-item" [formGroupName]="dayIndex" [ngbAccordionItem]="'day'+dayIndex" [collapsed]="!first">
+                    <button class="btn btn-link w-100 text-start ps-0" ngbAccordionHeader (click)="accordion.toggle('day'+dayIndex)">
+                        <!-- <h5 class="my-0">{{ 'title' | titlecase }}</h5> -->
+                        <h5 class="my-0">{{ dayTitle(dayIndex) | titlecase}}</h5>
+                    </button>
+
+                    <div ngbAccordionCollapse> 
+                        <div ngbAccordionBody class="px-0 pb-0 pt-3">
+                            <ng-template>
+                                <span class="d-flex justify-content-between align-items-center pb-3">
+                                    <button class="btn btn-outline-warning" (click)="openAddEditDayModal(dayIndex)">Edit Title</button>
+                                    <button class="btn btn-outline-danger " (click)="openDeleteDayModal(dayIndex)">Remove</button>
+                                </span>
+
+                                <form class="mb-3">
+                                    <div class="input-group line-container">
+                                        <div class="cell left input-group-text">
+                                            <span>{{selectedCell ? selectedCell.number : '1A'}}</span>
+                                            <span>{{selectedCell ? selectedCell.name : 'Number'}}</span>
+                                        </div>
+                                        <!-- Value isn't binding -->
+                                        <app-mat-auto-complete
+                                            *ngIf="(selectedCell && selectedCell.name) === 'Description'; else baseInput;"
+                                            [tasks]="tasks"
+                                            [value]="selectedDaysCellValue(dayIndex)"
+                                            (selectionChange)="handleSelectionChanged($event)"
+                                            (changed)="handleValueChanged($event)"
+                                            inputClass="form-control cell right"
+                                        ></app-mat-auto-complete>
+                                        <ng-template #baseInput>
+                                            <input
+                                                [formControl]="inputCtrl"
+                                                type="text"
+                                                class="form-control cell right"
+                                            />
+                                        </ng-template>
+                                    </div>
+                                </form>
+
+                                <table class="table table-responsive table-bordered table-striped sm">
+                                    <thead>
+                                        <tr style="position: relative;">
+                                            <th class="text-center dth-number">#</th>
+                                            <th class="text-center dth-description">Description</th>
+                                            <th class="text-center dth-link">Link</th>
+                                            <th class="text-center dth-sets">Sets</th>
+                                            <th class="text-center dth-reps">Reps</th>
+                                            <th class="text-center dth-tempo">Tempo</th>
+                                            <th class="text-center dth-rest">Rest</th>
+
+                                            <div *ngIf="uid">
+                                                <th class="text-center dth-w1">w1</th>
+                                                <th class="text-center dth-w2">w2</th>
+                                                <th class="text-center dth-w3">w3</th>
+                                            </div>
+
+                                            <th class="text-center dth-btn">
+                                                <span role="img" aria-label='Delete'>&#10060;</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody formArrayName="exercises">
+                                        <ng-container *ngFor="let exercise of daysExercises(dayIndex).controls; let rowIndex = index">
+                                            <tr [formGroupName]="rowIndex">
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        name="Number"
+                                                        class="data-grid-control"
+                                                        formControlName="Number"
+                                                        (click)="setCurrentCell(dayIndex, rowIndex, 'Number')"
+                                                    />
+                                                </td>
+                                                <td class="data-grid-control">
+                                                    <app-mat-auto-complete
+                                                        [value]="getExerciseValue(dayIndex, rowIndex, 'Description')"
+                                                        [tasks]="tasks"
+                                                        (clicked)="setCurrentCell(dayIndex, rowIndex, 'Description')"
+                                                        (changed)="handleValueChanged($event, dayIndex)"
+                                                        (selectionChange)="handleSelectionChanged($event)"
+                                                    ></app-mat-auto-complete>
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        name="Link"
+                                                        class="data-grid-control"
+                                                        formControlName="Link"
+                                                        (click)="setCurrentCell(dayIndex, rowIndex, 'Link')"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        name="Sets"
+                                                        class="data-grid-control"
+                                                        formControlName="Sets"
+                                                        (click)="setCurrentCell(dayIndex, rowIndex, 'Sets')"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        name="Reps"
+                                                        class="data-grid-control"
+                                                        formControlName="Reps"
+                                                        (click)="setCurrentCell(dayIndex, rowIndex, 'Reps')"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        name="Tempo"
+                                                        class="data-grid-control"
+                                                        formControlName="Tempo"
+                                                        (click)="setCurrentCell(dayIndex, rowIndex,'Tempo')"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        name="Rest"
+                                                        class="data-grid-control"
+                                                        formControlName="Rest"
+                                                        (click)="setCurrentCell(dayIndex, rowIndex, 'Rest')"
+                                                    />
+                                                </td>
+
+                                                <div *ngIf="uid">
+                                                    <td class="vertical-align-center">
+                                                        item["tracking"]["week 1"]
+                                                    </td>
+                                                    <td class="vertical-align-center">
+                                                        item["tracking"]["week 2"]
+                                                    </td>
+                                                    <td class="vertical-align-center">
+                                                        item["tracking"]["week 3"]
+                                                    </td>
+                                                </div>
+
+                                                <td class="vertical-align-center">
+                                                    <button
+                                                        class="btn btn-outline-danger"
+                                                        (click)="handleRemoveSpecificRow(dayIndex, rowIndex)"
+                                                    >
+                                                        &#215;
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>
+                            
+                                <form class="form" [id]="'select-form-'+dayIndex" autocomplete="off">
+                                    <div class="form-group">
+                                        <div class="form-label">Add Row at Index</div>
+                                        <div class="input-group mb-3">
+                                            <button (click)="handleAddRow(dayIndex)" type="button" class="btn btn-outline-secondary px-5">
+                                                Add
+                                            </button>
+                                            <select class="form-control" [value]="addAtIndex" name="row-index">
+                                                <option *ngFor="let option of phase.days; let optionIndex = index;" [value]="optionIndex">{{optionIndex}}</option>
+                                                <option value="end">End of Table</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+
+        <div class="list-group-item accorion-item">
+            <button class="btn btn-link ps-0" (click)="openAddEditDayModal(null)"><h5 class="my-0">Add Day</h5></button>
+        </div>
+
+        <div class="list-group-item accorion-item py-3">
+            <button class="btn btn-outline-success w-100" (click)="handleSave()">Save {{phase.title}}</button>
+        </div>
+
+    </div>
+</div>

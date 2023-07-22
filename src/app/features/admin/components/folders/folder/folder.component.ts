@@ -13,6 +13,8 @@ ToDo:
 Break out into components
 cache Folders
 Move pagination into reusable component
+Add date added
+Add headers and basic sort
 */
 
 @Component({
@@ -265,8 +267,8 @@ export class FolderComponent {
   }
 
   removeSelectedProgram() {
-    if(this.selectedProgram){
-      this.programService.removeProgram(this.selectedProgram)
+    if(this.selectedProgram && this.selectedProgram.id){
+      this.programService.removeProgram(this.selectedProgram.id)
       .pipe(finalize(() => {
         this.modalService.dismissAll();
       }))

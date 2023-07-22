@@ -4,7 +4,7 @@
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
 	</div>
 	<div class="modal-body">
-		<form class="form" id="dateForm" [formGroup]="dateForm" (ngSubmit)="addDateSheet()">
+		<form class="form" id="dateForm" [formGroup]="dateForm" (ngSubmit)="addDateSheet()" autocomplete="off">
             <div class="mb-1">Date</div>
 			<div class="form-group mb-3">
 				<label class="sr-only" for="date">Add Date Sheet</label>

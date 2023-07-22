@@ -4,7 +4,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-        <form #form class="form" id="programForm" [formGroup]="programForm" (ngSubmit)="addProgram()">
+        <form #form class="form" id="programForm" [formGroup]="programForm" (ngSubmit)="addProgram()" autocomplete="off">
             <div class="form-group mb-3">
                 <label for="title">Program Title</label>
                 <input class="form-control" formControlName="title" id="exercise" type="text" placeholder="New Program" />
@@ -13,7 +13,7 @@
         </form>
         <div *ngIf="folderId">
             <hr />
-            <form class="form" id="existingProgramForm" [formGroup]="existingProgramForm" (ngSubmit)="addExistingProgram()">
+            <form class="form" id="existingProgramForm" [formGroup]="existingProgramForm" (ngSubmit)="addExistingProgram()" autocomplete="off">
                 <div class="form-group mb-3">
                     <label class="form-label">Existing Program</label>
                     <select class="form-control" formControlName="programId" >
@@ -36,7 +36,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-        <form #form class="form" id="folderForm" [formGroup]="folderForm" (ngSubmit)="updateFolder()">
+        <form #form class="form" id="folderForm" [formGroup]="folderForm" (ngSubmit)="updateFolder()" autocomplete="off">
             <div class="form-group mb-3">
                 <label for="title">Title</label>
                 <input class="form-control" formControlName="title" id="title" type="text" placeholder="Folder" maxlength="200"/>
@@ -73,7 +73,7 @@
 </ng-template>
 
 <h3 [class.header-button]="!state" (click)="openFoldersModal(editFolderModal)">{{ folder ? folder.title : this.state | titlecase }}</h3>
-<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openAddProgramModal(addProgramModal, filteredPrograms.length === 1 ? filteredPrograms[0] : null)">
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openAddProgramModal(addProgramModal, filteredPrograms.length === 1 ? filteredPrograms[0] : null)" autocomplete="off">
     <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search Programs..." maxlength="50" aria-label="Search Tasks"/>
     <div class="input-group-append">
         <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">

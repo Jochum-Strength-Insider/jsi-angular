@@ -1,5 +1,5 @@
 <div class="form-row mb-3">
-    <form class="form w-100 needs-validation" [formGroup]="dietForm" (ngSubmit)="onSubmit()" novalidate>
+    <form class="form w-100 needs-validation" id="dietForm" [formGroup]="dietForm" (ngSubmit)="onSubmit()" novalidate autocomplete="off">
         <div class="form-group mb-3 col">
             <label class="form-label">Breakfast</label>
             <input class="form-control" formControlName="breakfast" type="text" maxlength="499" [class.is-valid]="f['breakfast'].value.trim()"/>

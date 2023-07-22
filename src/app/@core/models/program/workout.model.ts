@@ -13,10 +13,8 @@ interface IInstruction {
 export class Workout {
     id: string;
     createdAt: number;
-    userId: string;
     instruction: IInstruction;
     completed: boolean;
     title: string;
     notes: string;
-    parentFolderId: string;
   }

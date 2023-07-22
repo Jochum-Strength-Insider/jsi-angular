@@ -99,6 +99,7 @@ export class TasksComponent {
     .subscribe({
       next: (tasks) => {
         this.tasks = tasks;
+        console.log(tasks);
         this.filterTasks(this.search);
       },
       error: (err) => console.log(err)

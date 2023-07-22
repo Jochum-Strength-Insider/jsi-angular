@@ -194,6 +194,14 @@ export class ProgramService {
     return this.db.object(`programs/${pid}`)
   }
 
+  getProgram(pid: string): Observable<Program> {
+    return this.programsObjectRef(pid)
+      .snapshotChanges()
+      .pipe(
+        mapKeyToObjectOperator()
+      );
+  }
+
   createProgram(title: string, parentFolderId: string | null = null): Observable<string | null> {
     const program = DEFAULT_PROGRAM(title, parentFolderId);
     return of(this.programsListRef().push(program).key)
@@ -209,10 +217,10 @@ export class ProgramService {
       )
   }
 
-  removeProgram(program: Program | ProgramId) : Observable<void> {
-    return defer( () => this.programIdsObjectRef(program.id).remove())
+  removeProgram(programId: string) : Observable<void> {
+    return defer( () => this.programIdsObjectRef(programId).remove())
       .pipe(
-        switchMap(() => defer( () => this.programsObjectRef(program.id).remove()))
+        switchMap(() => defer( () => this.programsObjectRef(programId).remove()))
       )
   }
 
@@ -221,6 +229,16 @@ export class ProgramService {
       .pipe(
         switchMap(() => {
           return defer(() => this.programIdsObjectRef(programId).update({parentFolderId: parentFolderId}))
+        })
+      )
+  }
+
+  updateProgramFolderAndTitle(programId: string, title: string, parentFolderId: string | null = null): Observable<void> {
+    console.log('updateProgram', parentFolderId);
+    return defer( () => this.programsObjectRef(programId).update({title, parentFolderId}))
+      .pipe(
+        switchMap(() => {
+          return defer(() => this.programIdsObjectRef(programId).update({title, parentFolderId}))
         })
       )
   }

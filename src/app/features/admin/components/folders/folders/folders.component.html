@@ -4,7 +4,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-        <form #form class="form" id="folderForm" [formGroup]="folderForm" (ngSubmit)="addFolder()">
+        <form #form class="form" id="folderForm" [formGroup]="folderForm" (ngSubmit)="addFolder()" autocomplete="off">
             <div class="form-group mb-3">
                 <label for="title">Title</label>
                 <input class="form-control" formControlName="title" id="title" type="text" placeholder="Folder" maxlength="200"/>
@@ -44,7 +44,7 @@
 </ng-template>
 
 <h3>Folders</h3>
-<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openFoldersModal(addModal, filteredFolders.length === 1 ? filteredFolders[0] : null)">
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openFoldersModal(addModal, filteredFolders.length === 1 ? filteredFolders[0] : null)" autocomplete="off">
     <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search..." maxlength="50" aria-label="Search Tasks"/>
     <div class="input-group-append">
         <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">

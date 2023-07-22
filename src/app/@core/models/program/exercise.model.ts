@@ -1,8 +1,6 @@
 import { Tracking } from "./tracking.model";
 
 export class Exercise {
-    id: string;
-    createdAt: number;
     Number: string;
     Description: string;
     Link: string;
@@ -12,3 +10,5 @@ export class Exercise {
     Tempo: string;
     tracking: Tracking;
   }
+
+export type ExerciseKeys = keyof Exercise;

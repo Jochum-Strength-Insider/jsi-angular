@@ -24,7 +24,7 @@ export class ProgramTableComponent implements OnInit, OnChanges {
     ifPropChanged(changes['program'], () => this.mapWorkoutToPhases(changes['program'].currentValue))
   }
 
-  mapWorkoutToPhases(program: Workout){
+  mapWorkoutToPhases(program: Workout) {
     const { instruction } = program;
     const phasesList: string[] = Object.keys(program.instruction);
     this.phases = phasesList.map((key: string) => {

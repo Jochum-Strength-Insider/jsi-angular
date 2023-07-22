@@ -4,7 +4,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-        <form #form class="form" id="taskForm" [formGroup]="taskForm" (ngSubmit)="addTasks()">
+        <form #form class="form" id="taskForm" [formGroup]="taskForm" (ngSubmit)="addTasks()" autocomplete="off">
             <div class="form-group mb-3">
                 <label for="title">Exercise</label>
                 <input class="form-control" formControlName="exercise" id="exercise" type="text" placeholder="New Exercise" maxlength="200"/>
@@ -49,7 +49,7 @@
 </ng-template>
 
 
-<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openTasksModal(addModal, filteredTasks.length === 1 ? filteredTasks[0] : null)">
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openTasksModal(addModal, filteredTasks.length === 1 ? filteredTasks[0] : null)" autocomplete="off">
     <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search..." maxlength="50" aria-label="Search Tasks"/>
     <div class="input-group-append">
         <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">
