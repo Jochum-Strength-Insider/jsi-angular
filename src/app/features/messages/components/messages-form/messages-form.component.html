@@ -1,7 +1,9 @@
 <form [formGroup]="messageForm"
-      class="chat-form" id="messageForm" 
+      id="messageForm"
+      class="chat-form"
       (ngSubmit)="sendMessage()"
-      (keydown.enter)="sendBtn.click()">
+      (keydown.enter)="sendBtn.click()"
+      autocomplete="off">
    <div class="chat-form-corner"></div>
    <textarea
         #messageInput

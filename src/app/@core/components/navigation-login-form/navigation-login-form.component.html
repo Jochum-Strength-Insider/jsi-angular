@@ -1,5 +1,5 @@
-<form [formGroup]="loginForm" class="nav-login d-none d-sm-none d-md-none d-lg-inline-flex d-xl-inline-flex"
-      (ngSubmit)="onSubmit()">
+<form [formGroup]="loginForm" id="loginForm" class="nav-login d-none d-sm-none d-md-none d-lg-inline-flex d-xl-inline-flex"
+      (ngSubmit)="onSubmit()" autocomplete="off">
     <div class="form-group me-2">
         <label class="sr-only"for="email">Email </label>
         <input id="email" class="form-control form-control-sm" type="text" placeholder="Email Address" formControlName="email" />

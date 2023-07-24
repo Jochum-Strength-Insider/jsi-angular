@@ -58,7 +58,7 @@
 
  <div class="collapse" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
     <div class="form-row mb-3">
-        <form class="form w-100 needs-validation" [formGroup]="trackingForm" (ngSubmit)="onSubmit()" novalidate>
+        <form class="form w-100 needs-validation" id="trackingForm" [formGroup]="trackingForm" (ngSubmit)="onSubmit()" novalidate autocomplete="off">
             <div class="form-group mb-3 col">
                 <label class="form-label">Week 1</label>
                 <input class="form-control" formControlName="week1" type="text" placeholder="10lb" [class.is-valid]="f['week1'].value.trim()"/>

@@ -10,14 +10,19 @@ import { CodesListComponent } from './components/codes/codes-list/codes-list.com
 import { CodesItemComponent } from './components/codes/codes-item/codes-item.component';
 import { CodesFormComponent } from './components/codes/codes-form/codes-form.component';
 import { CodesComponent } from './components/codes/codes/codes.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TasksComponent } from './components/tasks/tasks/tasks.component';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TasksListComponent } from './components/tasks/tasks-list/tasks-list.component';
+import { NgbAccordionModule, NgbAlertModule, NgbCollapseModule, NgbNavModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminFoldersPageComponent } from './pages/admin-folders-page/admin-folders-page.component';
 import { AdminResourcesPageComponent } from './pages/admin-resources-page/admin-resources-page.component';
 import { FoldersComponent } from './components/folders/folders/folders.component';
 import { FolderComponent } from './components/folders/folder/folder.component';
-import { AdminProgramsComponent } from './components/programs/programs/admin-programs.component';
+import { AdminProgramComponent } from './components/programs/program/admin-program.component';
+import { AdminProgramTableComponent } from './components/programs/program-table/admin-program-table.component';
+import { AdminPhaseTableComponent } from './components/programs/phase-table/admin-phase-table.component';
+import { AdminDayTableComponent } from './components/programs/day-table/admin-day-table.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AutoCompleteComponent } from './components/programs/auto-complete/auto-complete.component';
 
 
 @NgModule({
@@ -34,16 +39,26 @@ import { AdminProgramsComponent } from './components/programs/programs/admin-pro
     CodesListComponent,
     CodesItemComponent,
     CodesFormComponent,
-    TasksComponent,
+    TasksListComponent,
     FoldersComponent,
     FolderComponent,
-    AdminProgramsComponent
+    AdminProgramComponent,
+    AdminProgramTableComponent,
+    AdminPhaseTableComponent,
+    AdminDayTableComponent,
+    AutoCompleteComponent
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
     ReactiveFormsModule,
-    NgbPaginationModule
+    FormsModule,
+    NgbPaginationModule,
+    NgbAlertModule,
+    NgbNavModule,
+    NgbAccordionModule,
+    NgbCollapseModule,
+    MatAutocompleteModule
   ]
 })
 export class AdminModule { }

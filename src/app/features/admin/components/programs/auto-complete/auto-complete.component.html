@@ -1,0 +1,15 @@
+<ng-template #template>
+    <input matInput
+        type="text"
+        [formControl]="inputCtrl"
+        [matAutocomplete]="auto"
+        name="autocomplete-input"
+        [class]="inputClass"
+        (click)="onClicked()">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayLabelFn" (optionSelected)="onSelectionChange($event)">
+        <mat-option *ngFor="let option of filteredOptions$ | async;"
+            [value]="option">
+            {{ option.e }}
+        </mat-option>
+    </mat-autocomplete>
+</ng-template>

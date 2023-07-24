@@ -34,3 +34,8 @@
     background-color: #ddd;
     border-radius: 5px;
 }
+
+.header-button:hover {
+    cursor: pointer;
+    opacity: .7;
+} 

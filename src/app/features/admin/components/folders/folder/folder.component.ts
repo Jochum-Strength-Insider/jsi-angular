@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Folder } from '@app/@core/models/program/folder.model';
 import { ProgramId } from '@app/@core/models/program/program-id.model';
 import { ToastService } from '@app/@core/services/toast.service';
-import { ProgramService } from '@app/features/program/services/program.service';
+import { ProgramService } from '@app/features/admin/services/programs.service.';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize, forkJoin, map, of, switchMap, tap } from 'rxjs';
 
@@ -13,6 +13,8 @@ ToDo:
 Break out into components
 cache Folders
 Move pagination into reusable component
+Add date added
+Add headers and basic sort
 */
 
 @Component({
@@ -265,8 +267,8 @@ export class FolderComponent {
   }
 
   removeSelectedProgram() {
-    if(this.selectedProgram){
-      this.programService.removeProgram(this.selectedProgram)
+    if(this.selectedProgram && this.selectedProgram.id){
+      this.programService.removeProgram(this.selectedProgram.id)
       .pipe(finalize(() => {
         this.modalService.dismissAll();
       }))

@@ -25,7 +25,7 @@
 
 <div>
     <div class="card">
-        <form class="px-2 py-2" [formGroup]="promoForm" (ngSubmit)="applyDiscount()" novalidate>
+        <form class="px-2 py-2" id="promoForm" [formGroup]="promoForm" (ngSubmit)="applyDiscount()" novalidate autocomplete="off">
             <div class="input-group">
                 <input 
                     class="form-control"

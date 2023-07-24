@@ -8,6 +8,7 @@ import { AdminFoldersPageComponent } from './pages/admin-folders-page/admin-fold
 import { AdminResourcesPageComponent } from './pages/admin-resources-page/admin-resources-page.component';
 import { FolderComponent } from './components/folders/folder/folder.component';
 import { FoldersComponent } from './components/folders/folders/folders.component';
+import { AdminProgramComponent } from './components/programs/program/admin-program.component';
 
 /* 
 ToDo:
@@ -30,7 +31,7 @@ const routes: Routes = [
     path: 'programs',
     component: AdminProgramsPageComponent,
     children: [
-      {path: ':id', component: AdminFoldersPageComponent },
+      {path: ':id', component: AdminProgramComponent },
     ]
   },
   {

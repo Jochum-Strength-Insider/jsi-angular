@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Tasks } from '@app/@core/models/program/task.model';
 import { ToastService } from '@app/@core/services/toast.service';
-import { ProgramService } from '@app/features/program/services/program.service';
+import { TasksService } from '@app/features/admin/services/tasks.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize } from 'rxjs';
 
@@ -13,11 +13,11 @@ cache tasks
 */
 
 @Component({
-  selector: 'app-admin-programs',
-  templateUrl: './admin-programs.component.html',
-  styleUrls: ['./admin-programs.component.css']
+  selector: 'app-tasks-list',
+  templateUrl: './tasks-list.component.html',
+  styleUrls: ['./tasks-list.component.css']
 })
-export class AdminProgramsComponent {
+export class TasksListComponent {
   tasksSub: Subscription;
   searchSub: Subscription;
   search: string = "";
@@ -30,12 +30,12 @@ export class AdminProgramsComponent {
   @ViewChild('addModal') addModal: any;
   @ViewChild('deleteModal') deleteModal: any;
   error: Error;
-  
+
   page: number = 1;
   pageSize: number = 10;
 
   constructor(
-    private programService: ProgramService,
+    private tasksService: TasksService,
     private modalService: NgbModal,
     private fb: FormBuilder,
     private toastService: ToastService
@@ -73,10 +73,17 @@ export class AdminProgramsComponent {
     this.searchSub?.unsubscribe();
   }
 
-  resetTaskForm(){
+  clearTaskForm(){
     this.taskForm.patchValue({
       exercise: "",
       link: "",
+    });
+  }
+
+  resetTaskForm(){
+    this.taskForm.patchValue({
+      exercise: this.selectedTask ? this.selectedTask.e : "",
+      link: this.selectedTask ? this.selectedTask.l : "",
     });
   }
 
@@ -88,22 +95,14 @@ export class AdminProgramsComponent {
   }
 
   fetchTasks(): void {
-    this.tasksSub = this.programService.getTasks()
+    this.tasksSub = this.tasksService.getTasks()
     .subscribe({
       next: (tasks) => {
         this.tasks = tasks;
         this.filterTasks(this.search);
       },
-      error: (err) => {
-        console.log(err)
-        this.error = err;
-        this.toastService.showError();
-      }
+      error: (err) => console.log(err)
     });
-  }
-
-  searchTasks(search: string){
-    this.filteredTasks = this.tasks.filter((task) => task.e.includes(search))
   }
 
   openTasksModal(content: any, task: Tasks | null) {
@@ -113,7 +112,10 @@ export class AdminProgramsComponent {
       this.patchTaskForm(task);
     } else {
       this.selectedTask = null;
-      this.resetTaskForm();
+      this.clearTaskForm();
+      this.taskForm.patchValue({
+        exercise: this.searchForm.controls['search'].value,
+      });    
     }
 
     this.modalService.open(content, {
@@ -140,36 +142,29 @@ export class AdminProgramsComponent {
     task.e = this.f['exercise'].value;
     task.l = this.f['link'].value;
 
-    this.programService.addTask(task)
-    .subscribe({
-      next: () => {
-        this.toastService.showSuccess();
-        this.modalService.dismissAll();
-      },
-      error: (err) => {
-        console.log(err)
-        this.error = err;
-        this.toastService.showError();
-      }
-    });
+    this.tasksService.addTask(task)
+      .subscribe({
+        next: () => {
+          this.toastService.showSuccess();
+          this.modalService.dismissAll();
+        },
+        error: (error: Error) => {
+          this.toastService.showError();
+          this.error = error
+        }
+      });
   }
 
   deleteSelectedTask() {
     if(this.selectedTask){
-      this.programService.removeTask(this.selectedTask)
+      this.tasksService.removeTask(this.selectedTask)
       .pipe(finalize(() => {
         this.modalService.dismissAll();
         this.selectedTask = null;
       }))
       .subscribe({
-        next: () => {
-          console.log('remove')
-        },
-        error: (err) => {
-          console.log(err)
-          this.error = err;
-          this.toastService.showError();
-        }     
+        next: () => console.log('remove'),
+        error: (err: Error) => console.log(err),
       })
     }
   }
@@ -179,15 +174,14 @@ export class AdminProgramsComponent {
       this.selectedTask.e = this.f['exercise'].value;
       this.selectedTask.l = this.f['link'].value;
 
-      this.programService.saveTask(this.selectedTask)
+      this.tasksService.saveTask(this.selectedTask)
       .subscribe({
         next: () => {
           this.toastService.showSuccess();
         },
-        error: (err) => {
-          console.log(err)
-          this.error = err;
+        error: (error: Error) => {
           this.toastService.showError();
+          this.error = error
         }
       });
     }

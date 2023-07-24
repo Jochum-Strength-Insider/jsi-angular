@@ -3,8 +3,8 @@ import { Day } from '@app/@core/models/program/day.model';
 import { Exercise } from '@app/@core/models/program/exercise.model';
 import { ToastService } from '@app/@core/services/toast.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ProgramService } from '../../services/program.service';
 import { YoutubeEmbedComponent } from '../youtube-embed/youtube-embed.component';
+import { WorkoutService } from '../../services/workout.service';
 
 @Component({
   selector: 'app-day-table',
@@ -20,7 +20,7 @@ export class DayTableComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
-    private service: ProgramService,
+    private service: WorkoutService,
     private toastService: ToastService
   ) {}
 

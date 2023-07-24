@@ -3,7 +3,7 @@
         <div class="col-12 col-md-8 offset-md-2">
             <h1 class="text-center">Sign In</h1>
 
-            <form class="form w-100 needs-validation" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+            <form class="form w-100 needs-validation" id="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate autocomplete="off">
                 <div class="form-group mb-3">
                     <label class="form-label">Email</label>
                     <input class="form-control" formControlName="email" type="text" placeholder="Email Address" [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors, 'is-valid': f['email'].valid }"/>
