@@ -15,7 +15,7 @@ export class AdminProgramTableComponent implements OnInit, OnChanges {
   @Input() program: Workout | Program;
   @Input() uid: string;
   @Input() tasks: Tasks[] = [];
-  @Output() saveTracking = new EventEmitter<{phase: string, day: string; item: string }>();
+  @Output() savePhase = new EventEmitter<Phase>();
   phases: Phase[];
   active = 0;
 
@@ -43,5 +43,9 @@ export class AdminProgramTableComponent implements OnInit, OnChanges {
       });
       return ({ title: key, days: daysArray })
     });
+  }
+
+  handleSavePhase(event: Phase){
+    this.savePhase.emit(event);
   }
 }

@@ -2,32 +2,19 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Folder } from '@app/@core/models/program/folder.model';
+import { Phase } from '@app/@core/models/program/phase.model';
 import { Program } from '@app/@core/models/program/program.model';
 import { INITIAL_TASKS, Tasks } from '@app/@core/models/program/task.model';
 import { ToastService } from '@app/@core/services/toast.service';
-import { ProgramService } from '@app/features/program/services/program.service';
+import { LocalStorageService } from '@app/@shared/services/local-storage.service';
+import { FOLDERS_STRING, ProgramService } from '@app/features/admin/services/programs.service.';
+import { TASKS_STRING, TasksService } from '@app/features/admin/services/tasks.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, finalize, of, switchMap } from 'rxjs';
+import { Subscription, finalize, first, of, switchMap, tap } from 'rxjs';
 
 /*
 ToDo:
-Break out into components
-cache tasks
-
-Need to cache tasks/folders
-Should probably reorganize the pages to pass folders/tasks down
-*/
-
-/* Share replay example 
-  public stockClassTypesChanges$: Observable<ListItemModel[]> = of([]);
-  constructor(
-  ) { 
-    this.stockClassTypesChanges$ = this.getStockClassTypesList().pipe(shareReplay(1));
-  }
-  getStockClassTypesList(): Observable<ListItemModel[]> {
-    return this.http.get<ListItemModel[]>(this.apiUrl + '/resources/stockClassTypes', this.options)
-    .pipe(catchError(_ => of([])))
-  }
+Need to cache folders
 */
 
 @Component({
@@ -44,6 +31,7 @@ export class AdminProgramComponent {
   dayForm: FormGroup;
   foldersList: Folder[] = [];
   tasksList: Tasks[] = INITIAL_TASKS;
+  uid: string;
 
   @ViewChild('editProgramModal') editProgramModal: any;
   @ViewChild('editDayModal') editDayModal: any;
@@ -51,10 +39,12 @@ export class AdminProgramComponent {
 
   constructor(
     private programService: ProgramService,
+    private tasksService: TasksService,
     private modalService: NgbModal,
     private fb: FormBuilder,
     private toastService: ToastService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private lsService: LocalStorageService
   ) {}
 
   ngOnInit(){
@@ -73,7 +63,9 @@ export class AdminProgramComponent {
         switchMap((params) => {
           const pid = params.get('id');
           if(pid){
-            return this.programService.getProgram(pid);
+            return this.programService
+              .getProgram(pid)
+              .pipe(first());
           } else {
             return of();
           }
@@ -92,7 +84,7 @@ export class AdminProgramComponent {
       });
 
       this.fetchFolders();
-      // this.fetchTasks();
+      this.fetchTasks();
   }
 
   get f() { return this.programForm.controls; }
@@ -104,21 +96,37 @@ export class AdminProgramComponent {
   }
 
   fetchTasks(){
-    this.tasksSub = this.programService.getTasks()
-    .subscribe({
-      next: (tasks) => {
-        this.tasksList = tasks;
-      },
-      error: (err) => {
-        console.log(err)
-        this.error = err;
-        this.toastService.showError();
-      }
-    })
+    const cashedTasks: Tasks[] = this.lsService.getParseData(TASKS_STRING);
+    this.tasksSub = of(cashedTasks)
+      .pipe(switchMap((tasks) => {
+        if(tasks){
+          return of(tasks);
+        } else {
+          return this.tasksService.getTasks();
+        }
+      }))
+      .subscribe({  
+        next: (tasks) => {
+          this.tasksList = tasks;
+        },
+        error: (err) => {
+          console.log(err)
+          this.error = err;
+          this.toastService.showError();
+        }
+      })
   }
 
-  fetchFolders(){
-    this.foldersSub = this.programService.getFolders()
+  fetchFolders() {
+    const cashedFolders: Folder[] = this.lsService.getParseData(FOLDERS_STRING);
+    this.foldersSub = of(cashedFolders)
+      .pipe(switchMap((folders) => {
+        if(folders){
+          return of(folders);
+        } else {
+          return this.programService.getFolders();
+        }
+      }))
       .subscribe({
         next: (folders) => {
           this.foldersList = folders;
@@ -131,7 +139,7 @@ export class AdminProgramComponent {
       })
   }
 
-  resetProgramForm(){
+  resetProgramForm() {
     this.programForm.patchValue({
       title: this.program.title,
       folder: this.program?.parentFolderId || "",
@@ -161,7 +169,7 @@ export class AdminProgramComponent {
     });
   }
 
-  updateProgram(){
+  updateProgram() {
     const title = this.f['title'].value;
     const folderValue: string = this.f['folder'].value;
     const folder = folderValue.length > 0 ? folderValue : null;
@@ -184,8 +192,17 @@ export class AdminProgramComponent {
     }
   }
 
-  onSave(){
-
+  handleSavePhase(phase: Phase) {
+    if(this.program.id){
+      this.programService.saveProgramWithPhaseUpdate(this.program.id, phase)
+      .subscribe({
+        next: () => this.toastService.showSuccess(),
+        error: (err: Error) => {
+          this.error = err;
+          this.toastService.showError();
+        }
+      })
+    }
   }
 
   // <CreateProgramTable onSave={this.onSave} tasks={tasks} program={program} pid={pid} uid={uid} />

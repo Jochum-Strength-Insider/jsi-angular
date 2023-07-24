@@ -6,7 +6,8 @@
                 [phase]="phase"
                 [uid]="uid"
                 [programKey]="program.id"
-                [tasks]="tasks">
+                [tasks]="tasks"
+                (savePhase)="handleSavePhase($event)">
             </app-admin-phase-table>
 		</ng-template>
 	</div>

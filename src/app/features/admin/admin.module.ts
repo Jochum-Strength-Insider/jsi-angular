@@ -10,8 +10,8 @@ import { CodesListComponent } from './components/codes/codes-list/codes-list.com
 import { CodesItemComponent } from './components/codes/codes-item/codes-item.component';
 import { CodesFormComponent } from './components/codes/codes-form/codes-form.component';
 import { CodesComponent } from './components/codes/codes/codes.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TasksComponent } from './components/tasks/tasks/tasks.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TasksListComponent } from './components/tasks/tasks-list/tasks-list.component';
 import { NgbAccordionModule, NgbAlertModule, NgbCollapseModule, NgbNavModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminFoldersPageComponent } from './pages/admin-folders-page/admin-folders-page.component';
 import { AdminResourcesPageComponent } from './pages/admin-resources-page/admin-resources-page.component';
@@ -20,11 +20,9 @@ import { FolderComponent } from './components/folders/folder/folder.component';
 import { AdminProgramComponent } from './components/programs/program/admin-program.component';
 import { AdminProgramTableComponent } from './components/programs/program-table/admin-program-table.component';
 import { AdminPhaseTableComponent } from './components/programs/phase-table/admin-phase-table.component';
-import { AdminExerciseRowComponent } from './components/programs/exercise-row/admin-exercise-row.component';
 import { AdminDayTableComponent } from './components/programs/day-table/admin-day-table.component';
-import { CellFormComponent } from './components/programs/cell-form/cell-form.component';
-import { MatAutoCompleteComponent } from './components/programs/mat-auto-complete/mat-auto-complete.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AutoCompleteComponent } from './components/programs/auto-complete/auto-complete.component';
 
 
 @NgModule({
@@ -41,21 +39,20 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     CodesListComponent,
     CodesItemComponent,
     CodesFormComponent,
-    TasksComponent,
+    TasksListComponent,
     FoldersComponent,
     FolderComponent,
     AdminProgramComponent,
     AdminProgramTableComponent,
     AdminPhaseTableComponent,
-    AdminExerciseRowComponent,
     AdminDayTableComponent,
-    CellFormComponent,
-    MatAutoCompleteComponent
+    AutoCompleteComponent
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
     NgbPaginationModule,
     NgbAlertModule,
     NgbNavModule,

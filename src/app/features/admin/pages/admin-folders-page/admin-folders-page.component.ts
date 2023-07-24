@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { User } from '@app/@core/models/auth/user.model';
 import { AuthService } from '@app/@shared/services/auth.service';
-import { ProgramService } from '@app/features/program/services/program.service';
 import { Observable, tap } from 'rxjs';
 
 /* ToDo:

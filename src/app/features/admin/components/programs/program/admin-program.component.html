@@ -29,5 +29,5 @@
 
 <h3 class="header-button" (click)="openEditProgramModal()">{{ program ? program.title : 'Program' | titlecase }}</h3>
 <div *ngIf="program">
-    <app-admin-program-table [program]="program" [tasks]="tasksList"></app-admin-program-table>
+    <app-admin-program-table [program]="program" [tasks]="tasksList" [uid]="uid" (savePhase)="handleSavePhase($event)"></app-admin-program-table>
 </div>

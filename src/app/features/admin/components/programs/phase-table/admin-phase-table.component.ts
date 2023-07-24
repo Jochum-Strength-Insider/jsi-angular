@@ -1,32 +1,21 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Day, IMAGE_OPTIONS } from '@app/@core/models/program/day.model';
-import { ExerciseKeys } from '@app/@core/models/program/exercise.model';
 import { Phase } from '@app/@core/models/program/phase.model';
-import { ProgramCell } from '@app/@core/models/program/program-cell';
 import { INITIAL_DATA_PHASE, INITIAL_DATA_RECOVERY, RECOVERY_KEY } from '@app/@core/models/program/program.model';
 import { Tasks } from '@app/@core/models/program/task.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
 
 // To Do
 
 // Need To
 
-// Bind value changes to values
-// All editor search boxes are being updated when values changes
-
-// Add Day
-// Edit/Remove Day
-// Save
 // Cache tasks
 // Quick save
 
 // Should do
 // Clean Up
-// Run initial filter on search bar so the entire list isn't shown on first click
 // Clear everything when opening a day modal
-// Fix table overflow
 
 @Component({
   selector: 'app-admin-phase-table',
@@ -34,26 +23,20 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./admin-phase-table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AdminPhaseTableComponent implements OnInit, OnDestroy {
+export class AdminPhaseTableComponent implements OnInit {
   @Input() phase: Phase;
   @Input() programKey?: string;
   @Input() uid: string;
   @Input() tasks: Tasks[] = [];
+  @Output() savePhase = new EventEmitter<Phase>();
 
   @ViewChild('deleteDayModal') deleteDayModal: any;
   @ViewChild('addEditDayModal') addEditDayModal: any;
 
   imageOptions: Array<{value: string, title: string }> = IMAGE_OPTIONS;
-
   selectedDay: Day | null = null;
-  selectedCell: ProgramCell | null = null;
-  
-  addAtIndex: string = "";
+  selectedDayIndex: number | null;
   error: Error;
-
-  inputCtrl = new FormControl();
-  inputCtrlSub: Subscription;
-  phaseFormSub: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -86,61 +69,13 @@ export class AdminPhaseTableComponent implements OnInit, OnDestroy {
     return this.daysArray.at(dayIndex).get('title')?.value || "";
   }
 
-  daysExercises(dayIndex: number) : FormArray {
-    return this.daysArray.at(dayIndex).get("exercises") as FormArray
-  }
-
-  getExerciseAtIndex(dayIndex: number, rowIndex: number) : FormGroup {
-    return this.daysExercises(dayIndex).controls.at(rowIndex) as FormGroup;
-  }
-
-  getExerciseValue(dayIndex: number, rowIndex: number, name: ExerciseKeys) : string {
-    return this.getExerciseAtIndex(dayIndex, rowIndex)?.get(name)?.value || ""
-  }
-
-  selectedDaysCellValue(selecteDayIndex: number): string {
-    if(this.selectedCell === null){
-      return "";
-    }
-    const { dayIndex, rowIndex, name } = this.selectedCell;
-    const value = this.getExerciseValue(selecteDayIndex, rowIndex, name)
-    return dayIndex === selecteDayIndex ? value : "";
-  }
-
   ngOnInit(){
     this.mapPhaseToForm();
-
-    this.inputCtrlSub = this.inputCtrl.valueChanges
-    .subscribe( value => {
-      if(this.selectedCell){
-        this.handleValueChanged(value);
-      }
-    })
-
-    this.phaseFormSub = this.phaseForm.valueChanges.subscribe(
-      value => {
-        if(this.selectedCell) {
-          const formValue = value as Phase;
-          if(this.selectedCell.name !== 'tracking') {
-            const day = formValue.days[this.selectedCell.dayIndex];
-            const exercise = day.exercises[this.selectedCell.rowIndex]
-            const value = exercise[this.selectedCell.name];
-            this.inputCtrl.patchValue(value, { emitEvent: false })
-          }
-        }
-      }
-    )
-  }
-
-  ngOnDestroy(): void {
-    this.inputCtrlSub?.unsubscribe();
-    this.phaseFormSub?.unsubscribe();
   }
 
   mapPhaseToForm() {
     this.phaseForm.patchValue({ title: this.phase.title });
     this.phase.days.forEach((day: Day) =>  this.daysArray.push(this.createDayForm(day)))
-    console.log(this.phaseForm.getRawValue());
   }
 
   patchDayForm(day: Day | null = null){
@@ -150,7 +85,7 @@ export class AdminPhaseTableComponent implements OnInit, OnDestroy {
     })
   }
 
-  resetDayForm(){
+  resetDayForm() {
     this.patchDayForm(this.selectedDay);
   }
 
@@ -158,8 +93,10 @@ export class AdminPhaseTableComponent implements OnInit, OnDestroy {
     if(dayIndex !== null){
       const { id, title, image } = this.getDay(dayIndex).value;
       this.selectedDay = new Day(id, title, image);
+      this.selectedDayIndex = dayIndex;
     } else {
       this.selectedDay = null;
+      this.selectedDayIndex = null;
     }
 
     this.modalService.open(this.deleteDayModal, {
@@ -173,8 +110,10 @@ export class AdminPhaseTableComponent implements OnInit, OnDestroy {
     if(dayIndex !== null){
       const { id, title, image } = this.getDay(dayIndex).value;
       this.selectedDay = new Day(id, title, image);
+      this.selectedDayIndex = dayIndex;
     } else {
       this.selectedDay = null;
+      this.selectedDayIndex = null;
     }
     this.patchDayForm(this.selectedDay);
 
@@ -216,7 +155,7 @@ export class AdminPhaseTableComponent implements OnInit, OnDestroy {
   
   handleAddDay(){
     const newDay = new Day();
-    const dayIndex = this.daysArray.length;
+    const dayIndex = this.daysArray.length + 1;
     newDay.id = `day ${dayIndex}`;
     newDay.title = this.df['title'].value || "";
     newDay.image = this.df['image'].value || "";
@@ -226,157 +165,38 @@ export class AdminPhaseTableComponent implements OnInit, OnDestroy {
     this.daysArray.push(newDayForm);
 
     this.modalService.dismissAll();
-    console.log('handleAddDay', this.phaseForm.getRawValue());
-
-    //   handleAddDay = (e) => {
-    //     const daysUpdate = { ...days };
-    //     const location = "day " + (Object.keys(daysUpdate).length + 1);
-    //     daysUpdate[location] = {
-    //        exercises: JSON.parse(INITIALJSON),
-    //        title: dayTitle,
-    //        image: selectImage
-    //     };
-    //  }
   }
 
-  handleRemoveSpecificRow(dayIndex: number, index: number){
-    console.log('handleRemoveSpecificRow', dayIndex, index);
-  //   handleRemoveSpecificRow = (idx, key) => () => {
-  //     const days = { ...this.state.days };
-  //     // const dayArray = [...days[key]];
-  //     const { exercises } = days[key];
+  removeSelectedDay() {
+    console.log('removeSelectedDay');
+    if(this.selectedDayIndex !== null){
+      this.daysArray.removeAt(this.selectedDayIndex);
+      this.selectedDay = null;
+      this.selectedDayIndex = null;
 
-  //     this.resetCurrentCell(idx);
-
-  //     if (exercises.length > 1) {
-  //        exercises.splice(idx, 1);
-  //        days[key].exercises = exercises;
-  //        this.setState({ days });
-  //     } else {
-  //        console.log("Can't remove more rows");
-  //     }
-  //  }
-}
-removeSelectedDay(){
-  console.log('removeSelectedDay');
-  //  removeDay = (day) => () => {
-  //     const { days } = this.state;
-  //     const daysUpdate = { ...days };
-  //     delete daysUpdate[day]
-  //     this.setState({ days: daysUpdate, select: "end" }, this.hideModal("showRemove"));
-  //  }
-  }
-
-  handleAddRow(dayIndex: number){
-    console.log('handleAddRow', dayIndex)
-    // const TASKSHELL = {
-    //   instruction: {
-    //       Number: "1", Description: "", Link: "", Sets: "3", Reps: "5", Tempo: "3-3-0", Rest: ":0",
-    //       tracking: { "week 1": "", "week 2": "", "week 3": "" }
-    //   }, title: "Default"
-    // }
-
-  //   handleAddRow = (key) => e => {
-  //     e.preventDefault();
-  //     const index = this.state.select;
-  //     const days = { ...this.state.days };
-
-  //     const { instruction } = TASKSHELL;
-
-  //     const headers = Object.keys(instruction);
-  //     const items = headers.reduce(((accumulator, header) => { return { ...accumulator, [header]: instruction[header] } }), {});
-
-  //     if (index === "end") {
-  //        days[key].exercises.push(items);
-  //     } else {
-  //        days[key].exercises.splice(index, 0, items);
-  //     }
-
-  //     // days[key] = newDaysTable;
-  //     this.setState({ days: days, select: "end" })
-  //  };
+      const days = this.daysArray.controls;
+      days.forEach((day, i) => {
+        day.patchValue({ id: `day ${i + 1}` })
+      });
+    }
+    this.modalService.dismissAll();
   }
 
   handleEditDay() {
-    console.log('handleEditDay');
-  // handleChangeDayTitle = (e) => {
-  //   e.preventDefault();
-  //   const { days, modalNumber, dayTitle, selectImage } = this.state;
-  //   const daysUpdate = { ...days };
-  //   const dayUpdate = { ...daysUpdate[modalNumber] };
-  //   dayUpdate["title"] = dayTitle;
-  //   dayUpdate["image"] = selectImage;
-  //   daysUpdate[modalNumber] = dayUpdate;
-  //   this.setState({ days: daysUpdate }, this.hideModal("showEdit"));
-  // }
+    if(this.selectedDayIndex !== null) {
+      const day = this.getDay(this.selectedDayIndex);
+      const title = this.df['title'].value || "";
+      const image = this.df['image'].value || "";
+      day.patchValue({ title, image })
+    }
+    this.modalService.dismissAll();
   }
 
   handleSave(){
-    console.log('handleSave');
-  //  handleSave = () => {
-    // const { days, completed } = this.state;
-    // const { phase } = this.props;
-
-    // const daysListJSON = Object.keys(days).reduce((accumulator, key) => {
-    //     const { title, exercises, image } = days[key];
-    //     const day = {
-    //       image,
-    //       title,
-    //       exercises: JSON.stringify(exercises)
-    //     };
-
-    //     return (
-    //       { ...accumulator, [key]: day }
-    //     )
-    // }, {});
-
-    // const phaseUpdate = {
-    //     completed: completed,
-    //     ...daysListJSON
-    // }
-
-    // console.log("updating program");
-
-    // this.props.onSave(phase, phaseUpdate)
-    //     .then(this.onAlert)
-    //     .catch(error => this.setState({ error }));
-    // }
+    const phaseUpdate = this.phaseForm.getRawValue() as Phase;
+    this.savePhase.emit(phaseUpdate);
   }
 
-  setCurrentCell(dayIndex: number, rowIndex: number, name: ExerciseKeys) {
-    this.selectedCell = null;
-    const number =  this.getExerciseValue(dayIndex, rowIndex, 'Number');
-    const value =  this.getExerciseValue(dayIndex, rowIndex, name);
-    this.selectedCell = new ProgramCell(dayIndex, rowIndex, name, number, value)
-    this.inputCtrl.patchValue(value, { emitEvent: false });
-  }
-
-  // the selected day === dayIndex stuff might be more complicated that just splitting up the components.
-  handleValueChanged(event: string, selectedDayIndex: number | null = null) {
-    if(this.selectedCell === null) { return; }
-    const { dayIndex, rowIndex, name } = this.selectedCell;
-    // if(selectedDayIndex === dayIndex) {
-      const exerciseForm = this.getExerciseAtIndex(dayIndex, rowIndex);
-      exerciseForm.get(name)?.patchValue(event, { emitEvent: false });
-    // }
-  }
-
-  handleSelectionChanged(event: Tasks) {
-    if(this.selectedCell){
-      const exerciseForm = this.getExerciseAtIndex(this.selectedCell.dayIndex, this.selectedCell.rowIndex);
-      exerciseForm.get("Description")?.patchValue(event.e, { emitEvent: false });
-      exerciseForm.get("Link")?.patchValue(event.l);
-    }
-
-  //   handleSearchChange = (idx, day, name) => (value, link = false) => {
-  //     const days = { ...this.state.days };
-  //     days[day].exercises[idx][name] = value;
-  //     if (link) {
-  //        days[day].exercises[idx].Link = link;
-  //     }
-  //     this.setState({ days });
-  //  };
-  }
 }
 
 // <ListGroup className="pb-5">

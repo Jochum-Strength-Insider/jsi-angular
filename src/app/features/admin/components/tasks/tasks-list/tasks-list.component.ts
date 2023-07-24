@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Tasks } from '@app/@core/models/program/task.model';
 import { ToastService } from '@app/@core/services/toast.service';
-import { ProgramService } from '@app/features/program/services/program.service';
+import { TasksService } from '@app/features/admin/services/tasks.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize } from 'rxjs';
 
@@ -13,11 +13,11 @@ cache tasks
 */
 
 @Component({
-  selector: 'app-tasks',
-  templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.css']
+  selector: 'app-tasks-list',
+  templateUrl: './tasks-list.component.html',
+  styleUrls: ['./tasks-list.component.css']
 })
-export class TasksComponent {
+export class TasksListComponent {
   tasksSub: Subscription;
   searchSub: Subscription;
   search: string = "";
@@ -35,7 +35,7 @@ export class TasksComponent {
   pageSize: number = 10;
 
   constructor(
-    private programService: ProgramService,
+    private tasksService: TasksService,
     private modalService: NgbModal,
     private fb: FormBuilder,
     private toastService: ToastService
@@ -95,11 +95,10 @@ export class TasksComponent {
   }
 
   fetchTasks(): void {
-    this.tasksSub = this.programService.getTasks()
+    this.tasksSub = this.tasksService.getTasks()
     .subscribe({
       next: (tasks) => {
         this.tasks = tasks;
-        console.log(tasks);
         this.filterTasks(this.search);
       },
       error: (err) => console.log(err)
@@ -143,22 +142,22 @@ export class TasksComponent {
     task.e = this.f['exercise'].value;
     task.l = this.f['link'].value;
 
-    this.programService.addTask(task)
-    .subscribe({
-      next: () => {
-        this.toastService.showSuccess();
-        this.modalService.dismissAll();
-      },
-      error: (error: Error) => {
-        this.toastService.showError();
-        this.error = error
-      }
-    });
+    this.tasksService.addTask(task)
+      .subscribe({
+        next: () => {
+          this.toastService.showSuccess();
+          this.modalService.dismissAll();
+        },
+        error: (error: Error) => {
+          this.toastService.showError();
+          this.error = error
+        }
+      });
   }
 
   deleteSelectedTask() {
     if(this.selectedTask){
-      this.programService.removeTask(this.selectedTask)
+      this.tasksService.removeTask(this.selectedTask)
       .pipe(finalize(() => {
         this.modalService.dismissAll();
         this.selectedTask = null;
@@ -175,7 +174,7 @@ export class TasksComponent {
       this.selectedTask.e = this.f['exercise'].value;
       this.selectedTask.l = this.f['link'].value;
 
-      this.programService.saveTask(this.selectedTask)
+      this.tasksService.saveTask(this.selectedTask)
       .subscribe({
         next: () => {
           this.toastService.showSuccess();

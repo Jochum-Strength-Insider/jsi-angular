@@ -4,15 +4,15 @@ import { FormControl } from '@angular/forms';
 import { Tasks } from '@app/@core/models/program/task.model';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 
 @Component({
-  selector: 'app-mat-auto-complete',
-  templateUrl: './mat-auto-complete.component.html',
-  styleUrls: ['./mat-auto-complete.component.css'],
+  selector: 'app-auto-complete',
+  templateUrl: './auto-complete.component.html',
+  styleUrls: ['./auto-complete.component.css'],
   })
-export class MatAutoCompleteComponent implements OnInit {
+export class AutoCompleteComponent implements OnInit {
   @ViewChild('template', { static: true }) template: any;
   @Input() tasks: Tasks[] = [];
   @Input() value: string = '';
