@@ -6,12 +6,6 @@ import { TasksService } from '@app/features/admin/services/tasks.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize } from 'rxjs';
 
-/*
-ToDo:
-Break out into components
-cache tasks
-*/
-
 @Component({
   selector: 'app-tasks-list',
   templateUrl: './tasks-list.component.html',
@@ -163,7 +157,6 @@ export class TasksListComponent {
         this.selectedTask = null;
       }))
       .subscribe({
-        next: () => console.log('remove'),
         error: (err: Error) => console.log(err),
       })
     }

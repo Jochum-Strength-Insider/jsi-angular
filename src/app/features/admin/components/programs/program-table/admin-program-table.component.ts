@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { Day } from '@app/@core/models/program/day.model';
 import { Phase } from '@app/@core/models/program/phase.model';
 import { Program } from '@app/@core/models/program/program.model';
 import { Tasks } from '@app/@core/models/program/task.model';
 import { Workout } from '@app/@core/models/program/workout.model';
+import { mapWorkoutToPhases } from '@app/@core/utilities/programs.utilities';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
+import { AdminPhaseTableComponent } from '../phase-table/admin-phase-table.component';
 
 @Component({
   selector: 'app-admin-program-table',
@@ -12,6 +14,7 @@ import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
   styleUrls: ['./admin-program-table.component.css']
 })
 export class AdminProgramTableComponent implements OnInit, OnChanges {
+  @ViewChildren(AdminPhaseTableComponent) phaseTables: QueryList<AdminPhaseTableComponent>
   @Input() program: Workout | Program;
   @Input() uid: string;
   @Input() tasks: Tasks[] = [];
@@ -20,32 +23,15 @@ export class AdminProgramTableComponent implements OnInit, OnChanges {
   active = 0;
 
   ngOnInit(): void {
-    this.mapWorkoutToPhases(this.program);
+    this.phases = mapWorkoutToPhases(this.program);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    ifPropChanged(changes['program'], () => this.mapWorkoutToPhases(changes['program'].currentValue))
-  }
-
-  mapWorkoutToPhases(program: Workout | Program) {
-    const { instruction } = program;
-    const phasesList: string[] = Object.keys(program.instruction);
-    this.phases = phasesList.map((key: string) => {
-      const { completed, ...days } = instruction[key];
-      const daysArray: Day[] = Object.keys(days).map((key) => {
-          const { exercises, title, image } = days[key];
-          return ({
-            id: key,
-            title,
-            image,
-            exercises: JSON.parse(exercises)
-          });
-      });
-      return ({ title: key, days: daysArray })
-    });
+    ifPropChanged(changes['program'], () => this.phases = mapWorkoutToPhases(changes['program'].currentValue))
   }
 
   handleSavePhase(event: Phase){
+    console.log('programTable sae phase')
     this.savePhase.emit(event);
   }
 }

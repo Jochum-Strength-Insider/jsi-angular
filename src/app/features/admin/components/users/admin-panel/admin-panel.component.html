@@ -1,0 +1,187 @@
+<!-- Add User Modal -->
+<ng-template #addUserModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add User?</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <form class="form w-100 needs-validation"
+            [formGroup]="addUserForm"
+            id="addUserForm"
+            (ngSubmit)="addUser()"
+            novalidate
+            autocomplete="off">
+            <div class="form-group mb-3">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" formControlName="email" id="email" type="text" placeholder="Email Address" [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors, 'is-valid': f['email'].valid }" autocomplete="off"/>
+                <div *ngIf="f['email'].touched && f['email'].errors" class="invalid-feedback">
+                    <div *ngIf="f['email'].errors['required']">
+                        Email is required.
+                    </div>
+                    <div *ngIf="f['email'].errors['email']">
+                        Email isn't valid. Please enter a valid email.
+                    </div>
+                    <div *ngIf="f['email'].errors['userAccountAlreadyExists']">
+                        Email address already in use.
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" formControlName="username" id="username" type="text" placeholder="Username" [ngClass]="{ 'is-invalid': f['username'].touched && f['username'].errors, 'is-valid': f['username'].valid }" autocomplete="off"/>
+                
+                <div *ngIf="f['username'].touched && f['username'].errors" class="invalid-feedback">
+                    <div *ngIf="f['username'].errors['required']">
+                        Username is Required.
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <div class="d-flex justify-content-between">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="float-right show-pssw" (click)="showPassword = !showPassword">
+                        <i *ngIf="showPassword" class="fas fa-eye-slash"></i>
+                        <i *ngIf="!showPassword" class="fas fa-eye"></i>
+                    </div>
+                </div>
+                <input 
+                    class="form-control"
+                    id="password"
+                    formControlName="password"
+                    [type]="showPassword ? 'text' : 'password'"
+                    placeholder="Password"
+                    [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].errors, 'is-valid': f['password'].valid }"
+                    autocomplete="off"
+                />
+                <div *ngIf="f['password'].touched && f['password'].errors" class="invalid-feedback">
+                    <div *ngIf="f['password'].errors['required']">
+                        Password is required
+                    </div>
+                    <div *ngIf="f['password'].errors['minlength']">
+                        Password must be at least 7 characters long.
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="message">Welcome Message</label>
+                <textarea class="form-control" formControlName="message" id="message" type="text" placeholder="Message..."></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <button [disabled]="addUserForm.invalid" form="addUserForm" type="submit" class="btn btn-primary">Add User</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+    </div>
+</ng-template>
+
+<!-- Group Message Modal -->
+<ng-template #groupMessageModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Send Group Messages?</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="form">
+            <div class="form-group mb-3">
+                <label class="form-label">Send to these users?</label>
+                <select class="form-control">
+                    <option *ngFor="let user of selectedUsers; let first = first;" [selected]="first">{{user.username}}</option>
+                </select>
+            </div>
+        </div>
+        <hr />
+        <form #form class="form" id="messageForm" [formGroup]="messageForm" (ngSubmit)="sendGroupMessages()" autocomplete="off">
+            <div class="form-group mb-3">
+                <label for="message">Group Message</label>
+                <textarea class="form-control" formControlName="message" id="message" type="text" placeholder="Message..."></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <button [disabled]="!messageForm.valid" form="messageForm" type="submit" class="btn btn-primary">Send</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+    </div>
+</ng-template>
+
+<!-- Group Program Modal -->
+<ng-template #groupProgramModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add Group Program?</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <div class="form">
+            <div class="form-group mb-3">
+                <label class="form-label">Add program for these users?</label>
+                <select class="form-control">
+                    <option *ngFor="let user of selectedUsers; let first = first;" [selected]="first">{{user.username}}</option>
+                </select>
+            </div>
+        </div>
+        <hr />
+        <form class="form" id="programForm" [formGroup]="programForm" (ngSubmit)="setGroupPrograms()" autocomplete="off">
+            <div class="form-group mb-3">
+                <label class="form-label">Folders</label>
+                <select class="form-control" (change)="folderSelected($event.target)">
+                    <option value="all" selected>All</option>
+                    <option value="uncategorized">Uncategorized</option>
+                    <option *ngFor="let option of folders;" [value]="option.id">{{option.title}}</option>
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Program</label>
+                <select class="form-control" formControlName="programId" >
+                    <option value="" disabled selected>Select Program</option>
+                    <option *ngFor="let option of filteredProgramIds;" [value]="option.id">{{option.title}}</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <button [disabled]="!programForm.valid" form="programForm" type="submit" class="btn btn-outline-primary" >Set Programs</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+    </div>
+</ng-template>
+
+<mat-drawer-container class="sidenave-container">
+    <mat-drawer #drawer class="sidenav-drawer" [mode]="sideNavMode" opened (openedChange)="drawerOpenChanged($event)">
+        <div class="d-flex">
+            <div class="sidenav-drawer-content">
+                <app-users-list
+                    [users]="users"
+                    [currentUser]="currentUser"
+                    (userClicked)="handleSetUser($event)"
+                    (addUserClicked)="handleAddUserClicked()"
+                    (sendGroupMessagesClicked)="handleSendGroupMessagesClicked($event)"
+                    (setGroupProgramsClicked)="handleSetGroupProgramsClicked($event)">
+                </app-users-list>
+            </div>
+            <button type="button" class="sidenav-drawer-toggle drawer-nav" (click)="drawer.toggle()">
+                <div class="hamburger">
+                <div class="patty"></div>
+                <div class="patty"></div>
+                <div class="patty"></div>
+                </div>
+            </button>
+        </div>
+    </mat-drawer>
+  
+    <div class="sidenav-content">
+        <div class="d-flex drawer">
+            <button type="button" class="drawer-nav" (click)="drawer.toggle()">
+                <div class="hamburger">
+                  <div class="patty"></div>
+                  <div class="patty"></div>
+                  <div class="patty"></div>
+                </div>
+            </button>
+            <main class="drawer-main">
+                <div class="d-flex justify-content-center">
+                    <div class="contain-width">
+                        <router-outlet></router-outlet>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</mat-drawer-container>

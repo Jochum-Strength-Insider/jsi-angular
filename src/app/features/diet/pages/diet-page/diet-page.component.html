@@ -3,7 +3,7 @@
         <div class="contain-width mb-5">
             <div class="app-top">
                 <ng-container *ngIf="authUser$ | async as authUser">
-                    <app-diet-container [uid]="authUser.id"></app-diet-container>
+                    <app-diet-container [user]="authUser"></app-diet-container>
                 </ng-container>
             </div>
         </div>

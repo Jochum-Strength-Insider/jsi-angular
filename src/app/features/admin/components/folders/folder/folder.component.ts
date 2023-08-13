@@ -4,9 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Folder } from '@app/@core/models/program/folder.model';
 import { ProgramId } from '@app/@core/models/program/program-id.model';
 import { ToastService } from '@app/@core/services/toast.service';
-import { ProgramService } from '@app/features/admin/services/programs.service.';
+import { ProgramService } from '@app/features/admin/services/programs.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, finalize, forkJoin, map, of, switchMap, tap } from 'rxjs';
+import { Subscription, finalize, map, of, switchMap, tap } from 'rxjs';
 
 /*
 ToDo:
@@ -16,6 +16,9 @@ Move pagination into reusable component
 Add date added
 Add headers and basic sort
 */
+
+// Don't look up the programs by folder on demand. Just query all of the programs ids and use filters.
+// Then you can cache the program ids.
 
 @Component({
   selector: 'app-folders',
@@ -229,14 +232,13 @@ export class FolderComponent {
       return;
     }
     const title: string = this.programForm.controls['title'].value;
-    this.programService.createProgram(title, this.folderId)
+    this.programService.createDefaultProgram(title, this.folderId)
     .pipe(finalize(() => {
       this.modalService.dismissAll();
     }))
     .subscribe({
       next: () => {
         this.toastService.showSuccess();
-        console.log('add program')
       },
       error: (err: Error) => {
         this.toastService.showError();
@@ -274,7 +276,6 @@ export class FolderComponent {
       }))
       .subscribe({
         next: () => {
-          console.log('remove');
           this.selectedProgram = null;
         },
         error: (err: Error) => {

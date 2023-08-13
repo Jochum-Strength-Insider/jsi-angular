@@ -24,6 +24,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     ReactiveFormsModule,
     MessagesRoutingModule
+  ],
+  exports: [
+    MessagesContainerComponent
   ]
 })
 export class MessagesModule { }

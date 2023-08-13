@@ -113,9 +113,9 @@ export class AdminDayTableComponent implements OnInit, OnDestroy {
       Rest: [":00", Validators.required],
       Tempo: ["3-3-0", Validators.required],
       tracking: this.fb.group({
-        'week 1': [""],
-        'week 2': [""],
-        'week 3': [""],
+        'week 1': [{value: "", disabled: true}],
+        'week 2': [{value: "", disabled: true}],
+        'week 3': [{value: "", disabled: true}]
       })
     });
 

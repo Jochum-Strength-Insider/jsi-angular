@@ -71,6 +71,12 @@ export class DietService {
     return defer( () => updateRef.update({ meals: diet.meals, rating: diet.rating }));
   }
   
+  public removeUserDiets(uid: string): Observable<void> {
+    return defer( () => this.userDietsListRef(uid).remove())
+    .pipe(
+      switchMap(() => defer(() => this.userDietIdsListRef(uid).remove()))
+    )
+  }
 
   // // *** DietIds API ***
   

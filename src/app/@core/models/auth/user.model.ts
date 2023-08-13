@@ -1,11 +1,11 @@
 import { Message } from "../messages/message.model";
 
 export class User {
+    id: string;
     active: boolean;
     isAdmin: boolean;
     roles: string[];
     adminUnread: boolean;
-    id: string;
     createdAt: number;
     email: string;
     username: string;
@@ -15,3 +15,9 @@ export class User {
     ACTIVE: boolean;
     ADMIN: boolean;
 }
+
+export class UserWithSelection extends User {
+    checked?: boolean = false;
+}
+
+export type UserKeys = keyof User;

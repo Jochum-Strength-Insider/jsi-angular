@@ -150,8 +150,17 @@ table .vertical-align-center {
   opacity: 0.7;
 }
 
-@media (max-width: 576px) {
+.active-state-button {
+  width: 7rem;
+  text-align: center;
+}
 
+.header-button:hover {
+  cursor: pointer;
+  opacity: .7;
+} 
+
+@media (max-width: 576px) {
   h1,
   h2,
   h3,

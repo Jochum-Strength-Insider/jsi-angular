@@ -6,16 +6,6 @@ import { INITIAL_DATA_PHASE, INITIAL_DATA_RECOVERY, RECOVERY_KEY } from '@app/@c
 import { Tasks } from '@app/@core/models/program/task.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-// To Do
-
-// Need To
-
-// Cache tasks
-// Quick save
-
-// Should do
-// Clean Up
-// Clear everything when opening a day modal
 
 @Component({
   selector: 'app-admin-phase-table',
@@ -142,9 +132,9 @@ export class AdminPhaseTableComponent implements OnInit {
           Rest: [day.Rest, Validators.required],
           Tempo: [day.Tempo, Validators.required],
           tracking: this.fb.group({
-            'week 1': [""],
-            'week 2': [""],
-            'week 3': [""],
+            'week 1': [{value: day.tracking['week 1'], disabled: true}],
+            'week 2': [{value: day.tracking['week 2'], disabled: true}],
+            'week 3': [{value: day.tracking['week 3'], disabled: true}]
           })
         })
       )
@@ -168,7 +158,6 @@ export class AdminPhaseTableComponent implements OnInit {
   }
 
   removeSelectedDay() {
-    console.log('removeSelectedDay');
     if(this.selectedDayIndex !== null){
       this.daysArray.removeAt(this.selectedDayIndex);
       this.selectedDay = null;

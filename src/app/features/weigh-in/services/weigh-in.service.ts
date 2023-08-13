@@ -4,7 +4,7 @@ import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angula
 import { WeighIn } from '@app/@core/models/weigh-in/weigh-in.model';
 import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import * as moment from 'moment';
-import { BehaviorSubject, Observable, defer, first } from 'rxjs';
+import { BehaviorSubject, Observable, defer, first, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -59,5 +59,9 @@ export class WeighInService {
 
   addUserWeighIn(uid: string, weighIn: WeighIn): Observable<any> {
     return defer( () => this.userWeighInListRef(uid).push(weighIn))
+  }
+
+  public removeUserWeighIns(uid: string): Observable<void> {
+    return defer( () => this.userWeighInListRef(uid).remove())
   }
 }

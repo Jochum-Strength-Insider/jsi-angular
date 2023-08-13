@@ -1,16 +1,5 @@
 import { Exercise } from "./exercise.model";
-
-interface IInstruction {
-  [phase: string]:
-  {
-    [day: string]:
-    {
-      exercises: string;
-      image: string;
-      title: string;
-    };
-  }
-}
+import { IInstruction } from "./instructions.interface";
 
 export class Program {
     id?: string;
@@ -187,8 +176,62 @@ export const INITIAL_DATA_RECOVERY: Exercise[] = [
   },
 ];
 
+export const INITIAL_DATA_EMPTY: Exercise[] = [
+  {
+    Number: "1",
+    Description: "",
+    Link: "",
+    Sets: "",
+    Reps: "",
+    Tempo: "",
+    Rest: "",
+    tracking: { "week 1": "", "week 2": "", "week 3": "" },
+  },
+  {
+    Number: "2",
+    Description: "",
+    Link: "",
+    Sets: "",
+    Reps: "",
+    Tempo: "",
+    Rest: "",
+    tracking: { "week 1": "", "week 2": "", "week 3": "" },
+  },
+  {
+    Number: "3",
+    Description: "",
+    Link: "",
+    Sets: "",
+    Reps: "",
+    Tempo: "",
+    Rest: "",
+    tracking: { "week 1": "", "week 2": "", "week 3": "" },
+  },
+  {
+    Number: "4",
+    Description: "",
+    Link: "",
+    Sets: "",
+    Reps: "",
+    Tempo: "",
+    Rest: "",
+    tracking: { "week 1": "", "week 2": "", "week 3": "" },
+  },
+  {
+    Number: "5",
+    Description: "",
+    Link: "",
+    Sets: "",
+    Reps: "",
+    Tempo: "",
+    Rest: "",
+    tracking: { "week 1": "", "week 2": "", "week 3": "" },
+  },
+];
+
 export const INITIAL_JSON_PHASE = JSON.stringify(INITIAL_DATA_PHASE);
 export const INITIAL_JSON_RECOVERY = JSON.stringify(INITIAL_DATA_RECOVERY);
+export const INITIAL_JSON_EMPTY = JSON.stringify(INITIAL_DATA_EMPTY);
 
 export const PHASE_KEY = "Phase";
 export const RECOVERY_KEY = "Recovery Days";
@@ -196,49 +239,49 @@ export const RECOVERY_KEY = "Recovery Days";
 export const DEFAULT_PROGRAM = (title: string | null = null, parentFolderId: string | null = null): Program => {
   return {
     instruction: {
-      PHASE_KEY : {
+      [PHASE_KEY] : {
         "day 1": {
           title: "Max Effort Upper",
-          exercises: INITIAL_JSON_PHASE,
+          exercises: INITIAL_JSON_EMPTY,
           image: "max-upper",
         },
         "day 2": {
           title: "Max Effort Lower",
-          exercises: INITIAL_JSON_PHASE,
+          exercises: INITIAL_JSON_EMPTY,
           image: "max-lower",
         },
         "day 3": {
           title: "Dynamic Effort Upper",
-          exercises: INITIAL_JSON_PHASE,
+          exercises: INITIAL_JSON_EMPTY,
           image: "dynamic-upper",
         },
         "day 4": {
           title: "Dynamic Effort Lower Body",
-          exercises: INITIAL_JSON_PHASE,
+          exercises: INITIAL_JSON_EMPTY,
           image: "dynamic-lower",
         },
       },
-      RECOVERY_KEY: {
+      [RECOVERY_KEY]: {
         "day 1": {
           title: "Recovery Day 1",
-          exercises: INITIAL_JSON_RECOVERY,
+          exercises: INITIAL_JSON_EMPTY,
           image: "recovery-1",
         },
         "day 2": {
           title: "Recovery Day 2",
-          exercises: INITIAL_JSON_RECOVERY,
+          exercises: INITIAL_JSON_EMPTY,
           image: "recovery-2",
         },
         "day 3": {
           title: "Recovery Day 3",
-          exercises: INITIAL_JSON_RECOVERY,
+          exercises: INITIAL_JSON_EMPTY,
           image: "recovery-3",
         },
       },
     },
     createdAt: new Date().getTime(),
     title: title || "Default",
-    parentFolderId: parentFolderId || null,
+    parentFolderId: parentFolderId,
     notes: ""
   };
 };

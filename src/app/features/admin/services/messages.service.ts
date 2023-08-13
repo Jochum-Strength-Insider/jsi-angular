@@ -86,7 +86,7 @@ export class adminUnreadService {
 
   // unreadMessages = uid => this.db.ref(`unread/${uid}`);
   getUnreadMessages(uid: string): Observable<Message[]> {
-    return <Observable<Message[]>>this.db.list(`unread/${uid}`)
+    return this.db.list(`unread/${uid}`)
       .snapshotChanges()
       .pipe( mapKeysToObjectArrayOperator() );
   }

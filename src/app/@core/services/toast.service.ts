@@ -10,14 +10,12 @@ export class ToastService {
 		this.toasts.push({ textOrTpl, ...options });
 	}
 
-	showSuccess() {
-		const textOrTpl = 'Saved';
+	showSuccess(textOrTpl: string | TemplateRef<any> = 'Saved!') {
 		const options = { classname: 'bg-success text-light', delay: 2000 };
 		this.toasts.push({ textOrTpl, ...options });
 	}
 
-	showError() {
-		const textOrTpl = 'An Error Occured. Please try again.';
+	showError(textOrTpl: string | TemplateRef<any> = 'An Error Occured. Please try again.') {
 		const options = { classname: 'bg-danger text-light', delay: 5000 };
 		this.toasts.push({ textOrTpl, ...options });
 	}

@@ -27,6 +27,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     DietRoutingModule,
     NgbAccordionModule,
     NgbCollapseModule
+  ],
+  exports: [
+    DietContainerComponent
   ]
 })
 export class DietModule { }

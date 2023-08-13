@@ -12,7 +12,7 @@ import { CodesFormComponent } from './components/codes/codes-form/codes-form.com
 import { CodesComponent } from './components/codes/codes/codes.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TasksListComponent } from './components/tasks/tasks-list/tasks-list.component';
-import { NgbAccordionModule, NgbAlertModule, NgbCollapseModule, NgbNavModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbAlertModule, NgbCollapseModule, NgbDropdownModule, NgbNavModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminFoldersPageComponent } from './pages/admin-folders-page/admin-folders-page.component';
 import { AdminResourcesPageComponent } from './pages/admin-resources-page/admin-resources-page.component';
 import { FoldersComponent } from './components/folders/folders/folders.component';
@@ -22,7 +22,21 @@ import { AdminProgramTableComponent } from './components/programs/program-table/
 import { AdminPhaseTableComponent } from './components/programs/phase-table/admin-phase-table.component';
 import { AdminDayTableComponent } from './components/programs/day-table/admin-day-table.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { AutoCompleteComponent } from './components/programs/auto-complete/auto-complete.component';
+import { UsersListComponent } from './components/users/users-list/users-list.component';
+import { AdminPanelComponent } from './components/users/admin-panel/admin-panel.component';
+import { UserItemComponent } from './components/users/user-item/user-item.component';
+import { UserProfileComponent } from './components/users/user-profile/user-profile.component';
+import { UserProgramsListComponent } from './components/users/user-programs-list/user-programs-list.component';
+import { UserDietComponent } from './components/users/user-diet/user-diet.component';
+import { UserMessagesComponent } from './components/users/user-messages/user-messages.component';
+import { UserWeightComponent } from './components/users/user-weight/user-weight.component';
+import { UserProgramComponent } from './components/users/user-program/user-program.component';
+import { UserQuestionaireComponent } from './components/users/user-questionaire/user-questionaire.component';
+import { MessagesModule } from '../messages/messages.module';
+import { DietModule } from '../diet/diet.module';
+import { WeighInModule } from '../weigh-in/weigh-in.module';
 
 
 @NgModule({
@@ -46,7 +60,17 @@ import { AutoCompleteComponent } from './components/programs/auto-complete/auto-
     AdminProgramTableComponent,
     AdminPhaseTableComponent,
     AdminDayTableComponent,
-    AutoCompleteComponent
+    AutoCompleteComponent,
+    UsersListComponent,
+    AdminPanelComponent,
+    UserItemComponent,
+    UserProfileComponent,
+    UserProgramsListComponent,
+    UserDietComponent,
+    UserMessagesComponent,
+    UserWeightComponent,
+    UserProgramComponent,
+    UserQuestionaireComponent,
   ],
   imports: [
     CommonModule,
@@ -58,7 +82,12 @@ import { AutoCompleteComponent } from './components/programs/auto-complete/auto-
     NgbNavModule,
     NgbAccordionModule,
     NgbCollapseModule,
-    MatAutocompleteModule
+    NgbDropdownModule,
+    MatAutocompleteModule,
+    MatSidenavModule,
+    MessagesModule,
+    DietModule,
+    WeighInModule
   ]
 })
 export class AdminModule { }

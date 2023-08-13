@@ -18,10 +18,11 @@
                             [formGroup]="signupForm"
                             (ngSubmit)="infoStepSubmit()"
                             novalidate
+                            autocomplete="off"
                             >   
                             <div class="form-group mb-3">
-                                <label class="form-label">Email</label>
-                                <input class="form-control" formControlName="email" type="text" placeholder="Email Address" [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors, 'is-valid': f['email'].valid }"/>
+                                <label class="form-label" for="email">Email</label>
+                                <input class="form-control" formControlName="email" id="email" type="text" placeholder="Email Address" [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors, 'is-valid': f['email'].valid }"/>
 
                                 <div *ngIf="f['email'].touched && f['email'].errors" class="invalid-feedback">
                                     <div *ngIf="f['email'].errors['required']">
@@ -36,8 +37,8 @@
                                 </div>
                             </div>
                             <div class="form-group mb-3">
-                                <label class="form-label">Username</label>
-                                <input class="form-control" formControlName="username" type="text" placeholder="Username" [ngClass]="{ 'is-invalid': f['username'].touched && f['username'].errors, 'is-valid': f['username'].valid }"/>
+                                <label class="form-label" for="username">Username</label>
+                                <input class="form-control" formControlName="username" id="username" type="text" placeholder="Username" [ngClass]="{ 'is-invalid': f['username'].touched && f['username'].errors, 'is-valid': f['username'].valid }"/>
                                 
                                 <div *ngIf="f['username'].touched && f['username'].errors" class="invalid-feedback">
                                     <div *ngIf="f['username'].errors['required']">
@@ -47,7 +48,7 @@
                             </div>
                             <div class="form-group mb-3">
                                 <div class="d-flex justify-content-between">
-                                    <label class="form-label">Password</label>
+                                    <label class="form-label" for="password">Password</label>
                                     <div class="float-right show-pssw" (click)="showPassword = !showPassword">
                                         <i *ngIf="showPassword" class="fas fa-eye-slash"></i>
                                         <i *ngIf="!showPassword" class="fas fa-eye"></i>
@@ -55,6 +56,7 @@
                                 </div>
                                 <input 
                                     class="form-control"
+                                    id="password"
                                     formControlName="password"
                                     [type]="showPassword ? 'text' : 'password'"
                                     placeholder="Password"

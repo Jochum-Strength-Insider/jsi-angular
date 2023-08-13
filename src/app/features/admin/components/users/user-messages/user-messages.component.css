@@ -1,0 +1,6 @@
+.messages-max-height {
+    max-height: calc(100vh - 200px);
+    height: calc(100vh - 200px);
+    min-height: calc(100vh - 200px);
+    flex-basis: calc(100vh - 200px);
+}

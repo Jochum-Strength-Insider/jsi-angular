@@ -1,0 +1,83 @@
+<ng-template #clearMessagesModal let-modal>
+    <ng-container>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Clear All User Messages?</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body">
+            <p>
+                Are you sure you want to delete all messags with this user? This action cannot be undone.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100 d-flex justify-content-between">
+                <button type="button" class="btn btn-danger" (click)="clearUserMessages()">Clear Messages</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #clearDataModal let-modal>
+    <ng-container>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Clear All User Data?</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body">
+            <p>
+                Are you sure you want to delete all data for this user? This action cannot be undone.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100 d-flex justify-content-between">
+                <button type="button" class="btn btn-danger" (click)="clearUserData()">Delete Data</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<div class="list-group mb-5">
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <strong>Username:</strong> {{user.username}}
+        </div>
+        <buton
+            class="btn"
+            type="button"
+            (click)="toggleUserIsActive()"
+            [ngClass]="user.ACTIVE ? 'btn-danger' : 'btn-success'"
+        >
+            {{ user.ACTIVE ? 'Deactivate' : 'Activate' }}
+        </buton>
+    </div>
+    <div class="list-group-item no-top-border"><strong>E-Mail:</strong> {{ user.email }}</div>
+    <div class="list-group-item"><strong>Member Since:</strong> {{ user.createdAt | date }}</div>
+    <div class="list-group-item"><strong>Last Program:</strong> {{ user.programDate | date }}</div>
+    <div class="list-group-item">
+        <button
+            class="btn btn-outline-primary"
+            type="button"
+            (click)="sendPasswordReset()"
+        >
+            Send Password Reset
+        </button>
+    </div>
+    <div class="list-group-item">
+        <button
+            class="btn btn-danger me-2"
+            type="button"
+            (click)="handleOpenModal(clearMessagesModal)"
+        >
+            Clear Messages
+        </button>
+        <button
+            type="button"
+            class="btn btn-danger"
+            (click)="handleOpenModal(clearDataModal)"
+        >
+            Clear Data
+        </button>
+    </div>
+</div>

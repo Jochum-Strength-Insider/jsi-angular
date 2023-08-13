@@ -9,6 +9,9 @@ import { AdminResourcesPageComponent } from './pages/admin-resources-page/admin-
 import { FolderComponent } from './components/folders/folder/folder.component';
 import { FoldersComponent } from './components/folders/folders/folders.component';
 import { AdminProgramComponent } from './components/programs/program/admin-program.component';
+import { UserItemComponent } from './components/users/user-item/user-item.component';
+import { UserProgramComponent } from './components/users/user-program/user-program.component';
+import { UserQuestionaireComponent } from './components/users/user-questionaire/user-questionaire.component';
 
 /* 
 ToDo:
@@ -26,12 +29,24 @@ https://insider.jochumstrength.com/create-program/-MazAMPfeXylS_yKOncr
 
 
 const routes: Routes = [
-  { path: 'users', component: AdminUsersPageComponent },
+  {
+    path: 'users',
+    component: AdminUsersPageComponent,
+    children: [
+      {
+        path: ':uid', component: UserItemComponent,
+      },
+    ]
+  },
+  {
+    path: 'users/:uid/program/:pid',
+    component: UserProgramComponent,
+  },
   {
     path: 'programs',
     component: AdminProgramsPageComponent,
     children: [
-      {path: ':id', component: AdminProgramComponent },
+      { path: ':pid', component: AdminProgramComponent },
     ]
   },
   {
@@ -48,51 +63,6 @@ const routes: Routes = [
   { path: 'codes', component: AdminCodesPageComponent },
   { path: 'resources', component: AdminResourcesPageComponent },
 ];
-
-  // {
-  //   path: 'home',
-  //   component: homeComponent,
-  //   children: [
-  //     {
-  //       path: 'module1',
-  //       component: module1Component,
-  //       children: [
-  //         {
-  //           path: 'submodule11',
-  //           component: submodule11Component,
-  //         },
-  //         {
-  //           path: '',
-  //           redirectTo: 'submodule11',
-  //           pathMatch: 'full'
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       path: 'module2',
-  //       component: module2omponent,
-  //       children: [
-  //         {
-  //           path: 'submodule21',
-  //           component: submodule21Component,
-  //         },
-  //         {
-  //           path: '',
-  //           redirectTo: 'submodule21',
-  //           pathMatch: 'full'
-  //         }
-  //       ]
-  //     }
-  //   ]
-  // },
-
-// <Route path={ROUTES.ADMIN} component={AdminPage} />
-// <Route path={ROUTES.CREATE_PROGRAM} component={CreateProgram} />
-// <Route path={ROUTES.CREATE_TASK} component={CreateTask} />
-// <Route path={ROUTES.CREATE_CODE} component={CreateCodes} />
-
-// <Route path={ROUTES.ADMIN_MESSAGES} component={AdminChat} />
-// <Route path={ROUTES.WORKOUTS} component={AdminUserProgramsPage} />
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

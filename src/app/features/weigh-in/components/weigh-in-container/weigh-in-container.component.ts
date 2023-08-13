@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WeighIn } from '@app/@core/models/weigh-in/weigh-in.model';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
@@ -6,17 +6,20 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { Subscription, delay, finalize } from 'rxjs';
 import { WeighInService } from '../../services/weigh-in.service';
+import { User } from '@app/@core/models/auth/user.model';
+import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 
 @Component({
   selector: 'app-weigh-in-container',
   templateUrl: './weigh-in-container.component.html',
   styleUrls: ['./weigh-in-container.component.css']
 })
-export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() uid: string;
-  @Input() isAdmin: boolean = false;
+export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+  @Input() user: User;
+  @Input() adminUser: User | null = null;
   @Output() showAddModal = new EventEmitter();
   @ViewChild('addModal') addModal: any;
+
   weignInSub: Subscription;
   mostRecentSub: Subscription;
   weighIns: WeighIn[] = [];
@@ -28,6 +31,7 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
   showModal: boolean = false;
   alreadyCheckedIn: boolean = false;
   isCollapsed: boolean = true;
+  chartTitle: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -38,6 +42,7 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
 
   ngOnInit(): void {
     this.getWeighIns();
+    this.setChartTitle(this.queryDate.getTime());
 
     this.weightForm = this.fb.group({
       weight: [{value: 180, disabled: false}, [
@@ -50,7 +55,44 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngAfterViewInit(){
-    this.mostRecentSub = this.weighInService.getMostRecentUserWeighIn(this.uid)
+    if(this.adminUser === null) {
+      this.getMostRecentWeighIn();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    ifPropChanged( changes['user'], () => {
+      this.getWeighIns();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.weignInSub?.unsubscribe();
+    this.mostRecentSub?.unsubscribe();
+  }
+
+  get weight() {
+    return this.weightForm.get('weight');
+  }
+
+  getWeighIns(){
+    this.weignInSub = this.weighInService
+      .getWeighInsByMonthAndUser(this.user.id, this.queryDate)
+      .subscribe({
+        next: result => {
+          this.weighIns = result;
+        },
+        error: error => {
+          this.error = error;
+          this.clearWeighIns();
+        }
+      })
+
+    this.checkIsCurrentMonth();
+  }
+
+  getMostRecentWeighIn(): void {
+    this.mostRecentSub = this.weighInService.getMostRecentUserWeighIn(this.user.id)
     .pipe(delay(500))
     .subscribe({
       next: (weighIns: WeighIn[]) => {
@@ -80,26 +122,6 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
     })
   }
 
-  get weight() {
-    return this.weightForm.get('weight');
-  }
-
-  getWeighIns(){
-    this.weignInSub = this.weighInService
-      .getWeighInsByMonthAndUser(this.uid, this.queryDate)
-      .subscribe({
-        next: result => {
-          this.weighIns = result;
-        },
-        error: error => {
-          this.error = error;
-          this.clearWeighIns();
-        }
-      })
-
-    this.checkIsCurrentMonth();
-  }
-
   openAddModal(content: any) {
     this.modalService.open(content, {
       size: 'lg',
@@ -114,11 +136,12 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   addWeighIn() {
-    if(this.weightForm.invalid) {
+    if(this.weightForm.invalid || this.adminUser !== null) {
       return;
     }
+
     const weighIn = new WeighIn(this.currentDate.getTime(), this.weight?.value);
-    this.weighInService.addUserWeighIn(this.uid, weighIn)
+    this.weighInService.addUserWeighIn(this.user.id, weighIn)
       .pipe(finalize(() => this.modalService.dismissAll()))
       .subscribe({
         next: () => {
@@ -133,6 +156,7 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
 
   handleChangeQueryDate(date: number) {
     this.queryDate = new Date(date);
+    this.setChartTitle(date);
     this.getWeighIns();
   }
 
@@ -142,8 +166,7 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
     this.isCurrentMonth = startOfMonth === startOfQuery;
   }
 
-  ngOnDestroy(): void {
-    this.weignInSub.unsubscribe();
-    this.mostRecentSub.unsubscribe();
+  setChartTitle(date: number) {
+    this.chartTitle = moment(date).format('MMMM YYYY');
   }
 }
