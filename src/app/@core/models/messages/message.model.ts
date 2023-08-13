@@ -7,7 +7,7 @@ export class Message {
 
     constructor(text: string, userId: string, username: string){
       this.createdAt = new Date().getTime();
-      this.text = text;
+      this.text = text.trim();
       this.userId = userId;
       this.username = username;
     }

@@ -34,15 +34,17 @@
 	</div>
 </ng-template>
 
+<h3 *ngIf="!adminUser" class="text-center text-light">{{ chartTitle }}</h3>
 <app-weight-chart [weighIns]="weighIns"></app-weight-chart>
+
 <div class="list-group mt-3">
     <div class="list-group-item">
         <app-month-circles [queryDate]="queryDate" (queryDateChanged)="handleChangeQueryDate($event)"></app-month-circles>
     </div>
     <ng-container *ngIf="weighIns.length > 0; else noWeighIns">
         <div *ngFor="let item of weighIns;" class="list-group-item d-flex justify-content-between">
-            <div>{{item.date | date:'fullDate'}}</div>
-            <div><b>{{item.weight}}lbs</b></div>
+            <div>{{ item.date | date:'fullDate' }}</div>
+            <div><b>{{ item.weight }}lbs</b></div>
         </div>
     </ng-container>
     <ng-template #noWeighIns>
@@ -50,7 +52,7 @@
             No Weigh Ins This Month
         </div>
     </ng-template>
-    <div *ngIf="!isAdmin" class="list-group-item d-flex justify-content-center">
+    <div *ngIf="!adminUser" class="list-group-item d-flex justify-content-center">
         <button [disabled]="!isCurrentMonth" class="py-2 weigh-button btn btn-primary" variant="primary" (click)="openAddModal(addModal)">+ Weigh In</button>
     </div>
 </div>

@@ -15,6 +15,7 @@ interface IDateCircle {
 })
 export class DietDateCirclesComponent {
   @Input() queryDate: Date;
+  @Input() isAdmin: boolean = false;
   @Output() queryDateChanged = new EventEmitter<{check: boolean; date: number}>();
   currentDate: Date = new Date();
   daysOfWeek: IDateCircle[] = [];

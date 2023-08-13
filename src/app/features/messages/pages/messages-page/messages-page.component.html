@@ -2,9 +2,9 @@
     <div class="d-flex justify-content-center">
         <div class="contain-width">
             <div class="app-top">
-                <ng-container *ngIf="authUser$ | async as authUser">
-                    <app-messages-container [uid]="authUser.id" [username]="authUser.username" [isAdmin]="false"></app-messages-container>
-                </ng-container>
+                <div class="messages-max-height" *ngIf="authUser$ | async as authUser">
+                    <app-messages-container [user]="authUser"></app-messages-container>
+                </div>
             </div>
         </div>
     </div>

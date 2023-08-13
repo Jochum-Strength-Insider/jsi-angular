@@ -66,6 +66,10 @@ export class MessageService {
     return defer( () => this.userMessageObjectRef(uid, message.id).remove());
   }
 
+  public removeUserMessages(uid: string): Observable<void> {
+    return defer( () => this.userMessagesListRef(uid).remove())
+  }
+
   // *** AdminUnreadMessage API ***
 
   adminUnreadListRef(): AngularFireList<Message> {

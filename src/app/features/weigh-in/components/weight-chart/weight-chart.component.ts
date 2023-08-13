@@ -1,9 +1,12 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
 import { WeighIn } from '@app/@core/models/weigh-in/weigh-in.model';
+import { ResizeService } from '@app/@core/services/resize.service';
+import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-moment';
 import * as moment from 'moment';
-import { Observable, Subscription, debounceTime, fromEvent } from 'rxjs';
+import { Subscription, debounceTime, delay, fromEvent } from 'rxjs';
+import { DATASET_OPTIONS, GRID_COLOR, TICK_COLOR } from './chart-options';
 Chart.register(...registerables);
 
 @Component({
@@ -11,64 +14,65 @@ Chart.register(...registerables);
   templateUrl: './weight-chart.component.html',
   styleUrls: ['./weight-chart.component.css']
 })
-export class WeightChartComponent implements OnInit, OnChanges, OnDestroy {
+export class WeightChartComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() weighIns: WeighIn[] = [];
+  @ViewChild('container') container: ElementRef;
+
   currentDate: Date = new Date();
   chart: Chart;
   month: Date;
   startOf: Date;
   endOf: Date;
-  chartTitle: string;
   defaultWeight: number = 180;
-
-  dataSetOptions = {
-    label: 'Weight',
-    fill: true,
-    lineTension: 0.2,
-    backgroundColor: 'rgb(255,255,255, 0.1)',
-    borderColor: 'white',
-    borderWidth: 2,
-    pointBorderColor: 'white',
-    pointBackgroundColor: '#a76884',
-    pointBorderWidth: 1,
-    pointHoverRadius: 5,
-    pointHoverBorderWidth: 2,
-    pointRadius: 5,
-    pointHitRadius: 10,
-  }
-
-  resizeObservable$: Observable<Event>;
   resizeSubscription$: Subscription;
+  panelSubscription$: Subscription;
+
+  constructor(
+    private renderer: Renderer2,
+    private resizeService: ResizeService
+  ) {}
 
   ngOnInit(): void {
-    this.chartTitle = moment().format('MMMM YYYY');
-    this.resizeObservable$ = fromEvent(window, 'resize')
-    this.resizeSubscription$ = this.resizeObservable$
+    this.resizeSubscription$ = fromEvent(window, 'resize')
       .pipe(debounceTime(200))
       .subscribe(() => {
         this.chart.resize();
       })
 
-    this.setConfig();
+    this.panelSubscription$ = this.resizeService.adminPanel$
+      .pipe(delay(0))
+      .subscribe(() => {
+        this.chart.resize();
+      })
+  }
+
+  ngAfterViewInit(): void {
+    this.createCanvas();
+    this.initChart();
+  }
+
+  ngOnDestroy() {
+    this.resizeSubscription$?.unsubscribe();
+    this.panelSubscription$?.unsubscribe();
+    this.chart?.destroy();
+    this.container?.nativeElement.remove();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const weighIns = changes['weighIns'].currentValue as WeighIn[];
-    if (!weighIns) {
-      return;
-    }
-
-    if (weighIns.length > 0) {
-      this.updateChartWeighIns(weighIns);
-    } else {
-      this.clearChart();
-    }
+    ifPropChanged(changes['weighIns'], (weighIns: WeighIn[]) =>  {
+      if (!weighIns) {
+        return;
+      }
+  
+      if (weighIns.length > 0) {
+        this.updateChartWeighIns(weighIns);
+      } else {
+        this.clearChart();
+      }
+    })
   }
 
-  setConfig(): any {
-    const gridColor = "rgba(255, 255, 255, 0.100)";
-    const tickColor = "white";
-
+  initChart(): any {
     const weights = this.weighIns.length > 0 ? this.weighIns.map(x => x.weight) : [this.defaultWeight];
     const days = this.weighIns.map(x => moment(x.date));
 
@@ -83,7 +87,7 @@ export class WeightChartComponent implements OnInit, OnChanges, OnDestroy {
       data: {
         labels: days,
         datasets: [{
-          ...this.dataSetOptions,
+          ...DATASET_OPTIONS,
           data: weights,
         }]
       },
@@ -130,17 +134,17 @@ export class WeightChartComponent implements OnInit, OnChanges, OnDestroy {
                 }
               },
               stepSize: 5,
-              color: tickColor,
+              color: TICK_COLOR,
             },
             grid: {
-              color: gridColor
+              color: GRID_COLOR
             }
           },
           x: {
             title: {
               display: true,
               text: 'Date',
-              color: tickColor,
+              color: TICK_COLOR,
             },
             type: 'time',
             time: {
@@ -154,11 +158,11 @@ export class WeightChartComponent implements OnInit, OnChanges, OnDestroy {
             suggestedMax: startOf,
             suggestedMin: endOf,
             ticks: {
-              color: tickColor,
+              color: TICK_COLOR,
               stepSize: 1,
             },
             grid: {
-              color: gridColor
+              color: GRID_COLOR
             },
           },
         },
@@ -168,11 +172,13 @@ export class WeightChartComponent implements OnInit, OnChanges, OnDestroy {
 
   updateChartWeighIns(weighIns: WeighIn[]) {
     this.clearChart();
-    this.chart.data.labels = weighIns.map(w => w.date);
-    this.chart.data.datasets.forEach((dataset) => {
-      dataset.data = weighIns.map(w => w.weight);
-    });
-    this.chart.update();
+    if(this.chart){
+      this.chart.data.labels = weighIns.map(w => w.date);
+      this.chart.data.datasets.forEach((dataset) => {
+        dataset.data = weighIns.map(w => w.weight);
+      });
+      this.chart.update();
+    }
   }
 
   clearChart() {
@@ -186,13 +192,17 @@ export class WeightChartComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   removeData() {
-    this.chart.data?.labels?.pop();
-    this.chart.data.datasets.forEach((dataset) => {
-      dataset.data.pop();
-    });
+    if(this.chart){
+      this.chart.data?.labels?.pop();
+      this.chart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+      });
+    }
   }
 
-  ngOnDestroy() {
-    this.resizeSubscription$.unsubscribe()
+  createCanvas(){
+    let canvas = this.renderer.createElement('canvas');
+    canvas.id = 'WeightChart';
+    this.container.nativeElement.appendChild(canvas);
   }
 }

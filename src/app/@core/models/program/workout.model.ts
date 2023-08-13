@@ -1,20 +1,10 @@
-interface IInstruction {
-  [phase: string]:
-  {
-    [day: string]:
-    {
-      exercises: string;
-      image: string;
-      title: string;
-    };
-  }
-}
+import { IInstruction } from "./instructions.interface";
 
 export class Workout {
     id: string;
     createdAt: number;
     instruction: IInstruction;
-    completed: boolean;
+    completed: boolean = false;
     title: string;
     notes: string;
   }

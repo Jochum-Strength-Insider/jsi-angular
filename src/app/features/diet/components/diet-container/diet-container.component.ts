@@ -1,9 +1,11 @@
 import { formatDate } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { User } from '@app/@core/models/auth/user.model';
 import { DietId } from '@app/@core/models/diet/diet-id.model';
 import { Diet } from '@app/@core/models/diet/diet.model';
 import { ToastService } from '@app/@core/services/toast.service';
+import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { NgbAccordionDirective, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize, tap, timer } from 'rxjs';
 import { DietService } from '../../services/diet.service';
@@ -13,10 +15,9 @@ import { DietService } from '../../services/diet.service';
   templateUrl: './diet-container.component.html',
   styleUrls: ['./diet-container.component.css']
 })
-export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() uid : string;
-  @Input() isAdmin: boolean = false;
-  @Output() showAddModal = new EventEmitter();
+export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+  @Input() user: User;
+  @Input() adminUser: User | null = null;
   @ViewChild('addModal') addModal: any;
   @ViewChild('accordion') accItem: NgbAccordionDirective;
   @ViewChildren('panel') panels: QueryList<ElementRef>;
@@ -57,13 +58,22 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngAfterViewInit(): void {
-    this.timerSub = timer(1000).subscribe(() => this.checkDietSheet());
+    if(!this.adminUser){
+      this.timerSub = timer(1000).subscribe(() => this.checkDietSheet());
+    }
   }
 
   ngOnDestroy(): void {
     this.dietSub?.unsubscribe();
     this.mostRecentSub?.unsubscribe();
     this.timerSub?.unsubscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    ifPropChanged(changes['user'], () => {
+      this.checkIns = [];
+      this.fetchDiets();
+    })
   }
 
   get date() {
@@ -76,7 +86,7 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     
     if(this.date?.value){
-      this.dietService.addUserDietSheet(this.uid, this.date.value)
+      this.dietService.addUserDietSheet(this.user.id, this.date.value)
         .pipe(finalize(() => this.modalService.dismissAll()))
         .subscribe({
           next: (dietId) => {
@@ -109,7 +119,7 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   fetchDiets() {
-    this.dietSub = this.dietService.getUserDietsForWeekByDate(this.uid, this.queryDate)
+    this.dietSub = this.dietService.getUserDietsForWeekByDate(this.user.id, this.queryDate)
     .pipe(
       tap((diets: Diet[]) =>
           diets.forEach(diet =>
@@ -145,7 +155,7 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   checkDietSheet() {
-    this.dietService.getUserDietIdByDate(this.uid, this.queryDate)
+    this.dietService.getUserDietIdByDate(this.user.id, this.queryDate)
     .subscribe(checkedIn => {
       if(checkedIn){
         this.addDietIdToCheckIns(checkedIn);
@@ -159,8 +169,7 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   handleSaveDiet(diet: Diet){
-    console.log('handleSaveDiet');
-    this.dietService.saveUserDiet(this.uid, diet)
+    this.dietService.saveUserDiet(this.user.id, diet)
     .subscribe({
       next: () => {
         this.toastService.showSuccess();

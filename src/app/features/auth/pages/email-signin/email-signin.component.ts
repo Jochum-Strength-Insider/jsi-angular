@@ -28,7 +28,6 @@ export class EmailSigninComponent {
     });
     
     if (this.auth.getIsSignInWithEmailLink()) {
-      console.log('getIsSignInWithEmailLink')
         var email: string | null = this.localStorage.getData("emailForSignIn");
         if (!email) {
           email = window.prompt('Please provide your email for confirmation');

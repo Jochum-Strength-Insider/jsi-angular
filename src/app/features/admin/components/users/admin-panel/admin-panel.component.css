@@ -1,0 +1,94 @@
+.sidenav-container {
+    position: absolute;
+    top: 66px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+.sidenav-content {
+    height: 100%;
+    width: 100%;
+}
+
+mat-sidenav,
+.sidenav-drawer {
+    width: 300px;
+}
+
+.sidenav-drawer .drawer-nav {
+   display: none;
+}
+
+.sidenav-drawer .sidenav-drawer-content {
+   flex: 1 1 0;
+}
+
+@media screen and (max-width: 768px) {
+   .sidenav-drawer .drawer-nav {
+      display: block;
+   }
+ 
+  .sidenav-drawer,
+   mat-sidenav {
+      /* width: calc(100vw - 44px); */
+      width: 100vw;
+   }
+}
+
+.mat-drawer-container {
+    background: unset;
+}
+
+.drawer main {
+   height: calc(100vh - 66px);
+   flex: 1 1 0;
+
+   padding-right: 1rem;
+   padding-left: 1rem;
+   padding-bottom: 1rem;
+   overflow-y: scroll;
+}
+
+.drawer main::-webkit-scrollbar {
+   width: 6px;
+}
+
+.drawer main {
+   scrollbar-width: thin;
+   scrollbar-color: white rgba(255, 255, 255, 0);
+}
+
+.drawer main::-webkit-scrollbar-track {
+   background: rgba(255, 255, 255, 0);
+}
+
+.drawer main::-webkit-scrollbar-thumb {
+   background-color: white;
+   border-radius: 6px;
+}
+
+.drawer-nav {
+    background-color: rgb(18,15,16);
+    height: calc(100vh - 66px);
+    border: none;
+    padding: 0px;
+ }
+
+ .drawer-nav:focus-visible {
+    outline: var(--js-purple) inset 2px;
+ }
+ 
+ .hamburger {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+ }
+ 
+ .patty {
+    width: 25px;
+    height: 2px;
+    background-color: white;
+    margin-bottom: 6px;
+ }
+ 

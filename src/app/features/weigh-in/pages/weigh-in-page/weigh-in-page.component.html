@@ -3,7 +3,7 @@
         <div class="contain-width mb-5">
             <div class="app-top">
                 <ng-container *ngIf="authUser$ | async as authUser">
-                    <app-weigh-in-container [uid]="authUser.id" [isAdmin]="false"></app-weigh-in-container>
+                    <app-weigh-in-container [user]="authUser"></app-weigh-in-container>
                 </ng-container>
             </div>
         </div>

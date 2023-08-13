@@ -106,7 +106,7 @@
     <ng-container *ngIf="filteredCodes.length > 0; else noCodes;">
         <div *ngFor="let code of filteredCodes; let i = index;" class="list-group-item d-flex justify-content-between">
             <span class="d-flex align-items-center">
-                <strong class="me-2">{{code.title}}</strong>
+                <strong class="me-2">Code:</strong> {{code.title}}
             </span>
             <span>
                 <button class="btn active-state-button me-3" [ngClass]="code.active ? 'btn-outline-warning' : 'btn-outline-success'" (click)="toggleCodeIsActive(code)">

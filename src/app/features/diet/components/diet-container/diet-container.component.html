@@ -22,9 +22,9 @@
 </ng-template>
 
 <div class="card date-select-card">
-    <img class="card-img-top" src="../../../../assets/images/diet.jpg" />
+    <img *ngIf="!adminUser" class="card-img-top" src="../../../../assets/images/diet.jpg" />
     <div class="card-body">
-        <app-diet-date-circles [queryDate]="queryDate" (queryDateChanged)="handleChangeQueryDate($event)"></app-diet-date-circles>
+        <app-diet-date-circles [queryDate]="queryDate" [isAdmin]="adminUser !== null" (queryDateChanged)="handleChangeQueryDate($event)"></app-diet-date-circles>
     </div>
 </div>
 
@@ -46,7 +46,7 @@
         <div ngbAccordionCollapse class="accordion-collapse card-collapse">
             <div ngbAccordionBody >
                 <ng-template>
-                    <app-diet-form-row [diet]="diet" (saveDiet)="handleSaveDiet($event)"></app-diet-form-row>
+                    <app-diet-form-row [diet]="diet" [isAdmin]="adminUser !== null" (saveDiet)="handleSaveDiet($event)"></app-diet-form-row>
                 </ng-template>
             </div>
         </div>

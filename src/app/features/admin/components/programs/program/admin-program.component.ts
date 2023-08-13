@@ -1,21 +1,18 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { User } from '@app/@core/models/auth/user.model';
 import { Folder } from '@app/@core/models/program/folder.model';
 import { Phase } from '@app/@core/models/program/phase.model';
 import { Program } from '@app/@core/models/program/program.model';
 import { INITIAL_TASKS, Tasks } from '@app/@core/models/program/task.model';
 import { ToastService } from '@app/@core/services/toast.service';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
-import { FOLDERS_STRING, ProgramService } from '@app/features/admin/services/programs.service.';
+import { FOLDERS_STRING, ProgramService } from '@app/features/admin/services/programs.service';
 import { TASKS_STRING, TasksService } from '@app/features/admin/services/tasks.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, finalize, first, of, switchMap, tap } from 'rxjs';
+import { Subscription, finalize, first, of, switchMap } from 'rxjs';
 
-/*
-ToDo:
-Need to cache folders
-*/
 
 @Component({
   selector: 'app-admin-program',
@@ -23,6 +20,9 @@ Need to cache folders
   styleUrls: ['./admin-program.component.css']
 })
 export class AdminProgramComponent {
+  @Input() adminUser: User | null = null;
+  @Input() user: User | null = null;
+  uid: string = "";
   programSub: Subscription;
   foldersSub: Subscription;
   tasksSub: Subscription;
@@ -31,7 +31,6 @@ export class AdminProgramComponent {
   dayForm: FormGroup;
   foldersList: Folder[] = [];
   tasksList: Tasks[] = INITIAL_TASKS;
-  uid: string;
 
   @ViewChild('editProgramModal') editProgramModal: any;
   @ViewChild('editDayModal') editDayModal: any;
@@ -61,7 +60,7 @@ export class AdminProgramComponent {
     this.programSub = this.route.paramMap
       .pipe(
         switchMap((params) => {
-          const pid = params.get('id');
+          const pid = params.get('pid');
           if(pid){
             return this.programService
               .getProgram(pid)
@@ -173,7 +172,6 @@ export class AdminProgramComponent {
     const title = this.f['title'].value;
     const folderValue: string = this.f['folder'].value;
     const folder = folderValue.length > 0 ? folderValue : null;
-    console.log('updateProgram', title, folder);
     if(this.program && this.program.id && title){
       this.programService.updateProgramFolderAndTitle(this.program.id, title, folder)
       .pipe(
@@ -181,6 +179,7 @@ export class AdminProgramComponent {
       )
       .subscribe({
         next: () => {
+          this.program.title = title;
           this.toastService.showSuccess();
         },
         error: (err) => {
@@ -204,30 +203,4 @@ export class AdminProgramComponent {
       })
     }
   }
-
-  // <CreateProgramTable onSave={this.onSave} tasks={tasks} program={program} pid={pid} uid={uid} />
-  // onSave = (phase, phaseUpdate) => {
-  // const { firebase } = this.props;
-  // const { pid } = this.state;
-
-  // return firebase
-  //     .program(pid)
-  //     .child("instruction")
-  //     .child(phase)
-  //     .set(phaseUpdate)
-  // }
-
-  // Create Program Table
-  //   <Tabs fill defaultActiveKey={phasesList[0]} className="dark-tab">
-  //   {phasesList.map((key, index) => {
-  //      const { completed, ...days } = tablesList[key];
-  //      const phaseTitle = key.charAt(0).toUpperCase() + key.substring(1);
-  //      return (
-  //         <Tab eventKey={key} title={phaseTitle} key={key}>
-  //            <ExpandableTable onSave={onSave} tasks={tasks} days={days} phase={key} key={key} pid={pid} showTracking={false} />
-  //         </Tab>
-  //      )
-  //   })}
-  // </Tabs>
-
 }

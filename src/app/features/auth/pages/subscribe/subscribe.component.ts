@@ -14,6 +14,9 @@ import { Subscription, combineLatestWith, filter } from 'rxjs';
   styleUrls: ['./subscribe.component.css']
 })
 export class SubscribeComponent implements OnInit, OnDestroy {
+  // TO DO: Don't pull all of the codes.
+  // Set up an api call to check if the code exists in the codes array on demand. 
+  
   @Input() step: number = 2;
   showPassword: boolean = false;
   signupForm: FormGroup;
@@ -60,10 +63,8 @@ export class SubscribeComponent implements OnInit, OnDestroy {
       this.referral = params['referral'];
       const promoCode = params['promo'];
       if(promoCode){
-        console.log('params', params);
         this.handleApplyPromo(promoCode);
       }
-      console.log('codes', codes);
     })
     
     // this.paramsSub = this.route.queryParams

@@ -1,9 +1,7 @@
 .messages {
-    max-height: calc(100vh - 99px);
-    height: calc(100vh - 99px);
-    min-height: calc(100vh - 99px);
     display: flex;
     flex-direction: column;
+    height: 100%;
  }
  
  .messageContainer {

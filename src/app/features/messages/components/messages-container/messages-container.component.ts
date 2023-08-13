@@ -1,13 +1,10 @@
 import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
-import { BehaviorSubject, Subject, Subscription, delay, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, map, of, switchMap } from 'rxjs';
 import { MessageService } from '../../services/message.service';
 
-/* 
-TODO:
-- Will need to test admin logic for sending
-*/ 
 
 @Component({
   selector: 'app-messages-container',
@@ -15,10 +12,8 @@ TODO:
   styleUrls: ['./messages-container.component.css']
 })
 export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() uid : string;
-  @Input() username : string;
-  @Input() isAdmin: boolean = false;
-  @Input() adminId: string;
+  @Input() user: User;
+  @Input() adminUser: User | null = null;
 
   @ViewChild('scrollContain') scrollContain: ElementRef;
   @ViewChild('scrollBottom') scrollBottom: ElementRef;
@@ -29,89 +24,108 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
   messages: Message[] = [];
   messageDates: number[] = [];
 
-  messageSubject = new Subject<Message[]>();
-
   messagesSub: Subscription;
   currentlyMessagingSub: Subscription;
-  scrollSub: Subscription;
+  messagesLoadedSubject = new Subject<boolean>();
+  initialLoad: boolean = true;
+  scrollSubscription: Subscription;
+  scrollDelay: number = 0;
 
   currentlyMessaging: boolean = false;
   error: Error | null;
 
   scroll: boolean = true;
+
   firstDate: number;
   firstDateNotIncluded: boolean = false;
   enoughMessages: boolean = false;
 
   loading: boolean = false;
-  initialLoad: boolean = true;
 
   constructor(
     private messageService: MessageService
   ){}
 
   ngOnInit(): void {
-    this.listenForMessages();
-    if(this.isAdmin) {
+    if(this.adminUser) {
+      // Delay to keep scroll in sync with admin tabs animation
+      this.scrollDelay = 150;
       this.setCurrentlyMessaging();
     } else {
+      this.listenForMessages();
       this.currentlyMessagingSub = this.messageService.getCurrentlyMessaging()
-        .subscribe((id) => this.currentlyMessaging = id ? id === this.uid : false)
+        .subscribe((id) => this.currentlyMessaging = id === this.user.id )
     }
   }
 
   ngAfterViewInit(): void {
-    // Using delay(0) is the same as setTimeout() in this case
-    this.scrollSub = this.messageSubject.pipe(delay(0)).subscribe(() => {
-      if(this.scroll && !this.currentlyMessaging){
-        this.scrollToBottom(!this.initialLoad);
-      }
-      this.initialLoad = false;
-    });
+    this.scrollSubscription = this.messagesLoadedSubject
+      .subscribe(() => {
+        if(this.scroll){
+          setTimeout(() => {
+            this.scrollToBottom(!this.initialLoad);
+            this.initialLoad = false;
+            this.scrollDelay = 0;
+          }, this.scrollDelay)
+        }
+      });
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.isAdmin){
-      ifPropChanged(changes['uid'], () => this.setCurrentlyMessaging() )
+    if(this.adminUser){
+      ifPropChanged(changes['user'], () => {
+       this.listenToNewUserMessages()
+      });
     }
   }
 
   ngOnDestroy(): void {
     this.messagesSub?.unsubscribe();
-    this.scrollSub?.unsubscribe();
+    this.scrollSubscription?.unsubscribe();
     this.currentlyMessagingSub?.unsubscribe();
   }
 
-  listenForMessages() {      
+  listenForMessages() {
     this.loading = true;
     this.messagesSub = this.limit$
       .pipe(
-        switchMap((limit) => this.messageService.getUserMessagesWithLimit(this.uid, limit))
+        switchMap((limit) => this.messageService.getUserMessagesWithLimit(this.user.id, limit))
       )
       .subscribe({
         next: messages => {
-          console.log('listenForMessages');
           if(messages.length > 0){
             this.messages = messages;
-            this.messageSubject.next(messages);
+            this.messagesLoadedSubject.next(true);
             this.messageDates = messages.map(item => item.createdAt)
             this.firstDateNotIncluded = this.messageDates.indexOf(this.firstDate) === -1 ? true : false;
             this.enoughMessages = messages.length === this.limit ? true : false;
           } else {
+            this.enoughMessages = false;
             this.messages = [];
           }
           this.loading = false;
         },
-        error: err => this.error = err
+        error: (err: Error) => {
+          this.error = err;
+          this.loading = false;
+        }
       });
   }
 
+  listenToNewUserMessages(){
+    this.messagesSub?.unsubscribe();
+    this.currentlyMessagingSub?.unsubscribe();
+    this.setLimit(15);
+    this.messages = [];
+    this.enoughMessages = false;
+    this.initialLoad = true;
+    this.setCurrentlyMessaging();
+    this.listenForMessages();
+  }
+
   setCurrentlyMessaging(){
-    this.messageService.setCurrentlyMessaging(this.uid)
+    this.messageService.setCurrentlyMessaging(this.user.id)
       .subscribe({
-        next: () => {
-          console.log('currentlyMessaging Set');
-        },
         error: (err: Error) => {
           this.error = err
         }
@@ -125,36 +139,30 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
 
   handleSendMessage(message: string) {
     if(message.trim().length > 0){
-      const messageObject = (this.isAdmin && this.adminId)
-      ? new Message(message, this.adminId, this.username)
-      : new Message(message, this.uid, this.username);
+      const messageObject = this.adminUser
+      ? new Message(message, this.adminUser.id, this.adminUser.username)
+      : new Message(message, this.user.id, this.user.username);
 
-      console.log('handleSendMessage', messageObject);
-
-      this.messageService.addUserMessage(this.uid, messageObject)
+      this.messageService.addUserMessage(this.user.id, messageObject)
       .pipe(
         switchMap((key) => {
-          if(key && (!this.isAdmin && !this.currentlyMessaging)){
+          if(key && (!this.adminUser && !this.currentlyMessaging)){
             return this.messageService.addAdminUnreadMessage(key, messageObject)
               .pipe(map(() => key))
           } else {
             return of(key)
           }
-        }))
+        })
+        )
       .subscribe({
-        next: (key) => {
-          console.log('sendMessage', key);
-        },
-        error: (err: Error) => {
-          this.error = err
-        }
+        error: (err: Error) => this.error = err
       })
     }
   }
 
   loadMore() {
     if (this.firstDate !== undefined) {
-      this.messageService.getFirstUserMessage(this.uid)
+      this.messageService.getFirstUserMessage(this.user.id)
       .subscribe({
         next: (message) => {
           if (message) {

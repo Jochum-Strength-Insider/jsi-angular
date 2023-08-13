@@ -24,6 +24,9 @@ import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     NgbCollapseModule,
     WeighInRoutingModule
+  ],
+  exports:[
+    WeighInContainerComponent
   ]
 })
 export class WeighInModule { }

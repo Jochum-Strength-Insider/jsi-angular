@@ -178,7 +178,6 @@ export class CodesComponent implements OnInit, AfterViewInit, OnDestroy {
   toggleCodeIsActive(code: Code){
     this.codesService.toggleCodeIsActive(code)
     .subscribe({
-      next: () => console.log('toggle'),
       error: (err: Error) => console.log(err)
     })
   }

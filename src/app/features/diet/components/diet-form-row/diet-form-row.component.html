@@ -36,7 +36,7 @@
             </select>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="!isAdmin">
             <button *ngIf="saved" type="submit" class="btn btn-outline-success w-100">Saved!</button>
             <button *ngIf="!saved" type="submit" class="btn btn-outline-primary w-100">Save</button>
         </div>
