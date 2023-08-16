@@ -1,0 +1,14 @@
+<ng-container *ngIf="user">
+    <div class="card mb-3">
+        <div class="card-header">Account Info</div>
+        <div class="card-body px-0 py-2">
+            <div class="list-group list-group-flush">
+                <div class="list-group-item">Username: {{ user.username}}</div>
+                <div class="list-group-item">Email: {{ user.email}}</div>
+                <div class="list-group-item">Programs: {{ workoutIds ? workoutIds.length : 0 }}</div>
+                <div class="list-group-item">Member Since: {{ user.createdAt | date }}</div>
+                <div class="list-group-item" *ngIf="!user.ACTIVE">Your account is currently inactive</div>
+            </div>
+        </div>
+    </div>
+</ng-container>

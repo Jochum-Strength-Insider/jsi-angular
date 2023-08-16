@@ -33,12 +33,14 @@ export class SigninComponent {
   onSubmit() {
     this.auth
       .login(this.loginForm.value)
-      .then(() => {
-        this.error = null;
-        this.router.navigateByUrl('/program')
+      .subscribe({
+        next: () => {
+          this.error = null;
+          this.router.navigateByUrl('/program')
+        },
+        error: (error) => {
+          this.error = error;
+        }
       })
-      .catch(error => {
-        this.error = error;
-      });
   };
 }
