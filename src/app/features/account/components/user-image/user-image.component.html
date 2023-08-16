@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="modal-footer justify-content-between">
-        <button (click)="uploadFile()" [disabled]="isInvalid || uploading" type="button" class="btn btn-primary">Submit</button>
+        <button (click)="uploadFile()" [disabled]="isInvalid || uploading || !file" type="button" class="btn btn-primary">Submit</button>
         <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
     </div>
 </ng-template>

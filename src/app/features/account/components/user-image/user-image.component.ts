@@ -61,9 +61,13 @@ export class UserImageComponent {
   uploadFile(){
     if(!this.file) { return; }
     this.fileUploadClicked.emit(this.file);
+    this.file = null;
+    this.touched = false;
   }
 
   removeImg(){
     this.removeImageClicked.emit();
+    this.file = null;
+    this.touched = false;
   }
 }
