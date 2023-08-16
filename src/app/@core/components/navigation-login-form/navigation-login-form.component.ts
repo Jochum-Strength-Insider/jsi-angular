@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastService } from '@app/@core/services/toast.service';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { environment } from '@env/environment';
 
@@ -23,7 +24,8 @@ export class NavigationLoginFormComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -36,14 +38,17 @@ export class NavigationLoginFormComponent {
   onSubmit() {
     this.authService
       .login(this.loginForm.value)
-      .then(() => {
-        this.error = null;
-        this.router.navigateByUrl('/program')
+      .subscribe({
+        next: () => {
+          this.error = null;
+          this.router.navigateByUrl('/program')
+        },
+        error: (error) => {
+          this.error = error;
+          this.toastService.showError('Email or Password is invalid')
+          this.router.navigateByUrl('/auth/signin')
+        }
       })
-      .catch(error => {
-        this.error = error;
-        this.router.navigateByUrl('/signin')
-      });
   };
   
 }

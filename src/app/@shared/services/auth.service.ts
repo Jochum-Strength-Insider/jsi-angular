@@ -1,27 +1,27 @@
 
 import { Injectable } from '@angular/core';
-import { LoginRequestModel } from '../models/auth/login-request.model';
-import { BehaviorSubject, defer, from, Observable } from 'rxjs';
-import { User as UserModel } from '@app/@core/models/auth/user.model';
-import { AngularFireDatabase } from '@angular/fire/compat/database';
 import {
+  ActionCodeSettings,
   Auth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
-  sendPasswordResetEmail,
-  sendEmailVerification,
-  updatePassword,
-  sendSignInLinkToEmail,
-  signInWithEmailLink,
+  fetchSignInMethodsForEmail,
   isSignInWithEmailLink,
-  ActionCodeSettings,
-  UserCredential,
-  fetchSignInMethodsForEmail
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  sendSignInLinkToEmail,
+  signInWithEmailAndPassword,
+  signInWithEmailLink,
+  signOut,
+  updatePassword,
+  User,
+  UserCredential
 } from '@angular/fire/auth';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { User as UserModel } from '@app/@core/models/auth/user.model';
 import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import { environment } from '@env/environment';
+import { BehaviorSubject, defer, Observable } from 'rxjs';
+import { LoginRequestModel } from '../models/auth/login-request.model';
 
 // snapshotChanges includes metadata
 // valueChanges does not
@@ -73,8 +73,8 @@ export class AuthService {
   
   // doSignInWithEmailAndPassword = (email, password) =>
   //   this.auth.signInWithEmailAndPassword(email, password);
-  login({ email, password }: LoginRequestModel) {
-    return signInWithEmailAndPassword(this.auth, email, password);
+  login({ email, password }: LoginRequestModel): Observable<UserCredential> {
+    return defer(() => signInWithEmailAndPassword(this.auth, email, password));
   }
 
   // doCreateUserWithEmailAndPassword = (email, password) => {

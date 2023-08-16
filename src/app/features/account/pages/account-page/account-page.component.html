@@ -1,1 +1,11 @@
-<p>account-page works!</p>
+<div class="container-fluid">
+    <div class="d-flex justify-content-center">
+        <div class="contain-width mb-5">
+            <div class="app-top">
+                <ng-container *ngIf="authUser && authStatus">
+                    <app-account-container [user]="authUser" [authStatus]="authStatus"></app-account-container>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

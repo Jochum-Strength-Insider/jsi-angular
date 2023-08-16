@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { AuthService } from '@app/@shared/services/auth.service';
 
 @Component({
-  selector: 'app-auth-sign-out-button',
-  templateUrl: './auth-sign-out-button.component.html',
-  styleUrls: ['./auth-sign-out-button.component.css']
+  selector: 'app-sign-out-button',
+  templateUrl: './sign-out-button.component.html',
+  styleUrls: ['./sign-out-button.component.css']
 })
-export class AuthSignOutButtonComponent {
+export class SignOutButtonComponent {
   constructor(
     private auth: AuthService,
     private router: Router

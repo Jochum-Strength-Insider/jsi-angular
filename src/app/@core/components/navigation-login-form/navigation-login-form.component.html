@@ -1,12 +1,12 @@
-<form [formGroup]="loginForm" id="loginForm" class="nav-login d-none d-sm-none d-md-none d-lg-inline-flex d-xl-inline-flex"
+<form [formGroup]="loginForm" id="navLoginForm" class="nav-login d-none d-sm-none d-md-none d-lg-inline-flex d-xl-inline-flex"
       (ngSubmit)="onSubmit()" autocomplete="off">
     <div class="form-group me-2">
-        <label class="sr-only" for="email">Email: </label>
-        <input id="email" class="form-control form-control-sm" type="text" placeholder="Email Address" formControlName="email" />
+        <label class="sr-only" for="navEmail">Email: </label>
+        <input id="navEmail" class="form-control form-control-sm" type="text" placeholder="Email Address" formControlName="email" />
     </div>
     <div class="form-group me-2">
-        <label class="sr-only" for="password">Password: </label>
-        <input id="password" class="form-control form-control-sm" type="password" placeholder="Password" formControlName="password" />
+        <label class="sr-only" for="navPassword">Password: </label>
+        <input id="navPassword" class="form-control form-control-sm" type="password" placeholder="Password" formControlName="password" />
     </div>
     <button class="btn btn-outline-light btn-sm" type="submit">Sign In</button>
 </form>
