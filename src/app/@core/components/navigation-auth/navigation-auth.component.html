@@ -42,9 +42,8 @@
             </div>
         </div>
         <div class="navbar-nav">
-            <div class="d-inline-block">
-                <div *ngIf="authUser.isAdmin">
-                    <app-admin-unread />
+                <div class="mx-auto my-auto" *ngIf="authUser.ADMIN">
+                    <app-admin-unread/>
                 </div>
                 <div class="d-inline-block" ngbDropdown #userDrop="ngbDropdown">
                     <button 
@@ -63,7 +62,6 @@
                             <app-sign-out-button></app-sign-out-button>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>

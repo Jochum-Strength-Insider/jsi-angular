@@ -85,7 +85,7 @@
 }
 
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 992px) {
     nav.my-tabs-nav {
         display: none;
     }
