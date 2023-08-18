@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { Workout } from '@app/@core/models/program/workout.model';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
-import { Subscription, switchMap } from 'rxjs';
+import { Subscription, of, switchMap } from 'rxjs';
 import { WorkoutService } from '../../services/workout.service';
 
 @Component({
@@ -27,11 +27,19 @@ export class ProgramContainerComponent implements OnDestroy {
 
     this.programSub = this.service
       .getActiveWorkoutId(this.uid)
-      .pipe( switchMap((wid) => this.service.getWorkout(this.uid, wid[0].id)) )
+      .pipe(
+        switchMap((wid) => {
+          if(wid.length > 0){
+            return this.service.getWorkout(this.uid, wid[0].id)
+          } else {
+            return of();
+          }
+        })
+      )
       .subscribe({
         next: result => {
             this.program = result;
-            this.programKey = result.id;
+            this.programKey = result?.id;
             this.lsService.saveStringifyData('program', result);
             this.lsService.saveData('programKey', result.id);
         },

@@ -37,7 +37,7 @@
         <div class="users-list-contain">
             <div class="list-group list-group-flush">
                 <div *ngFor="let user of sortedUsers">
-                    <div class="list-group-item d-flex" [ngClass]="{'current' : currentUser?.id === user.id}">
+                    <div class="list-group-item d-flex" [ngClass]="{'current' : currentUserId === user.id}">
                         <div class="check-box d-flex align-items-center">
                             <div class="mb-3 form-check">
                                 <label [for]="'checkbox-'+user.id" class="sr-only"></label>

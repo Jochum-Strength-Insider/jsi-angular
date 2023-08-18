@@ -76,12 +76,25 @@ export class MessageService {
     return this.db.list(`adminUnread`);
   }
 
-  adminUnreadObjectRef(): AngularFireObject<Message> {
-    return this.db.object(`adminUnread`);
+  adminUnreadObjectRef(mid: string): AngularFireObject<Message> {
+    return this.db.object(`adminUnread/${mid}`);
   }
 
-  addAdminUnreadMessage(messageKey: string, message: Message): Observable<any> {
-    return defer( () => this.adminUnreadObjectRef().update({ [messageKey]: message }))
+  addAdminUnreadMessage(mid: string, message: Message): Observable<any> {
+    return defer( () => this.adminUnreadListRef().update(mid, message))
+  }
+
+  getAdminUnreadMessages(): Observable<Message[]> {
+    return this.adminUnreadListRef()
+      .valueChanges([], { idField: 'id' })
+  }
+
+  removeAdminUnreadMessage(mid: string): Observable<void> {
+    return defer(() => this.adminUnreadObjectRef(mid).remove())
+  }
+
+  clearAllAdminUnreadMessages(): Observable<void> {
+    return defer(() => this.adminUnreadListRef().remove())
   }
 
   // *** CurrentlyMessaging API ***

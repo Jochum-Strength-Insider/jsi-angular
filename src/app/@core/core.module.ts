@@ -3,7 +3,7 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@app/@shared/shared.module';
 import { AppRoutingModule } from '@app/app-routing.module';
-import { NgbCollapse, NgbDropdownModule, NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapse, NgbDropdownModule, NgbPopoverModule, NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 import { AdminUnreadComponent } from './components/admin-unread/admin-unread.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MessageIconComponent } from './components/message-icon/message-icon.component';
@@ -12,6 +12,7 @@ import { NavigationLoginFormComponent } from './components/navigation-login-form
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { ToastsContainer } from './components/toasts-container/toasts-container.component';
 import { SafePipe } from './pipes/safe.pipe';
+import { FromNowPipe } from './pipes/from-now.pipe';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { SafePipe } from './pipes/safe.pipe';
     AdminUnreadComponent,
     NavigationLoginFormComponent,
     SafePipe,
-    ToastsContainer
+    ToastsContainer,
+    FromNowPipe
   ],
   imports: [
     CommonModule,
@@ -33,7 +35,8 @@ import { SafePipe } from './pipes/safe.pipe';
     ReactiveFormsModule,
     NgbDropdownModule,
     NgbCollapse,
-    NgbToastModule
+    NgbToastModule,
+    NgbPopoverModule
   ],
   exports: [
     HeaderComponent,

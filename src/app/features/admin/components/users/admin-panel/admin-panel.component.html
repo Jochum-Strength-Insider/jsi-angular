@@ -150,6 +150,7 @@
                 <app-users-list
                     [users]="users"
                     [currentUser]="currentUser"
+                    [currentUserId]="userIdFromParams"
                     (userClicked)="handleSetUser($event)"
                     (addUserClicked)="handleAddUserClicked()"
                     (sendGroupMessagesClicked)="handleSendGroupMessagesClicked($event)"

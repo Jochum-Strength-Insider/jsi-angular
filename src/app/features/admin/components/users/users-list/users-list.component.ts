@@ -17,8 +17,8 @@ export class UsersListComponent implements OnInit, OnChanges {
 
   @Input() users: UserWithSelection[] = [];
   @Input() currentUser: User | null = null;
+  @Input() currentUserId: string | null;
 
-  paramsSub: Subscription;
   searchSub: Subscription;
 
   sortedUsers: UserWithSelection[] = [];
@@ -54,7 +54,6 @@ export class UsersListComponent implements OnInit, OnChanges {
   }
 
   ngOnDestroy() {
-    this.paramsSub?.unsubscribe();
     this.searchSub?.unsubscribe();
   }
 
