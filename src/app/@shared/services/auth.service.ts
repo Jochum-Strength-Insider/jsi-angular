@@ -23,8 +23,9 @@ import { environment } from '@env/environment';
 import { BehaviorSubject, defer, Observable } from 'rxjs';
 import { LoginRequestModel } from '../models/auth/login-request.model';
 
-// snapshotChanges includes metadata
-// valueChanges does not
+// Need to check questionniare submit on sign-in and redirect to questionnaire page.
+// Need to force email validation on sign-in
+// Show verify email/submit questionnaire card on program page.
 
 @Injectable({
   providedIn: 'root',
@@ -109,7 +110,7 @@ export class AuthService {
 
   // *** Auth API ***
   // fetchSignInMethodsForEmail = (email) => this.auth.fetchSignInMethodsForEmail(email);
-  getSignInMethodsFormEmail(email: string): Observable<string[]> {
+  getSignInMethodsForEmail(email: string): Observable<string[]> {
     return defer( () => fetchSignInMethodsForEmail(this.auth, email));
   }
 

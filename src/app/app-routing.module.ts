@@ -9,22 +9,30 @@ import {
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['auth/login']);
 const redirectLoggedInToProgram = () => redirectLoggedInTo(['program']);
+// const adminOnly = () => hasCustomClaim('admin');
+// { path: 'admin', component: AdminComponent, canActivate: [AngularFireAuthGuard], data: { authGuardPipe: adminOnly }},
+// const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
+// const redirectLoggedInToItems = () => redirectLoggedInTo(['items']);
+
+// canActivate: mapToCanActivate([AdminGuard]),
+
+// ...canActivate(redirectLoggedInToProgram),
+// Same as
+// canActivate: [AuthGuard],
+// data: { authGuardPipe: redirectUnauthorizedToLogin },
 
 const routes: Routes = [
   { 
     path:  '',
     loadChildren: () => import('./features/landing/landing.module').then(m => m.LandingModule),
-    ...canActivate(redirectLoggedInToProgram)
+    ...canActivate(redirectLoggedInToProgram),
   },
   { 
     path: 'admin',
     loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule),
     ...canActivate(redirectUnauthorizedToLogin)
-    // Same as
-    // canActivate: [AuthGuard],
-    // data: { authGuardPipe: redirectUnauthorizedToLogin },
   },
-  { 
+  {
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule),
   },
@@ -51,6 +59,16 @@ const routes: Routes = [
   { 
     path: 'weigh-in',
     loadChildren: () => import('./features/weigh-in/weigh-in.module').then(m => m.WeighInModule),
+    ...canActivate(redirectUnauthorizedToLogin)
+  },
+  { 
+    path: 'resources',
+    loadChildren: () => import('./features/resources/resources.module').then(m => m.ResourcesModule),
+    ...canActivate(redirectUnauthorizedToLogin)
+  },
+  { 
+    path: 'questionnaire',
+    loadChildren: () => import('./features/questionnaire/questionnaire.module').then(m => m.QuestionnaireModule),
     ...canActivate(redirectUnauthorizedToLogin)
   },
   {

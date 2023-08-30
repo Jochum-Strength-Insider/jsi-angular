@@ -11,7 +11,6 @@ import { FoldersComponent } from './components/folders/folders/folders.component
 import { AdminProgramComponent } from './components/programs/program/admin-program.component';
 import { UserItemComponent } from './components/users/user-item/user-item.component';
 import { UserProgramComponent } from './components/users/user-program/user-program.component';
-import { UserQuestionaireComponent } from './components/users/user-questionaire/user-questionaire.component';
 
 /* 
 ToDo:

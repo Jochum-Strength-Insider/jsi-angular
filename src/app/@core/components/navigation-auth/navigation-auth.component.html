@@ -32,10 +32,10 @@
                         (click)="onSelect()">Users</a>
                     <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/folders/list']"
                         (click)="onSelect()">Programs</a>
+                        <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/exercises']"
+                            (click)="onSelect()">Exercises</a>
                     <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/resources']"
                         (click)="onSelect()">Resources</a>
-                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/exercises']"
-                        (click)="onSelect()">Exercises</a>
                     <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/codes']"
                         (click)="onSelect()">Codes</a>
                 </div>
@@ -57,6 +57,8 @@
                     </button>
                     <div ngbDropdownMenu aria-labelledby="userDropdown" class="dropdown-menu dropdown-menu-end">
                         <a ngbDropdownItem [routerLink]="['/account']">Account</a>
+                        <a ngbDropdownItem [routerLink]="['/resources']">Resources</a>
+                        <a ngbDropdownItem [routerLink]="['/questionnaire']">Questionnaire</a>
                         <div class="dropdown-divider" role="separator"></div>
                         <div ngbDropdownItem>
                             <app-sign-out-button></app-sign-out-button>

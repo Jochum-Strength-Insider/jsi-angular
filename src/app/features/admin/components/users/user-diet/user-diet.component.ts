@@ -8,5 +8,5 @@ import { User } from '@app/@core/models/auth/user.model';
 })
 export class UserDietComponent {
   @Input() user: User;
-  @Input() loggedInUser: User | null;
+  @Input() adminUser: User | null;
 }

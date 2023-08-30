@@ -6,6 +6,8 @@ import { Submission } from '@app/@core/models/codes/submission.model';
 import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import { Observable, defer, from, of, take } from 'rxjs';
 
+export const CODES_STRING = 'codes';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,16 +20,26 @@ export class CodesService {
   // // *** Codes API ***
 
   private codesListRef(): AngularFireList<Code> {
-    return this.db.list(`codes`)
+    return this.db.list(CODES_STRING)
   }
   
   private codesObjectRef(cid: string): AngularFireObject<Code> {
-    return this.db.object(`codes/${cid}`)
+    return this.db.object(`${CODES_STRING}/${cid}`)
   }
 
   getCodes():Observable<Code[]> {
     return this.codesListRef()
     .valueChanges([], { idField: 'id' })
+  }
+
+  getActiveCodes():Observable<Code[]> {
+    const activeCodesRef = this.db.list(
+      `${CODES_STRING}`,
+      ref => ref.orderByChild("active").equalTo(true)
+    );
+
+    return <Observable<Code[]>>activeCodesRef
+      .valueChanges([], { idField: 'id' });
   }
   
   getCode(cid: string):Observable<Code> {

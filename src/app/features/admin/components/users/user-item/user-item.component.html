@@ -38,19 +38,25 @@
                 <div class="my-tabs-item" [ngbNavItem]="3" [destroyOnHide]="true">
                     <button class="my-tabs-link" [class.active]="active === 3" ngbNavLink>Messages</button>
                     <ng-template ngbNavContent>
-                        <app-user-messages [loggedInUser]="authUser$ | async" [user]="user"></app-user-messages>
+                        <app-user-messages [adminUser]="authUser$ | async" [user]="user"></app-user-messages>
                     </ng-template>
                 </div>
                 <div class="my-tabs-item" [ngbNavItem]="4" [destroyOnHide]="true">
                     <button class="my-tabs-link" [class.active]="active === 4" ngbNavLink>Diet</button>
                     <ng-template ngbNavContent>
-                        <app-user-diet [loggedInUser]="authUser$ | async" [user]="user"></app-user-diet>
+                        <app-user-diet [adminUser]="authUser$ | async" [user]="user"></app-user-diet>
                     </ng-template>
                 </div>
                 <div class="my-tabs-item" [ngbNavItem]="5" [destroyOnHide]="true">
                     <button class="my-tabs-link" [class.active]="active === 5" ngbNavLink>Weight</button>
                     <ng-template ngbNavContent>
-                        <app-user-weight [loggedInUser]="authUser$ | async" [user]="user"></app-user-weight>
+                        <app-user-weight [adminUser]="authUser$ | async" [user]="user"></app-user-weight>
+                    </ng-template>
+                </div>
+                <div class="my-tabs-item" [ngbNavItem]="6" [destroyOnHide]="true">
+                    <button class="my-tabs-link" [class.active]="active === 6" ngbNavLink>Questionnaire</button>
+                    <ng-template ngbNavContent>
+                        <app-user-questionnaire [adminUser]="authUser$ | async" [user]="user"></app-user-questionnaire>
                     </ng-template>
                 </div>
             </nav>

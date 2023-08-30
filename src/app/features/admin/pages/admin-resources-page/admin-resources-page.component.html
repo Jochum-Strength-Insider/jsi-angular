@@ -3,7 +3,8 @@
         <div class="contain-width">
             <div class="app-top">
                 <ng-container *ngIf="authUser$ | async as authUser">
-                    <p>admin-resources-page works!</p>
+                    <h3>Resources</h3>
+                    <app-admin-resources></app-admin-resources>
                 </ng-container>
             </div>
         </div>

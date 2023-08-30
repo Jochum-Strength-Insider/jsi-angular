@@ -14,6 +14,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '@app/@shared/shared.module';
 import { NgxPayPalModule } from 'ngx-paypal';
 import { PromoComponent } from './components/promo/promo.component';
+import { PasswordForgetComponent } from './pages/password-forget/password-forget.component';
 
 
 @NgModule({
@@ -21,11 +22,12 @@ import { PromoComponent } from './components/promo/promo.component';
     AuthComponent,
     SigninComponent,
     EmailSigninComponent,
+    PasswordForgetComponent,
     SubscribeComponent,
     SignupComponent,
     DotsComponent,
     PaymentComponent,
-    PromoComponent,
+    PromoComponent
   ],
   imports: [
     CommonModule,

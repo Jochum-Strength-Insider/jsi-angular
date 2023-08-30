@@ -1,25 +1,50 @@
 <ng-container *ngIf="authUser$ | async as authUser">
-    <div *ngIf="authUser.ACTIVE; else active" class="container-fluid" >
-        <div class="d-flex justify-content-center">
-            <div class="contain-width">
-                <div class="app-top">
-                    <app-program-container [uid]="authUser.id"></app-program-container>
-                 </div>
-            </div>
-        </div>
-    </div>
-
-    <ng-template #active>
-        <div class="container-fluid">
-            <div class="d-flex justify-content-center mt-5">
-                <div class="card" style="width: 30rem;">
-                    <div class="card-header text-center">
-                        <strong>Account Status</strong>
+    <ng-container *ngIf="authUser.ACTIVE; else inActive">
+        <ng-container *ngIf="authUser.surveySubmitted; else questionnaire">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-center">
+                    <div class="contain-width px-1">
+                        <div class="app-top">
+                            <app-program-container [uid]="authUser.id"></app-program-container>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <p class="card-text text-center">
-                            Your Account is currently deactivated. To reactivate your account reapply for Jochum Strength Insider or contact jochumstrength@gmail.com for more information.
-                        </p>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-template #questionnaire>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col col-xs-12 col-md-6 mx-auto">
+                        <div class="card mt-5">
+                            <div class="card-header text-center">
+                                <strong>Questionnaire</strong>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text text-center">
+                                    Please submit your user questionnaire to get started with a new program! <a [routerLink]="['../questionnaire']">Click here to submit your questionnaire.</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </ng-container>
+
+    <ng-template #inActive>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col col-xs-12 col-md-6 mx-auto">
+                    <div class="card mt-5">
+                        <div class="card-header text-center">
+                            <strong>Account Status</strong>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text text-center">
+                                Your Account is currently deactivated. To reactivate your account reapply for Jochum Strength Insider or contact jochumstrength@gmail.com for more information.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
