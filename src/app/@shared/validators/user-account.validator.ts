@@ -13,7 +13,7 @@ export class UserAccountValidator {
                 .pipe(
                     debounceTime(400),
                     distinctUntilChanged(),
-                    switchMap(value => service.getSignInMethodsFormEmail(value)),
+                    switchMap(value => service.getSignInMethodsForEmail(value)),
                     map((result: string[]) => result.length > 0 ? { userAccountAlreadyExists: true } : null),
                     first()
                 );

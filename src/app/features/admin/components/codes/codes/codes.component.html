@@ -32,19 +32,21 @@
                         <option value="referral">Referral</option>
                     </select>
                 </div>
-                <ng-container *ngIf="selectedCode; else addButton;">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <button type="button" class="btn btn-outline-success me-2" (click)="updateCode()">Save</button>
-                            <button type="button" class="btn btn-outline-warning" (click)="resetCodeForm()">Reset</button>
-                        </div>
-                        <button type="button" class="btn btn-outline-primary" (click)="showReferrals(selectedCode)">Details</button>
-                    </div>
-                </ng-container>
-                <ng-template #addButton>
-                    <button type="submit" class="btn btn-primary">Add Code</button>
-                </ng-template>
             </form>
+        </div>
+        <div class="modal-footer">
+            <ng-container *ngIf="selectedCode; else addButton;">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <button type="button" class="btn btn-outline-success me-2" (click)="updateCode()">Save</button>
+                        <button type="button" class="btn btn-outline-warning" (click)="resetCodeForm()">Reset</button>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary" (click)="showReferrals(selectedCode)">Details</button>
+                </div>
+            </ng-container>
+            <ng-template #addButton>
+                <button form="codeForm" type="submit" class="btn btn-primary">Add Code</button>
+            </ng-template>
         </div>
     </ng-container>
     <ng-template #details>

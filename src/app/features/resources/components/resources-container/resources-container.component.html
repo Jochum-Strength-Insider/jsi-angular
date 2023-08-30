@@ -1,0 +1,14 @@
+<h3>Resources</h3>
+<div class="list-group">
+    <div *ngFor="let resource of resources" class="list-group-item">
+        <div class="d-flex justify-content-between">
+            <h5 class="my-2">{{ resource.title }}</h5>
+            <div class="d-flex align-items-center">
+                <a [href]="resource.link | sanitizeUrl" target="_blank">Link</a>
+            </div>
+        </div>
+        <div *ngIf="resource.description">
+            <p class="my-0">{{ resource.description }}</p>
+        </div>
+    </div>
+</div>

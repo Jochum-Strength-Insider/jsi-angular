@@ -160,6 +160,10 @@ table .vertical-align-center {
   opacity: .7;
 } 
 
+span.required {
+  color: red;
+}
+
 @media (max-width: 576px) {
   h1,
   h2,

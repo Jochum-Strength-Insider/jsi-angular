@@ -1,0 +1,138 @@
+<form class="form" id="questionnaireForm" [formGroup]="questionnaireForm" (ngSubmit)="submit()" autocomplete="off">
+    <div class="mb-4">
+        <h5 class="mb-3">Getting to know your past:</h5>
+    
+        <div class="form-group mb-3">
+            <label class="form-label" for="experience">What is your previous training experience?</label>
+            <textarea class="form-control"
+                    id="experience"
+                    formControlName="experience"
+                    [ngClass]="{ 'is-invalid': submitted && f['experience'].errors, 'is-valid': f['experience'].valid }">
+            </textarea>
+
+            <div *ngIf="f['experience'] && submitted && f['experience'].errors" class="invalid-feedback">
+                <div *ngIf="f['experience'].errors['required']">
+                    A "What is your previous training experience?" response is required.
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label class="form-label" for="injuries">What are your previous injuries (if any)?</label>
+            <textarea class="form-control"
+                    id="injuries"
+                    formControlName="injuries"
+                    [ngClass]="{ 'is-invalid': submitted && f['injuries'].errors, 'is-valid': f['injuries'].valid }">
+            </textarea>
+
+            <div *ngIf="f['injuries'] && submitted && f['injuries'].errors" class="invalid-feedback">
+                <div *ngIf="f['injuries'].errors['required']">
+                    A "What are your previous injuries (if any)?" response is required.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label" for="painfulMovement">Are there any movements that hurt you or that you cannot/should not do?</label>
+            <textarea class="form-control"
+                formControlName="painfulMovement"
+                id="painfulMovement"
+                [ngClass]="{ 'is-invalid': submitted && f['painfulMovement'].errors, 'is-valid': f['painfulMovement'].valid }">
+            </textarea>
+            <div *ngIf="f['painfulMovement'] && submitted && f['painfulMovement'].errors" class="invalid-feedback">
+                <div *ngIf="f['painfulMovement'].errors['required']">
+                    An "Are there any movements that hurt you or that you cannot/should not do?" response is required.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr *ngIf="!adminUser" class="mb-4">
+
+    <div class="mb-4">
+        <h5 class="mb-3">Let’s talk about the now:</h5>
+
+        <div class="form-group mb-3">
+            <label class="form-label" for="enjoyedMovement">What movements do you enjoy?</label>
+            <textarea class="form-control"
+                    formControlName="enjoyedMovement" 
+                    id="enjoyedMovement"
+                    [ngClass]="{ 'is-invalid': submitted && f['enjoyedMovement'].errors, 'is-valid': f['enjoyedMovement'].valid }">
+            </textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label" for="ultimateGoal">What is your ultimate goal for this program?</label>
+            <textarea class="form-control"
+                    formControlName="ultimateGoal"
+                    id="ultimateGoal"
+                    [ngClass]="{ 'is-invalid': submitted && f['ultimateGoal'].errors, 'is-valid': f['ultimateGoal'].valid }">
+            </textarea>
+            <div *ngIf="f['ultimateGoal'] && submitted && f['ultimateGoal'].errors" class="invalid-feedback">
+                <div *ngIf="f['ultimateGoal'].errors['required']">
+                    A "What is your ultimate goal for this program?" response is required.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label" for="daysPerWeek">Reaching this goal means setting up steps to help you get there. How many days are you hoping to work out each week?</label>
+            <select class="form-control"
+                    id="daysPerWeek"
+                    formControlName="daysPerWeek"
+                    [ngClass]="{ 'is-invalid': submitted && f['daysPerWeek'].errors, 'is-valid': f['daysPerWeek'].valid }">
+                <option value="" disabled selected>0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+            </select>
+
+            <div *ngIf="f['daysPerWeek'] && submitted && f['daysPerWeek'].errors" class="invalid-feedback">
+                <div *ngIf="f['daysPerWeek'].errors['required']">
+                    A "How many days are you hoping to work out each week?" response is required.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label" for="equipment">What equipment do you have access to?</label>
+            <textarea class="form-control"
+                    formControlName="equipment"
+                    id="equipment"
+                    [ngClass]="{ 'is-invalid': submitted && f['equipment'].errors, 'is-valid': f['equipment'].valid }">
+            </textarea>
+
+            <div *ngIf="f['equipment'] && submitted && f['equipment'].errors" class="invalid-feedback">
+                <div *ngIf="f['equipment'].errors['required']">
+                    A "What equipment do you have access to?" response is required.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label" for="comments">Is there anything else you would like to share about yourself that will help us create the perfect program for you?</label>
+            <textarea class="form-control" [class.is-valid]="submitted" formControlName="comments" id="comments" ></textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label" for="referral">How Did You Hear About Us?</label>
+            <textarea class="form-control"
+                    formControlName="referral"
+                    id="referral"
+                    [ngClass]="{ 'is-invalid': submitted && f['referral'].errors, 'is-valid': f['referral'].valid }">
+            </textarea>
+
+            <div *ngIf="f['referral'] && submitted && f['referral'].errors" class="invalid-feedback">
+                <div *ngIf="f['referral'].errors['required']">
+                    A "How Did You Hear About Us?" response is required.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button *ngIf="!adminUser" class="btn btn-primary" type="submit">Submit</button>
+</form>

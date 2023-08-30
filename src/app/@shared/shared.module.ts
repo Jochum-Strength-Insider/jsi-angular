@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
-import { PasswordForgetComponent } from '../features/auth/pages/password-forget/password-forget.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SignOutButtonComponent } from './components/auth/sign-out-button/sign-out-button.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
+import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
 
 
 
@@ -13,8 +13,8 @@ import { ResetPasswordComponent } from './components/auth/reset-password/reset-p
   declarations: [
     SignOutButtonComponent,
     SpinnerComponent,
-    PasswordForgetComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    SanitizeUrlPipe
   ],
   imports: [
     CommonModule,
@@ -24,7 +24,8 @@ import { ResetPasswordComponent } from './components/auth/reset-password/reset-p
   exports: [
     SignOutButtonComponent,
     ResetPasswordComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    SanitizeUrlPipe
   ],
 })
 export class SharedModule { }

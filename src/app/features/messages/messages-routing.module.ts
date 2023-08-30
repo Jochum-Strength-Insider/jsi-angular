@@ -4,8 +4,6 @@ import { MessagesComponent } from './messages.component';
 
 const routes: Routes = [{ path: '', component: MessagesComponent }];
 
-// <Route path={ROUTES.MESSAGES} component={UserChat} />
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]

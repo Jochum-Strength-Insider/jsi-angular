@@ -8,5 +8,5 @@ import { User } from '@app/@core/models/auth/user.model';
 })
 export class UserMessagesComponent {
   @Input() user: User;
-  @Input() loggedInUser: User | null;
+  @Input() adminUser: User | null;
 }

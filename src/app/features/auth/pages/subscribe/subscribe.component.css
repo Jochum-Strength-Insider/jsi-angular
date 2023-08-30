@@ -163,3 +163,23 @@
     /* max width of the ngx-payment button */
     max-width: 750px;
 }
+
+.payment-info {
+    font-size: 0.75rem;
+}
+
+
+.container-info {
+    color: #000;
+    background-color: rgba(255, 255, 255, 1);
+    min-height: 100vh;
+}
+
+.bg-image {
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-image: url('../../../../../assets/images/jochum-joy-b-w.jpg');
+    background-repeat: no-repeat;
+    filter: invert(25%) sepia(10%) saturate(500%) hue-rotate(282deg) brightness(70%) contrast(95%);
+}

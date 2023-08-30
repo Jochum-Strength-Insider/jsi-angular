@@ -6,10 +6,6 @@ import { UserService } from '@app/features/admin/services/user.service';
 import { NgbNav } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, tap } from 'rxjs';
 
-/* 
-  TODO:
-  Questionaire
-*/
 
 @Component({
   selector: 'app-user-item',
@@ -27,7 +23,8 @@ export class UserItemComponent {
     { id: 2, title: 'Programs' },
     { id: 3, title: 'Messages' },
     { id: 4, title: 'Diet' },
-    { id: 5, title: 'Weight' }
+    { id: 5, title: 'Weight' },
+    { id: 6, title: 'Questionnaire' }
   ];
 
   constructor(

@@ -1,0 +1,17 @@
+<h3>Questionnaire</h3>
+
+<div class="mb-5">
+    <div class="mb-3">
+        <p>
+            Before we get started on this journey, I'll need you to fill out this questionnaire so I can get your program rolling for you! If you have any questions at all on any of this just let me know! Excited for this Journey!
+        </p>
+        <p><b>Keep Chopping Wood</b></p>
+    </div>
+
+    <hr class="mb-4">
+
+    <app-questionnaire-form
+        [questionnaire]="questionnaire"
+        (formSubmitted)="updateQuestionnaire($event)">
+    </app-questionnaire-form>
+</div>

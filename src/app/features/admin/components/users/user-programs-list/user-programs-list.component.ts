@@ -21,7 +21,7 @@ import { Subscription, finalize, of, switchMap } from 'rxjs';
 })
 export class UserProgramsListComponent implements OnInit, OnDestroy, OnChanges {
   @Input() user: User;
-  @Input() loggedInUser: User;
+  @Input() adminUser: User;
 
   @ViewChild('addProgramModal') addProgramModal: any;
   @ViewChild('deleteProgramModal') deleteProgramModal: any;

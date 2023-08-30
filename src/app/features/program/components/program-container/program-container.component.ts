@@ -22,8 +22,8 @@ export class ProgramContainerComponent implements OnDestroy {
   ){ }
 
   ngOnInit(): void {
-    this.program = this.lsService.getParseData('program')
-    this.programKey = this.lsService.getData('programKey');
+    // this.program = this.lsService.getParseData('program')
+    // this.programKey = this.lsService.getData('programKey');
 
     this.programSub = this.service
       .getActiveWorkoutId(this.uid)

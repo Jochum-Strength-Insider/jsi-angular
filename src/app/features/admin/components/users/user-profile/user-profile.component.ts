@@ -22,7 +22,7 @@ export class UserProfileComponent {
   @ViewChild('clearDataModal') clearDataModal: any;
 
   @Input() user: User;
-  @Input() loggedInUser: User;
+  @Input() adminUser: User;
 
   error: Error;
 

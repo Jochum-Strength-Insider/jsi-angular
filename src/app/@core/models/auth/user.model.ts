@@ -12,6 +12,7 @@ export class User {
     programDate: number;
     unread: Message;
     emailVerified: boolean;
+    surveySubmitted: boolean;
     ACTIVE: boolean;
     ADMIN: boolean;
 }

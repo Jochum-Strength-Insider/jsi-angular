@@ -1,23 +1,22 @@
-<div *ngIf="program; else noProgram">
+<ng-container *ngIf="program; else noProgram">
     <h1>{{ program.title }}</h1>
     <h4>{{ program.createdAt | date }}</h4>
     <app-program-table
         [program]="program"
         [uid]="uid"
     />
-</div>
+</ng-container>
 <ng-template #noProgram>
-    <div class="container-fluid">
-        <ngb-alert *ngIf="error" #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
-
-        <div class="row d-flex justify-content-center mt-5">
-            <div class="card">
-                <div class="card-header text-center">
-                    <strong>No Programs</strong>
-                </div>
-                <div class="card-body text-center">
+    <ngb-alert *ngIf="error" #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
+    <div class="col col-xs-12 col-md-6 mx-auto px-0">
+        <div class="card mt-5">
+            <div class="card-header text-center">
+                <strong>No Programs</strong>
+            </div>
+            <div class="card-body">
+                <p class="card-text text-center">
                     You have no available programs at this time.
-                </div>
+                </p>
             </div>
         </div>
     </div>

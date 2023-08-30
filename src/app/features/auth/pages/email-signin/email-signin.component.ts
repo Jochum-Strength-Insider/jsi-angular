@@ -55,7 +55,7 @@ export class EmailSigninComponent {
 
   onSubmit() {
     const email = this.email?.value || "";
-    this.auth.getSignInMethodsFormEmail(email)
+    this.auth.getSignInMethodsForEmail(email)
       .pipe(
         filter((res) => res.length > 0 ),
         switchMap(() => this.auth.sendSignInLinkToEmail(email)),
