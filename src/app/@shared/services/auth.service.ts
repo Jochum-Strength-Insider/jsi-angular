@@ -3,8 +3,11 @@ import { Injectable } from '@angular/core';
 import {
   ActionCodeSettings,
   Auth,
+  User,
+  UserCredential,
   createUserWithEmailAndPassword,
   fetchSignInMethodsForEmail,
+  initializeAuth,
   isSignInWithEmailLink,
   sendEmailVerification,
   sendPasswordResetEmail,
@@ -12,15 +15,14 @@ import {
   signInWithEmailAndPassword,
   signInWithEmailLink,
   signOut,
-  updatePassword,
-  User,
-  UserCredential
+  updatePassword
 } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { User as UserModel } from '@app/@core/models/auth/user.model';
 import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import { environment } from '@env/environment';
-import { BehaviorSubject, defer, Observable } from 'rxjs';
+import { initializeApp } from '@firebase/app';
+import { BehaviorSubject, Observable, defer, finalize, map, switchMap } from 'rxjs';
 import { LoginRequestModel } from '../models/auth/login-request.model';
 
 // Need to check questionniare submit on sign-in and redirect to questionnaire page.
@@ -41,7 +43,7 @@ export class AuthService {
   
   constructor(
     private auth: Auth,
-    private db: AngularFireDatabase,
+    private db: AngularFireDatabase
     ) {
     this.onAuthStatusListener();
   }
@@ -49,11 +51,12 @@ export class AuthService {
   onAuthStatusListener(){
     this.auth.onAuthStateChanged((credential)=> {
       if(credential) {
-        console.log('User is logged in');
+        console.log('User is logged in', credential);
         this.getUserById(credential.uid)
           .subscribe(( userResponse: UserModel ) => {
             if(userResponse){
               userResponse.emailVerified = credential.emailVerified;
+              console.log('onAuthStatusListener getUserById', userResponse);
               this.currentUserSub.next(userResponse);
               this.authStatus.next(credential);
             } else {
@@ -72,8 +75,6 @@ export class AuthService {
     console.log('User is logged out');
   }
   
-  // doSignInWithEmailAndPassword = (email, password) =>
-  //   this.auth.signInWithEmailAndPassword(email, password);
   login({ email, password }: LoginRequestModel): Observable<UserCredential> {
     return defer(() => signInWithEmailAndPassword(this.auth, email, password));
   }
@@ -85,12 +86,23 @@ export class AuthService {
   //     resolve({ newUser, secondaryApp });
   //   });
   // };
-  register({ email, password }: LoginRequestModel) {
-    return createUserWithEmailAndPassword(this.auth, email, password);
+  register({ email, password }: LoginRequestModel): Observable<UserCredential> {
+    return defer(() => createUserWithEmailAndPassword(this.auth, email, password));
   }
 
-  logout() {
-    return signOut(this.auth);
+  adminRegisterNewUser({email, password}: LoginRequestModel): Observable<UserCredential> {
+     // firebase.initializeApp(config, "Secondary");
+    // const newUser = secondaryApp.auth().createUserWithEmailAndPassword(email, password)
+    const otherApp = initializeApp(environment.firebase, "otherApp");
+    const otherAuth = initializeAuth(otherApp);
+    return defer(() => createUserWithEmailAndPassword(otherAuth, email, password))
+      .pipe(
+        switchMap((user) => defer(() => signOut(otherAuth)).pipe(map(() => user))),
+      );
+  }
+
+  logout(): Observable<void> {
+    return defer(() => signOut(this.auth));
   }
 
   public getCurrentAuthUser(){
@@ -109,12 +121,11 @@ export class AuthService {
   }
 
   // *** Auth API ***
-  // fetchSignInMethodsForEmail = (email) => this.auth.fetchSignInMethodsForEmail(email);
+
   getSignInMethodsForEmail(email: string): Observable<string[]> {
     return defer( () => fetchSignInMethodsForEmail(this.auth, email));
   }
 
-  // doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
   sendPasswordReset(email: string) : Observable<void> {
     return defer( () => sendPasswordResetEmail(this.auth, email));
   }
@@ -132,10 +143,6 @@ export class AuthService {
     return defer( () => sendEmailVerification(user));
   }
 
-  // doSendNewUserEmailVerification = (authUser) =>
-  //   authUser.sendEmailVerification({
-  //     url: process.env.REACT_APP_CONFIRMATION_EMAIL_REDIRECT || process.env.REACT_APP_DEV_CONFIRMATION_EMAIL_REDIRECT,
-  //   });
   sendNewUserEmailVerification(user: User) : Observable<void> {
     const actionCodeSettings: ActionCodeSettings = {
       url: environment.firebase.confirmationEmailRedirect || ''
@@ -143,19 +150,10 @@ export class AuthService {
     return defer( () => sendEmailVerification(user, actionCodeSettings));
   }
 
-  // doPasswordUpdate = password =>
-  //   this.auth.currentUser.updatePassword(password);
   updatePassword(user: User, password: string): Observable<void>{
     return defer( () => updatePassword(user, password));
   }
 
-  // doSendSignInLinkToEmail = (email) => {
-  //   const actionCodeSettings = {
-  //     url: process.env.REACT_APP_EMAIL_SIGN_IN_REDIRECT || process.env.REACT_APP_DEV_EMAIL_SIGN_IN_REDIRECT,
-  //     handleCodeInApp: true,
-  //   };
-  //   return this.auth.sendSignInLinkToEmail(email, actionCodeSettings);
-  // }
   sendSignInLinkToEmail(email: string): Observable<void> {
     const actionCodeSettings: ActionCodeSettings = {
       url: environment.firebase.emailSignInRedirect || '',
@@ -164,14 +162,10 @@ export class AuthService {
     return defer( () => sendSignInLinkToEmail(this.auth, email, actionCodeSettings));
   }
 
-  // doSignInWithEmailLink = (email, location) =>
-  //   this.auth.signInWithEmailLink(email, location);
   doSignInWithEmailLink(email: string): Observable<UserCredential> {
     return defer( () => signInWithEmailLink(this.auth, email, window.location.href));
   }
 
-  // doIsSignInWithEmailLink = (location) =>
-  //   this.auth.isSignInWithEmailLink(location);
   getIsSignInWithEmailLink(): boolean {
     return isSignInWithEmailLink(this.auth, window.location.href)
   }

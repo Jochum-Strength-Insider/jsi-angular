@@ -1,17 +1,20 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { User as UserModel } from '@app/@core/models/auth/user.model';
+import { Message } from '@app/@core/models/messages/message.model';
 import { WorkoutId } from '@app/@core/models/program/workout-id.model';
 import { ToastService } from '@app/@core/services/toast.service';
 import { WRONG_PASSWORD } from '@app/@core/utilities/firebase-auth-constants.utilities';
 import { LoginRequestModel } from '@app/@shared/models/auth/login-request.model';
 import { PasswordResetModel } from '@app/@shared/models/auth/password-reset.model';
 import { AuthService } from '@app/@shared/services/auth.service';
-import { WorkoutService } from '@app/features/program/services/workout.service';
-import { EMPTY, Observable, Subscription, catchError, finalize, map, of, switchMap, tap } from 'rxjs';
-import { AFTER_STRING, AccountService, BEFORE_STRING } from '../../services/account.service';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
+import { MessageService } from '@app/features/messages/services/message.service';
+import { WorkoutService } from '@app/features/program/services/workout.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EMPTY, Observable, Subscription, catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
+import { AFTER_STRING, AccountService, BEFORE_STRING } from '../../services/account.service';
+import { environment } from '@env/environment';
 
 
 @Component({
@@ -38,6 +41,7 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private toastService: ToastService,
     private modalService: NgbModal,
+    private messageService: MessageService,
     private lsService: LocalStorageService
   ){ }
 
@@ -165,5 +169,27 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
         this.error = error
       }
     });
+  }
+
+  handleCancellation() {
+    const USER_CANCELLATION_MESSAGE = new Message(`${this.user.username} has cancelled their account.`, this.user.id, "Cancellation")
+    forkJoin([
+      // this.userService.setUserIsActive(this.user.id, false),
+      this.messageService.addAdminUnreadMessage(USER_CANCELLATION_MESSAGE),
+      this.messageService.addUserMessage(this.user.id, USER_CANCELLATION_MESSAGE)
+    ])
+    .pipe(finalize(() => this.modalService.dismissAll()))
+    .subscribe({
+      next: () => {
+        const url = `${environment.userSubscriptionUrl}${this.user.billingId}`;
+        window.open(url, '_blank');
+        this.toastService.showSuccess("Your account has been cancelled.");
+      },
+      error: (error: Error) => {
+        this.toastService.showError();
+        this.error = error
+      }
+    });
+
   }
 }

@@ -32,8 +32,10 @@ export class UserItemComponent {
     private authService: AuthService,
     private userService: UserService
   ){
+    console.log('userItem Constructor');
     this.currentUser$ = this.userService.currentUser$;
     this.authUser$ = this.authService.currentUser$.pipe(
+      tap((user) => console.log('user', user)),
       tap((user) => { if(user && !user.ADMIN){ this.router.navigateByUrl('/signin') } })
     );
   }

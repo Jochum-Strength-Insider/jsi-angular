@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '@app/@core/models/auth/user.model';
 import { ToastService } from '@app/@core/services/toast.service';
 import { AuthService } from '@app/@shared/services/auth.service';
@@ -12,6 +12,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize, forkJoin } from 'rxjs';
 
 
+
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -20,13 +21,13 @@ import { finalize, forkJoin } from 'rxjs';
 export class UserProfileComponent {
   @ViewChild('clearMessagesModal') clearMessagesModal: any;
   @ViewChild('clearDataModal') clearDataModal: any;
+  @ViewChild('editUserModal') editUserModal: any;
 
   @Input() user: User;
   @Input() adminUser: User;
 
   error: Error;
-
-  userForm: FormGroup;
+  userProfileForm: FormGroup;
 
   constructor(
     private modalService: NgbModal,
@@ -36,12 +37,56 @@ export class UserProfileComponent {
     private messagesService: MessageService,
     private workoutService: WorkoutService,
     private weighInService: WeighInService,
-    private authService: AuthService
+    private authService: AuthService,
+    private fb: FormBuilder
   ) { }
 
-  ngOnInit(){ }
+  ngOnInit(){
+    this.userProfileForm = this.fb.group({
+      username: [this.user.username, [Validators.required]],
+      billingId: [this.user.billingId],
+      surveySubmitted: [this.user.surveySubmitted],
+    })
+  }
+
+  patchProfileForm(user: User){
+    this.userProfileForm.patchValue({
+      username: user.username,
+      billingId: user.billingId || "",
+      surveySubmitted: user.surveySubmitted || false,
+    })
+  }
+
+  resetUserProfile(){
+    this.patchProfileForm(this.user);
+  }
 
   handleOpenModal(content: any){
+    this.modalService.open(content, {
+      size: 'lg',
+      centered: true,
+      backdrop: true,
+    });
+  }
+
+  updateUserProfile(){
+    const { username, billingId, surveySubmitted } = this.userProfileForm.value;
+    this.user.username = username;
+    this.user.billingId = billingId;
+    this.user.surveySubmitted = surveySubmitted;
+
+    this.userService.updateUserProfile(this.user)
+      .pipe(finalize(() => this.modalService.dismissAll()))
+      .subscribe({
+        next: () => {
+          this.toastService.showSuccess('User Profile Updated')
+        },
+        error: (err) => this.error = err
+      });
+  }
+
+  openProfileModal(content: any) {
+    this.resetUserProfile();
     this.modalService.open(content, {
       size: 'lg',
       centered: true,

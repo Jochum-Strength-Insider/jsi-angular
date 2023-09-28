@@ -14,7 +14,7 @@
                     <label for="link">Link</label>
                     <input class="form-control" formControlName="link" id="link" type="text" placeholder="" />
                 </div>
-                <div class="form-group mb-3">
+                <div class="form-group">
                     <label for="link">Description</label>
                     <textarea class="form-control" formControlName="description" id="description" type="text" placeholder="" ></textarea>
                 </div>
@@ -22,15 +22,19 @@
         </div>
         <div class="modal-footer">
             <ng-container *ngIf="selectedResource; else addButton;">
-                <div class="d-flex justify-content-between">
+                <div class="w-100 d-flex justify-content-between">
                     <div>
                         <button type="button" class="btn btn-outline-success me-2" (click)="updateResource()">Save</button>
                         <button type="button" class="btn btn-outline-warning" (click)="resetResourceForm()">Reset</button>
                     </div>
+                    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
                 </div>
             </ng-container>
             <ng-template #addButton>
-                <button form="resourceForm" type="submit" class="btn btn-primary">Add Resource</button>
+                <div class="w-100 d-flex justify-content-between">
+                    <button form="resourceForm" type="submit" class="btn btn-primary">Add Resource</button>
+                    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+                </div>
             </ng-template>
         </div>
     </ng-container>

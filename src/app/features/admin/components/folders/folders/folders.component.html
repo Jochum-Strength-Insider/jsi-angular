@@ -5,23 +5,28 @@
     </div>
     <div class="modal-body">
         <form #form class="form" id="folderForm" [formGroup]="folderForm" (ngSubmit)="addFolder()" autocomplete="off">
-            <div class="form-group mb-3">
+            <div class="form-group">
                 <label for="title">Title</label>
                 <input class="form-control" formControlName="title" id="title" type="text" placeholder="Folder" maxlength="200"/>
             </div>
-            <ng-container *ngIf="selectedFolder; else addButton;">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <button [disabled]="!folderForm.valid" type="button" class="btn btn-outline-success me-2" (click)="updateFolder()">Save</button>
-                        <button type="button" class="btn btn-outline-warning" (click)="resetFolderForm()">Reset</button>
-                    </div>
-                    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
-                </div>
-            </ng-container>
-            <ng-template #addButton>
-                <button [disabled]="!folderForm.valid" type="submit" class="btn btn-primary">Add Folder</button>
-            </ng-template>
         </form>
+    </div>
+    <div class="modal-footer">
+        <ng-container *ngIf="selectedFolder; else addButton;">
+            <div class="w-100 d-flex justify-content-between">
+                <div>
+                    <button [disabled]="!folderForm.valid" type="button" class="btn btn-outline-success me-2" (click)="updateFolder()">Save</button>
+                    <button type="button" class="btn btn-outline-warning" (click)="resetFolderForm()">Reset</button>
+                </div>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </ng-container>
+        <ng-template #addButton>
+            <div class="w-100 d-flex justify-content-between">
+                <button form="folderForm" [disabled]="!folderForm.valid" type="submit" class="btn btn-primary">Add Folder</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </ng-template>
     </div>
 </ng-template>
 

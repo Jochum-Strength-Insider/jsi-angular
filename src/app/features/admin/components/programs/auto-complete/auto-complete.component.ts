@@ -59,9 +59,9 @@ export class AutoCompleteComponent implements OnInit {
   }
 
   filterTasksByExercise(options: Tasks[], label: string): Tasks[] {
-    const value = label.trim().toLowerCase();
+    const value = label.trim().toLocaleLowerCase();
     return options.filter((option: Tasks) => {
-      return option.e.toLowerCase().includes(value);
+      return option.e.toLocaleLowerCase().includes(value);
     });
   }
 

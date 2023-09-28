@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDrawer, MatSidenavContainer } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
@@ -14,7 +15,7 @@ import { FOLDERS_STRING, PROGRAM_IDS_STRING, ProgramService } from '@app/feature
 import { UserService } from '@app/features/admin/services/user.service';
 import { MessageService } from '@app/features/messages/services/message.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subscription, debounceTime, forkJoin, fromEvent, of, switchMap } from 'rxjs';
+import { Observable, Subscription, debounceTime, finalize, forkJoin, fromEvent, map, of, switchMap } from 'rxjs';
 
 /* TODO:
   Actually add user
@@ -29,6 +30,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
   @ViewChild('groupMessageModal') groupMessageModal: any;
   @ViewChild('groupProgramModal') groupProgramModal: any;
   @ViewChild('addUserModal') addUserModal: any;
+  @ViewChild(MatDrawer) matDrawer: MatDrawer;
 
   users: User[] = [];
   folders: Folder[] = [];
@@ -44,18 +46,11 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
     programId: ["", Validators.required]
   });
 
-  addUserForm = this.fb.group({
-    email: ["", [Validators.required, Validators.email],[UserAccountValidator.createValidator(this.auth)]],
-    username: ["", [Validators.required]],
-    password: ["", [Validators.required, Validators.minLength(7)]],
-    message: ""
-  });
+  addUserForm: FormGroup;
 
   get f() { return this.addUserForm.controls; }
 
-  showPassword: boolean = false;
-
-  sideNavMode: any = 'side';
+  mobile: boolean = false;
 
   paramsSub?: Subscription;
   usersListSub: Subscription;
@@ -79,6 +74,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private programsService: ProgramService,
     private userService: UserService,
+    private authService: AuthService,
     private toastService: ToastService,
     private resizeService: ResizeService
   ) { }
@@ -92,7 +88,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
     this.windowSub = fromEvent(window, 'resize')
       .pipe(debounceTime(200))
       .subscribe(() => {
-        this.sideNavMode = window.innerWidth < 768 ? 'over' : 'side';
+        this.mobile = window.innerWidth < 768;
       });
 
     this.authUserSub = this.auth.currentUser$
@@ -101,6 +97,8 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
           this.authUser = user
         }
       });
+
+    this.createAddUserForm();
   }
   
   ngOnDestroy(): void {
@@ -111,6 +109,24 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
     this.windowSub?.unsubscribe();
     this.authUserSub?.unsubscribe();
     this.userService.setCurrentUser(null);
+  }
+
+  createAddUserForm(){
+    this.addUserForm = this.fb.group({
+      email: ["", [Validators.required, Validators.email],[UserAccountValidator.createValidator(this.auth)]],
+      username: ["", [Validators.required]],
+      password: ["", [Validators.required, Validators.minLength(7)]],
+      message: ""
+    });
+  }
+
+  resetCreateAddUserForm(){
+    this.addUserForm.patchValue({
+      email: "",
+      username: "",
+      password: "InsiderSignup!",
+      message: ""
+    });
   }
 
   getUserFromRoute() {
@@ -127,7 +143,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
         next: (users) => {
           this.users = users;
           const currentUser = this.users.find(x => x.id === this.userIdFromParams) || null;
-          this.handleSetUser(currentUser);
+          this.setUser(currentUser);
         },
         error: (err) => {
           console.log(err)
@@ -182,7 +198,14 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
       })
   }
 
-  handleSetUser(user: User | null){
+  handleUserClicked(user: User){
+    this.setUser(user);
+    if(this.mobile){
+      this.matDrawer.close();
+    }
+  }
+
+  setUser(user: User | null){
     this.currentUser = user;
     this.userService.setCurrentUser(user);
   }
@@ -247,12 +270,44 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
   }
 
   handleAddUserClicked(){
-    this.addUserForm.reset();
+    this.resetCreateAddUserForm();
     this.handleOpenModal(this.addUserModal);
   }
 
   addUser(){
-    console.log('addUser', this.addUserForm.value);
+    const { username, email, password, message } = this.addUserForm.value;
+    this.authService.adminRegisterNewUser({ email, password })
+    .pipe(
+      switchMap((credential) => {
+        const { user } = credential;
+        return forkJoin([
+          this.authService.sendEmailVerification(user),
+          this.userService.addNewUser(user.uid, email, username)
+        ]).pipe(map(() => user.uid))
+      }),
+      switchMap((uid) => {
+        const WELCOME_MESSAGE = new Message("Welcome Message", "welcome_message_id", message.length > 0 ? message : "Welcome");
+        return this.messagesService.addUserMessage(uid, WELCOME_MESSAGE)
+          .pipe(switchMap((key) => {
+            if(key){
+              return this.userService.addUserUnreadMessage(uid, key, WELCOME_MESSAGE)
+            } else {
+              return of("")
+            }
+          }))
+      }),
+      finalize(() => this.modalService.dismissAll())
+    )
+    .subscribe({
+      next: (result) => {
+        console.log('user created', result);
+        this.toastService.showSuccess("New User Added")
+      },
+      error: (err) => {
+        console.log(err)
+        this.toastService.showError("Add Error Occured Adding New User")
+      }
+    })
   }
 
   folderSelected(target: EventTarget | null){
@@ -274,7 +329,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
     this.programForm.controls['programId'].patchValue(id);
   }
 
-  // @ViewChild(MatSidenavContainer) sidenavContainer: MatSidenavContainer;
+
   // sideNavSub: Subscription;
 
   // ngAfterViewInit() {

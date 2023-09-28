@@ -17,12 +17,14 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer justify-content-between">
-                            <div>
-                                <button form="workoutForm" [disabled]="!workoutForm.valid" type="submit" class="btn btn-outline-success me-2">Save</button>
-                                <button type="button" class="btn btn-outline-warning" (click)="resetWorkoutForm()">Reset</button>
+                        <div class="modal-footer">
+                            <div class="w-100 d-flex justify-content-between">
+                                <div>
+                                    <button form="workoutForm" [disabled]="!workoutForm.valid" type="submit" class="btn btn-outline-success me-2">Save</button>
+                                    <button type="button" class="btn btn-outline-warning" (click)="resetWorkoutForm()">Reset</button>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
                             </div>
-                            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
                         </div>
                     </ng-template>
 
@@ -31,12 +33,14 @@
                             <h4 class="modal-title" id="modal-basic-title">Save Program?</h4>
                             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
                         </div>
-                        <div class="modal-footer justify-content-between">
-                            <div>
-                                <button type="button" class="btn btn-success me-2" (click)="saveToPrograms()">Save To Programs</button>
-                                <button type="button" class="btn btn-outline-success" (click)="quickSave()">Quick Save</button>
+                        <div class="modal-footer">
+                            <div class="w-100 d-flex justify-content-between">
+                                <div>
+                                    <button type="button" class="btn btn-success me-2" (click)="saveToPrograms()">Save To Programs</button>
+                                    <button type="button" class="btn btn-outline-success" (click)="quickSave()">Quick Save</button>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
                             </div>
-                            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
                         </div>
                     </ng-template>
                 

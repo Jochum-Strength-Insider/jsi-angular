@@ -35,6 +35,7 @@ export const environment = {
   paypalSecret: process.env['PAYPAL_CLIENT_SECRET_DEV'],
   subscriptionId: process.env['SUBSCRIPTION_ID_DEV'],
   subscriptionPrice: process.env['SUBSCRIPTION_PRICE_DEV'],
+  userSubscriptionUrl: process.env['PAYPAL_USER_SUBSCRIPTION_URL_DEV'],
 };
 
 /*

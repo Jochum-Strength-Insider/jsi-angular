@@ -164,6 +164,10 @@ span.required {
   color: red;
 }
 
+.p-link {
+  font-size: unset;
+}
+
 @media (max-width: 576px) {
   h1,
   h2,
@@ -203,5 +207,4 @@ span.required {
   .app-container {
     padding-top: 0.5rem;
   }
-
 }

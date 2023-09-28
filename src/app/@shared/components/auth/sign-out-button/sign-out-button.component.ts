@@ -15,7 +15,8 @@ export class SignOutButtonComponent {
 
   logout(){
     this.auth.logout()
-    .then(() => this.router.navigate(['/auth/signin']))
-    .catch((e) => console.log(e.message));
+    .subscribe({
+      next: () => this.router.navigate(['/auth/signin'])
+    })
   }
 }

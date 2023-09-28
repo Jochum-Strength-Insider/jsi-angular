@@ -1,7 +1,7 @@
 <ng-template #template>
     <div class="d-flex">
         <a *ngIf="authUser.emailVerified" [routerLink]="['/messages']" class="d-flex justify-content-center align-items-center me-3 px-2">
-            <app-message-icon [uid]="authUser.id" />
+            <app-message-icon [uid]="authUser.id" [unread]="messages"/>
         </a>
         <button class="navbar-toggler"
                 type="button"

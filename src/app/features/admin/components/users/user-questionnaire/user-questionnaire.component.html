@@ -2,7 +2,8 @@
     <div class="card-body">
         <app-questionnaire-form
             [adminUser]="adminUser"
-            [questionnaire]="questionnaire">
+            [questionnaire]="questionnaire"
+            (formSubmitted)="updateQuestionnaire($event)">
         </app-questionnaire-form>
     </div>
 </div>

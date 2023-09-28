@@ -9,24 +9,29 @@
                 <label for="title">Exercise</label>
                 <input class="form-control" formControlName="exercise" id="exercise" type="text" placeholder="New Exercise" maxlength="200"/>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group">
                 <label for="link">Link</label>
                 <input class="form-control" formControlName="link" id="link" type="text"
                     placeholder="aBCdefGHiJ" maxlength="100"/>
             </div>
-            <ng-container *ngIf="selectedTask; else addButton;">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <button [disabled]="!taskForm.valid" type="button" class="btn btn-outline-success me-2" (click)="updateTask()">Save</button>
-                        <button type="button" class="btn btn-outline-warning" (click)="resetTaskForm()">Reset</button>
-                    </div>
-                    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
-                </div>
-            </ng-container>
-            <ng-template #addButton>
-                <button [disabled]="!taskForm.valid" type="submit" class="btn btn-primary">Add Exercise</button>
-            </ng-template>
         </form>
+    </div>
+    <div class="modal-footer">
+        <ng-container *ngIf="selectedTask; else addButton;">
+            <div class="w-100 d-flex justify-content-between">
+                <div>
+                    <button [disabled]="!taskForm.valid" type="button" class="btn btn-outline-success me-2" (click)="updateTask()">Save</button>
+                    <button type="button" class="btn btn-outline-warning" (click)="resetTaskForm()">Reset</button>
+                </div>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </ng-container>
+        <ng-template #addButton>
+            <div class="w-100 d-flex justify-content-between">
+                <button form="taskForm" [disabled]="!taskForm.valid" type="submit" class="btn btn-primary">Add Exercise</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </ng-template>
     </div>
 </ng-template>
 

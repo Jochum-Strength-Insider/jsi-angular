@@ -165,7 +165,7 @@ export class FolderComponent {
   }
 
   filterPrograms(value: string){
-    this.filteredPrograms = this.programsList.filter(program => program.title.toLowerCase().indexOf(value.toLowerCase()) > -1 )
+    this.filteredPrograms = this.programsList.filter(program => program.title.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1 )
   }
 
   ngOnDestroy() {

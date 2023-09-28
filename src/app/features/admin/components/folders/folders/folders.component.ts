@@ -65,7 +65,7 @@ export class FoldersComponent {
     }
     
   filterFolders(value: string){
-    this.filteredFolders = this.folders.filter(folder => folder.title.toLowerCase().indexOf(value.toLowerCase()) > -1 )
+    this.filteredFolders = this.folders.filter(folder => folder.title.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1 )
   }
 
   get f() { return this.folderForm.controls; }

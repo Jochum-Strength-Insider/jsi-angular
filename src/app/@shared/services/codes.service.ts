@@ -29,7 +29,7 @@ export class CodesService {
 
   getCodes():Observable<Code[]> {
     return this.codesListRef()
-    .valueChanges([], { idField: 'id' })
+      .valueChanges([], { idField: 'id' })
   }
 
   getActiveCodes():Observable<Code[]> {
@@ -39,6 +39,16 @@ export class CodesService {
     );
 
     return <Observable<Code[]>>activeCodesRef
+      .valueChanges([], { idField: 'id' });
+  }
+
+  getCodesByDiscountCode(discountCode: string): Observable<Code[]> {
+    const codesByPromoRef = this.db.list(
+      `${CODES_STRING}`,
+      ref => ref.orderByChild('distountCode').equalTo(discountCode)
+    );
+
+    return <Observable<Code[]>>codesByPromoRef
       .valueChanges([], { idField: 'id' });
   }
   
@@ -72,7 +82,7 @@ export class CodesService {
     return this.db.object(`codeDetails/${cid}`)
   }
   
-  private codeDetailsSubmissonsListRef(cid: string): AngularFireList<Submission> {
+  private codeDetailsSubmissionsListRef(cid: string): AngularFireList<Submission> {
     return this.db.list(`codeDetails/${cid}/submissions`)
   }
   
@@ -83,8 +93,12 @@ export class CodesService {
   }
 
   getCodeDetailsSubmissions(code: Code): Observable<Submission[]> {
-    return this.codeDetailsSubmissonsListRef(code.id)
+    return this.codeDetailsSubmissionsListRef(code.id)
       .valueChanges([], { idField: 'id' })
       .pipe(take(1))
     }
+
+  addCodeDetailsSubmission(code: Code, submission: Submission): Observable<string | null> {
+    return of(this.codeDetailsSubmissionsListRef(code.id).push(submission).key);
+  }
 }

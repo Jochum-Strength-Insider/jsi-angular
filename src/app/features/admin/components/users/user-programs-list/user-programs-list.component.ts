@@ -202,7 +202,7 @@ export class UserProgramsListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   filterWorkouts(value: string){
-    this.filteredWorkouts = this.workoutIds.filter(workout => workout.title.toLowerCase().indexOf(value.toLowerCase()) > -1 )
+    this.filteredWorkouts = this.workoutIds.filter(workout => workout.title.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1 )
   }
 
   openAddProgramModal(content: any, workout: WorkoutId | null) {

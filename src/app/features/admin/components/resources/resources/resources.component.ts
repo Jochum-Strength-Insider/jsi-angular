@@ -58,7 +58,7 @@ export class AdminResourcesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   filterResources(value: string){
-    this.filteredResources = this.resources.filter(resource => resource.title.toLowerCase().indexOf(value.toLowerCase()) > -1 )
+    this.filteredResources = this.resources.filter(resource => resource.title.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1 )
   }
 
   get f() { return this.resourceForm.controls; }
@@ -142,10 +142,10 @@ export class AdminResourcesComponent implements OnInit, AfterViewInit, OnDestroy
     resource.description = this.f['description'].value;
 
     this.resourcesService.addResource(resource)
+    .pipe(finalize(() => this.modalService.dismissAll()))
     .subscribe({
       next: () => {
-        this.toastService.showSuccess();
-        this.modalService.dismissAll();
+        this.toastService.showSuccess("Resource Added");
       },
       error: (error: Error) => {
         this.toastService.showError();
@@ -169,8 +169,11 @@ export class AdminResourcesComponent implements OnInit, AfterViewInit, OnDestroy
         this.selectedResource = null;
       }))
       .subscribe({
-        next: () => console.log('remove'),
-        error: (err: Error) => console.log(err),
+        next: () => this.toastService.showSuccess("Resource Deleted"),
+        error: (err: Error) => {
+          this.error = err;
+          this.toastService.showError();
+        },
       })
     }
   }
@@ -182,9 +185,10 @@ export class AdminResourcesComponent implements OnInit, AfterViewInit, OnDestroy
       this.selectedResource.description = this.f['description'].value;
 
       this.resourcesService.saveResource(this.selectedResource)
+      .pipe(finalize(() => this.modalService.dismissAll()))
       .subscribe({
         next: () => {
-          this.toastService.showSuccess();
+          this.toastService.showSuccess("Resource Updated");
         },
         error: (error: Error) => {
           this.toastService.showError();

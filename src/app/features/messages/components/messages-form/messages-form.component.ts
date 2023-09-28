@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,8 +11,9 @@ export class MessagesFormComponent implements OnDestroy {
   @Output() sendMessageClicked = new EventEmitter<string>();
   @ViewChild('messageInput') messageInput: ElementRef;
   messageForm: FormGroup;
-
   messageChangesSub?: Subscription;
+
+  timesClicked: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -24,7 +25,7 @@ export class MessagesFormComponent implements OnDestroy {
     });
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.messageChangesSub = this.message?.valueChanges
       .subscribe(() => {
         if(this.messageInput?.nativeElement){
@@ -44,7 +45,8 @@ export class MessagesFormComponent implements OnDestroy {
 
   sendMessage(){
     const message = this.message?.value ?? '';
-    this.sendMessageClicked.emit(message);
+    console.log('sendMessage', message);
+    this.sendMessageClicked.emit(`Test ${this.timesClicked++}`);
     this.messageForm.patchValue({message: ''});
   }
 

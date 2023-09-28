@@ -7,6 +7,7 @@ import { AccountContainerComponent } from './components/account-container/accoun
 import { SharedModule } from '@app/@shared/shared.module';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { UserImageComponent } from './components/user-image/user-image.component';
+import { UserCancellationComponent } from './components/user-cancellation/user-cancellation.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { UserImageComponent } from './components/user-image/user-image.component
     AccountContainerComponent,
     AccountPageComponent,
     UserInfoComponent,
-    UserImageComponent
+    UserImageComponent,
+    UserCancellationComponent
   ],
   imports: [
     CommonModule,

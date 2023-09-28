@@ -21,17 +21,16 @@ export class QuestionnaireFormComponent implements OnInit, OnChanges {
   get f() { return this.questionnaireForm.controls }
 
   ngOnInit(){
-    const disabled = this.adminUser !== null;
     this.questionnaireForm = this.fb.group({
-      experience: [{value: "", disabled }, Validators.required],
-      injuries: [{value: "", disabled }, Validators.required],
-      painfulMovement: [{value: "", disabled }, Validators.required],
-      enjoyedMovement: [{value: "", disabled }, Validators.required],
-      ultimateGoal: [{value: "", disabled }, Validators.required],
-      daysPerWeek: [{value: "", disabled }, Validators.required],
-      equipment: [{value: "", disabled }, Validators.required],
-      comments: [{value: "", disabled }],
-      referral: [{value: "", disabled }, Validators.required],
+      experience: [{value: ""}, Validators.required],
+      injuries: [{value: ""}, Validators.required],
+      painfulMovement: [{value: ""}, Validators.required],
+      enjoyedMovement: [{value: ""}, Validators.required],
+      ultimateGoal: [{value: ""}, Validators.required],
+      daysPerWeek: [{value: ""}, Validators.required],
+      equipment: [{value: ""}, Validators.required],
+      comments: [{value: ""}],
+      referral: [{value: ""}],
     });
 
     this.patchQuestionnaire(this.questionnaire);
@@ -58,8 +57,6 @@ export class QuestionnaireFormComponent implements OnInit, OnChanges {
   }
 
   submit(){
-    if(this.adminUser !== null){ return; }
-
     if(this.questionnaireForm.invalid){
       this.submitted = true;
     } else {

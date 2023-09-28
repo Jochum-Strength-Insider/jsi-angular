@@ -19,7 +19,9 @@ export const environment = {
   crytoKey: 'Ins1d3r!',
   login: '',
   password: '',
+  paypalId: process.env['PAYPAL_CLIENT_ID_DEV'],
   paypalSecret: process.env['PAYPAL_CLIENT_SECRET_DEV'],
   subscriptionId: process.env['SUBSCRIPTION_ID_DEV'],
   subscriptionPrice: process.env['SUBSCRIPTION_PRICE_DEV'],
+  userSubscriptionUrl: process.env['PAYPAL_USER_SUBSCRIPTION_URL_DEV'],
 };

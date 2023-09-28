@@ -38,23 +38,66 @@
     </ng-container>
 </ng-template>
 
+<ng-template #updateUserModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Update {{ user.username }} information?</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <form #form class="form" id="userProfileForm" [formGroup]="userProfileForm" (ngSubmit)="updateUserProfile()" autocomplete="off">
+            <div class="form-group mb-3">
+                <label for="username">Username</label>
+                <input class="form-control" formControlName="username" id="username" type="text" placeholder="John Doe"/>
+            </div>
+            <div class="form-group mb-3">
+                <label for="billingId">Billing Id</label>
+                <input class="form-control" formControlName="billingId" id="billingId" type="text" placeholder="I-1ABCDEFG2HIJ"/>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" formControlName="surveySubmitted" type="checkbox" role="switch">
+                <label class="form-check-label" for="surveySubmitted">Questionnaire Submitted</label>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="w-100 d-flex justify-content-between">
+            <div>
+                <button form="userProfileForm" type="submit" [disabled]="!userProfileForm.valid" class="btn btn-outline-success me-2">Save</button>
+                <button type="button" class="btn btn-outline-warning" (click)="resetUserProfile()">Reset</button>
+            </div>
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+        </div>
+    </div>
+</ng-template>
+
 <div class="list-group mb-5">
     <div class="list-group-item d-flex justify-content-between align-items-center">
         <div>
-            <strong>Username:</strong> {{user.username}}
+            <strong>Username:</strong> {{ user.username }}
         </div>
-        <buton
-            class="btn"
-            type="button"
-            (click)="toggleUserIsActive()"
-            [ngClass]="user.ACTIVE ? 'btn-danger' : 'btn-success'"
-        >
-            {{ user.ACTIVE ? 'Deactivate' : 'Activate' }}
-        </buton>
+        <div>
+            <button
+                class="btn btn-primary me-2"
+                type="button"
+                (click)="openProfileModal(updateUserModal)"
+            >
+                Edit
+            </button>
+            <buton 
+                class="btn"
+                type="button"
+                (click)="toggleUserIsActive()"
+                [ngClass]="user.ACTIVE ? 'btn-danger' : 'btn-success'"
+            >
+                {{ user.ACTIVE ? 'Deactivate' : 'Activate' }}
+            </buton>
+        </div>
     </div>
     <div class="list-group-item no-top-border"><strong>E-Mail:</strong> {{ user.email }}</div>
     <div class="list-group-item"><strong>Member Since:</strong> {{ user.createdAt | date }}</div>
     <div class="list-group-item"><strong>Last Program:</strong> {{ user.programDate | date }}</div>
+    <div class="list-group-item"><strong>Billing Id: </strong><a target="_blank" [href]="'https://www.paypal.com/billing/subscriptions/' + user.billingId  | sanitizeUrl" >{{ user.billingId }}</a></div>
+    <div class="list-group-item"><strong>Questionnaire Submitted:</strong> {{ user.surveySubmitted ? 'Yes' : 'No' }}</div>
     <div class="list-group-item">
         <button
             class="btn btn-outline-primary"
