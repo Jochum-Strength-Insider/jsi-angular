@@ -42,7 +42,6 @@ export class AutoCompleteComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     ifPropChanged(changes['value'], () => {
        this.inputCtrl.setValue({ e: changes['value'].currentValue }, { emitEvent: false }) 
-      //  console.log('ifPropChanged:', changes['value'].currentValue)
       });
   }
 

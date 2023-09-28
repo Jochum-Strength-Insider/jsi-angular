@@ -4,7 +4,7 @@ import { User } from '@app/@core/models/auth/user.model';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { UserService } from '@app/features/admin/services/user.service';
 import { NgbNav } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
 
 
 @Component({
@@ -14,8 +14,12 @@ import { Observable, tap } from 'rxjs';
 })
 export class UserItemComponent {
   @ViewChild('nav') nav: NgbNav;
-  authUser$: Observable<User | null>;
-  currentUser$: Observable<User | null>;
+
+  authUser: User | null;
+  selectedUser: User | null;
+  authUserSub: Subscription;
+  selectedUserSub: Subscription;
+
   active: number = 1;
   activeTitle: string = 'Profile'
   navItems: Array<{id: number, title: string}> = [
@@ -31,13 +35,22 @@ export class UserItemComponent {
     private router: Router,
     private authService: AuthService,
     private userService: UserService
-  ){
-    console.log('userItem Constructor');
-    this.currentUser$ = this.userService.currentUser$;
-    this.authUser$ = this.authService.currentUser$.pipe(
-      tap((user) => console.log('user', user)),
-      tap((user) => { if(user && !user.ADMIN){ this.router.navigateByUrl('/signin') } })
-    );
+  ){ }
+
+  ngOnInit(){
+    this.selectedUserSub = this.userService.selectedUser$
+      .subscribe((user) => {
+        this.selectedUser = user
+      });
+
+    this.authUserSub = this.authService.currentUser$
+      .subscribe((user) => {
+        if(user && !user.ADMIN){
+          this.router.navigateByUrl('/signin')
+          return;
+        }
+        this.authUser = user;
+      })
   }
 
   selectNavItem(id: number) {
@@ -46,6 +59,11 @@ export class UserItemComponent {
 
   changeTitle(id: number){
     this.activeTitle = this.navItems.find(x => x.id === id)?.title || "User";
+  }
+
+  ngOnDestroy(){
+    this.authUserSub?.unsubscribe();
+    this.selectedUserSub?.unsubscribe();
   }
 }
 

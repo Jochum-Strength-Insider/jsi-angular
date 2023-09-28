@@ -14,12 +14,13 @@ import { MessageService } from '../../services/message.service';
 
 
 @Component({
-  selector: 'app-messages-container',
-  templateUrl: './messages-container.component.html',
-  styleUrls: ['./messages-container.component.css']
+  selector: 'app-admin-messages-container',
+  templateUrl: './admin-messages-container.component.html',
+  styleUrls: ['./admin-messages-container.component.css']
 })
-export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() user: User;
+  @Input() adminUser: User;
 
   @ViewChild('scrollContain') scrollContain: ElementRef;
   @ViewChild('scrollBottom') scrollBottom: ElementRef;
@@ -60,16 +61,16 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
   ){}
 
   ngOnInit(): void {
-    this.listenForMessages();
-    this.setUserCurrentlyMessaging();
-    this.listenForAdminCurrentlyMessaging();
-    this.clearUserUnreadMessages();
+    // Delay to keep scroll in sync with admin tabs animation
+    this.scrollDelay = 150;
+    this.setAdminCurrentlyMessaging();
+    this.listenForUserCurrentlyMessaging();
   }
 
   ngAfterViewInit(): void {
     this.scrollSubscription = this.messagesLoadedSubject
       .subscribe(() => {
-        if(this.scroll){
+        if(this.scroll) {
           setTimeout(() => {
             this.scrollToBottom(!this.initialLoad);
             this.initialLoad = false;
@@ -79,9 +80,15 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
       });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    ifPropChanged(changes['user'], () => {
+      this.listenToNewUserMessages()
+    });
+  }
+
   ngOnDestroy(): void {
     this.messageService
-      .removeUserCurrentlyMessaging(this.user.id)
+      .clearAdminCurrentlyMessaging()
       .subscribe();
     this.messagesSub?.unsubscribe();
     this.scrollSubscription?.unsubscribe();
@@ -170,14 +177,18 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
 
   handleSendMessage(message: string) {
     if(message.trim().length > 0) {
-      const messageObject = new Message(message, this.user.id, this.user.username);
+      const messageObject = new Message(message, this.adminUser.id, this.adminUser.username)
 
       this.messageService.addUserMessage(this.user.id, messageObject)
       .pipe(
-        switchMap((key) => 
-          this.messageService.addAdminUnreadMessage(messageObject, key)
-          .pipe(map(() => key))
-        ),
+        switchMap((key) => {
+          if( key && (!this.currentlyMessaging) ) {
+            return this.messageService.addUserUnreadMessage(this.user.id, key, messageObject)
+              .pipe(map(() => key))
+          } else {
+            return of(key)
+          }
+        }),
       )
       .subscribe({
         error: (err: Error) => this.error = err

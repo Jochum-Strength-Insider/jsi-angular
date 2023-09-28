@@ -101,6 +101,25 @@ export class MessageService {
     return defer(() => this.adminUnreadListRef().remove())
   }
 
+  // *** User Unread Messagse API ***
+
+  private usersUnreadMessasagesListRef(uid: string): AngularFireList<Message>{
+    return this.db.list(`unreadMessages/${uid}`);
+  }
+
+  getUserUnreadMessages(uid: string): Observable<Message[]> {
+    return this.usersUnreadMessasagesListRef(uid)
+      .valueChanges([], { idField: 'id' })
+  }
+
+  addUserUnreadMessage(uid: string, mid: string, message: Message): Observable<void> {
+    return defer(() => this.usersUnreadMessasagesListRef(uid).update(mid, message));
+  }
+
+  clearUserUnreadMessage(uid: string): Observable<void> {
+    return defer(() => this.usersUnreadMessasagesListRef(uid).remove());
+  }
+
   // *** Admin CurrentlyMessaging API ***
 
   adminCurrentlyMessagingObjectRef(): AngularFireObject<{uid: string}> {

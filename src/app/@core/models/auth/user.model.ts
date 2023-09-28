@@ -6,7 +6,6 @@ export class User {
     email: string;
     username: string;
     programDate: number;
-    unread: Message[];
     emailVerified: boolean;
     surveySubmitted: boolean;
     ACTIVE: boolean;

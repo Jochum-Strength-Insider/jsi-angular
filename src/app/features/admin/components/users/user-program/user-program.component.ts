@@ -91,7 +91,7 @@ export class UserProgramComponent implements OnInit {
           this.router.navigateByUrl('/admin/users');
           return EMPTY;
         }
-        return this.userService.currentUser$
+        return this.userService.selectedUser$
           .pipe(map((user) => ({ user, uid })))
       }),
       switchMap(({user, uid}) => {

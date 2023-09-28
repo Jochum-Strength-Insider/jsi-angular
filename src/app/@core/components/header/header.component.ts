@@ -3,6 +3,7 @@ import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { UserService } from '@app/features/admin/services/user.service';
+import { MessageService } from '@app/features/messages/services/message.service';
 import { Subscription, of, switchMap, tap } from 'rxjs';
 
 @Component({
@@ -18,7 +19,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService : AuthService,
-    private userService: UserService
+    private messagesService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -27,7 +28,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         tap((user) => this.authUser = user),
         switchMap((user) => {
         if(user){
-          return this.userService.getUserUnreadMessages(user.id)
+          return this.messagesService.getUserUnreadMessages(user.id)
         } else {
           return of([]);
         }

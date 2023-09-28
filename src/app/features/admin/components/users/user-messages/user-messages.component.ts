@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { User } from '@app/@core/models/auth/user.model';
 
 @Component({
@@ -6,11 +6,7 @@ import { User } from '@app/@core/models/auth/user.model';
   templateUrl: './user-messages.component.html',
   styleUrls: ['./user-messages.component.css']
 })
-export class UserMessagesComponent implements OnInit {
+export class UserMessagesComponent {
   @Input() user: User;
-  @Input() adminUser: User | null;
-
-  ngOnInit() {
-    console.log('user', this.user);
-  }
+  @Input() adminUser: User;
 }

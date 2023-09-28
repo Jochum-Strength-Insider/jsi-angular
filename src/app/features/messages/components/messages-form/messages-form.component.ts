@@ -13,8 +13,6 @@ export class MessagesFormComponent implements OnDestroy {
   messageForm: FormGroup;
   messageChangesSub?: Subscription;
 
-  timesClicked: number = 0;
-
   constructor(
     private fb: FormBuilder,
   ){}
@@ -45,8 +43,7 @@ export class MessagesFormComponent implements OnDestroy {
 
   sendMessage(){
     const message = this.message?.value ?? '';
-    console.log('sendMessage', message);
-    this.sendMessageClicked.emit(`Test ${this.timesClicked++}`);
+    this.sendMessageClicked.emit(message);
     this.messageForm.patchValue({message: ''});
   }
 

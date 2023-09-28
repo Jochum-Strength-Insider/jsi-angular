@@ -49,11 +49,11 @@ export class AdminUnreadComponent {
       })
   }
 
-  setCurrentUser(userId: string){
+  setSelectedUser(userId: string){
     this.userService
       .getUserById(userId)
       .subscribe({
-        next: (user) => this.userService.setCurrentUser(user),
+        next: (user) => this.userService.setSelectedUser(user),
         error: (err) => this.error = err
       })
   }

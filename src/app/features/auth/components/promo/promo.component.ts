@@ -37,7 +37,6 @@ export class PromoComponent implements OnInit, OnChanges {
   get f() { return this.promoForm.controls; }
   
   applyDiscount() {
-    console.log('applyDiscount');
     setTimeout(() => {
       this.applyPromo.emit(this.f['promo'].value);
     }, 100)

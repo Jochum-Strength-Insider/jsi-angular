@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '@app/@core/models/auth/user.model';
 import { ToastService } from '@app/@core/services/toast.service';
@@ -9,7 +9,7 @@ import { MessageService } from '@app/features/messages/services/message.service'
 import { WorkoutService } from '@app/features/program/services/workout.service';
 import { WeighInService } from '@app/features/weigh-in/services/weigh-in.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { finalize, forkJoin } from 'rxjs';
+import { Subscription, finalize, forkJoin } from 'rxjs';
 
 
 
@@ -18,7 +18,7 @@ import { finalize, forkJoin } from 'rxjs';
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent {
+export class UserProfileComponent implements OnInit {
   @ViewChild('clearMessagesModal') clearMessagesModal: any;
   @ViewChild('clearDataModal') clearDataModal: any;
   @ViewChild('editUserModal') editUserModal: any;
@@ -29,6 +29,8 @@ export class UserProfileComponent {
   error: Error;
   userProfileForm: FormGroup;
 
+  testSub: Subscription;
+
   constructor(
     private modalService: NgbModal,
     private toastService: ToastService,
@@ -38,6 +40,7 @@ export class UserProfileComponent {
     private workoutService: WorkoutService,
     private weighInService: WeighInService,
     private authService: AuthService,
+    private messageService: MessageService,
     private fb: FormBuilder
   ) { }
 
@@ -133,5 +136,4 @@ export class UserProfileComponent {
       error: (err) => this.error = err
     });
   }
-
 }

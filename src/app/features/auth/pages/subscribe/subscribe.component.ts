@@ -87,7 +87,6 @@ export class SubscribeComponent implements OnInit, OnDestroy {
   };
 
   handlePaymentStepSubmit(data: IOnApproveCallbackData) {
-    console.log('handlePaymentStepSubmit', data);
     this.createUser(data);
     this.navigateToStep(3);
   };
@@ -155,7 +154,7 @@ export class SubscribeComponent implements OnInit, OnDestroy {
         return this.messageService.addUserMessage(uid, WELCOME_MESSAGE)
           .pipe(switchMap((key) => {
             if(key){
-              return this.userService.addUserUnreadMessage(uid, key, WELCOME_MESSAGE)
+              return this.messageService.addUserUnreadMessage(uid, key, WELCOME_MESSAGE)
             } else {
               return of("")
             }

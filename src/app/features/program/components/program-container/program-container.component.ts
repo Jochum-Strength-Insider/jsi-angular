@@ -44,7 +44,6 @@ export class ProgramContainerComponent implements OnDestroy {
             this.lsService.saveData('programKey', result.id);
         },
         error: error => {
-          console.log(error)
           this.error = error;
           this.clearWorkout();
         }

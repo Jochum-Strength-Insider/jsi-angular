@@ -13,24 +13,20 @@ export const USERS_STRING = 'users';
   providedIn: 'root'
 })
 export class UserService {
-  private currentUserSubject = new BehaviorSubject<UserModel | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private selectedUserSubject = new BehaviorSubject<UserModel | null>(null);
+  public selectedUser$ = this.selectedUserSubject.asObservable();
 
   constructor(
     private db: AngularFireDatabase,
     private lsService: LocalStorageService
   ) {}
 
-  public setCurrentUser(user: UserModel | null){
-    this.currentUserSubject.next(user);
+  public setSelectedUser(user: UserModel | null){
+    this.selectedUserSubject.next(user);
   }
 
   private usersListRef(): AngularFireList<UserModel>{
     return this.db.list(USERS_STRING);
-  }
-
-  private usersUnreadMessasagesListRef(uid: string): AngularFireList<Message>{
-    return this.db.list(`${USERS_STRING}/${uid}/unread`);
   }
 
   private usersObjectRef(uid: string): AngularFireObject<UserModel>{
@@ -77,19 +73,6 @@ export class UserService {
     const userRef = this.usersObjectRef(uid)
     return defer( () => userRef.update({ "ACTIVE": active }))
       .pipe( tap(() => this.lsService.removeData(USERS_STRING)) );
-  }
-
-  getUserUnreadMessages(uid: string): Observable<Message[]> {
-    return this.usersUnreadMessasagesListRef(uid)
-      .valueChanges([], { idField: 'id' })
-  }
-
-  addUserUnreadMessage(uid: string, mid: string, message: Message): Observable<void> {
-    return defer(() => this.usersUnreadMessasagesListRef(uid).update(mid, message));
-  }
-
-  clearUserUnreadMessage(uid: string): Observable<void> {
-    return defer(() => this.usersUnreadMessasagesListRef(uid).remove());
   }
 
   addNewUser(uid: string, email: string, username: string, billingId: string = ""): Observable<void> {

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDrawer, MatSidenavContainer } from '@angular/material/sidenav';
+import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
@@ -15,11 +15,8 @@ import { FOLDERS_STRING, PROGRAM_IDS_STRING, ProgramService } from '@app/feature
 import { UserService } from '@app/features/admin/services/user.service';
 import { MessageService } from '@app/features/messages/services/message.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subscription, debounceTime, finalize, forkJoin, fromEvent, map, of, switchMap } from 'rxjs';
+import { Observable, Subscription, debounceTime, finalize, forkJoin, fromEvent, map, of, switchMap, take } from 'rxjs';
 
-/* TODO:
-  Actually add user
-*/
 
 @Component({
   selector: 'app-admin-panel',
@@ -80,6 +77,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(){
+    console.log('admin panel oninit')
     this.getUserFromRoute();
     this.fetchUsers(); 
     this.fetchFolders();
@@ -108,7 +106,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
     this.programIdsSub?.unsubscribe();
     this.windowSub?.unsubscribe();
     this.authUserSub?.unsubscribe();
-    this.userService.setCurrentUser(null);
+    this.userService.setSelectedUser(null);
   }
 
   createAddUserForm(){
@@ -138,12 +136,15 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
   }
 
   fetchUsers() {
-      this.userService.getUsers()
+    console.log('fetchUsers');
+      this.usersListSub = this.userService.getUsers()
+      .pipe(take(1))
       .subscribe({  
-        next: (users) => {
+        next: (users: User[]) => {
+          console.log('getUsers', users);
           this.users = users;
           const currentUser = this.users.find(x => x.id === this.userIdFromParams) || null;
-          this.setUser(currentUser);
+          // this.setUser(currentUser);
         },
         error: (err) => {
           console.log(err)
@@ -206,8 +207,9 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
   }
 
   setUser(user: User | null){
+    console.log('admin-panel set user', user)
     this.currentUser = user;
-    this.userService.setCurrentUser(user);
+    this.userService.setSelectedUser(user);
   }
 
   handleOpenModal(content: any){
@@ -290,18 +292,21 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
         return this.messagesService.addUserMessage(uid, WELCOME_MESSAGE)
           .pipe(switchMap((key) => {
             if(key){
-              return this.userService.addUserUnreadMessage(uid, key, WELCOME_MESSAGE)
+              return this.messagesService.addUserUnreadMessage(uid, key, WELCOME_MESSAGE)
             } else {
               return of("")
             }
           }))
       }),
-      finalize(() => this.modalService.dismissAll())
+      finalize(() => {
+        this.modalService.dismissAll();
+        this.fetchUsers();
+      })
     )
     .subscribe({
       next: (result) => {
         console.log('user created', result);
-        this.toastService.showSuccess("New User Added")
+        this.toastService.showSuccess("New User Added");
       },
       error: (err) => {
         console.log(err)
