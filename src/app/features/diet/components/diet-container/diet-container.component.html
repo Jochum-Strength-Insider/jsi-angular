@@ -16,9 +16,14 @@
                     readonly
                 />
 			</div>
-            <button [disabled]="alreadyCheckedIn" type="submit" class="btn btn-primary">Add Page</button>
 		</form>
 	</div>
+    <div class="modal-footer">
+        <div class="w-100 d-flex justify-content-between">
+            <button form="dateForm" [disabled]="alreadyCheckedIn" type="submit" class="btn btn-primary">Add Page</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+        </div>
+    </div>
 </ng-template>
 
 <div class="card date-select-card">
@@ -46,7 +51,7 @@
         <div ngbAccordionCollapse class="accordion-collapse card-collapse">
             <div ngbAccordionBody >
                 <ng-template>
-                    <app-diet-form-row [diet]="diet" [isAdmin]="adminUser !== null" (saveDiet)="handleSaveDiet($event)"></app-diet-form-row>
+                    <app-diet-form-row [diet]="diet" [index]="i" [isAdmin]="adminUser !== null" (saveDiet)="handleSaveDiet($event)"></app-diet-form-row>
                 </ng-template>
             </div>
         </div>

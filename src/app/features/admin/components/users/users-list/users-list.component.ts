@@ -4,20 +4,20 @@ import { User, UserKeys, UserWithSelection } from '@app/@core/models/auth/user.m
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { Subscription } from 'rxjs';
 
+
 @Component({
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.css']
 })
 export class UsersListComponent implements OnInit, OnChanges {
-  @Output() userClicked = new EventEmitter<User | null>();
+  @Output() userClicked = new EventEmitter<User>();
   @Output() addUserClicked = new EventEmitter();
   @Output() sendGroupMessagesClicked = new EventEmitter<User[]>();
   @Output() setGroupProgramsClicked = new EventEmitter<User[]>();
 
   @Input() users: UserWithSelection[] = [];
   @Input() currentUser: User | null = null;
-  @Input() currentUserId: string | null;
 
   searchSub: Subscription;
 
@@ -50,7 +50,10 @@ export class UsersListComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     ifPropChanged(changes['users'], () => {
       this.filterUsers();
-    })
+    });
+    ifPropChanged(changes['currentUser'], (user) => {
+      console.log(user)
+    });
   }
 
   ngOnDestroy() {

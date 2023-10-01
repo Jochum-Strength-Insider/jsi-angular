@@ -1,6 +1,7 @@
-import { Component, Output, EventEmitter, Input, SimpleChanges, OnInit, OnChanges } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Code } from '@app/@core/models/codes/code.model';
+import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 
 @Component({
   selector: 'app-promo',
@@ -20,20 +21,24 @@ export class PromoComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.promoForm = this.fb.group({
-      promo: ["", [Validators.required]],
+      promo: [{value: "", disabled: this.discountApplied }, [Validators.required]],
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.discountedAmount = this.defaultAmount - this.appliedCode.price;
-    if(this.discountApplied){
-      this.f['promo']?.disable();
-    }
+    ifPropChanged(changes['discountApplied'], (applied) => {
+      if(applied && this.promoForm){
+        this.f['promo']?.disable();
+      }
+    })
   }
 
   get f() { return this.promoForm.controls; }
   
   applyDiscount() {
-    this.applyPromo.emit(this.f['promo'].value);
+    setTimeout(() => {
+      this.applyPromo.emit(this.f['promo'].value);
+    }, 100)
   };
 }

@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { User as UserModel } from '@app/@core/models/auth/user.model';
 import { AuthService } from '@app/@shared/services/auth.service';
-import { Subscription, first, forkJoin } from 'rxjs';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-account-page',

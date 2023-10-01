@@ -6,27 +6,32 @@
     <div class="modal-body">
         <form #form class="form" id="taskForm" [formGroup]="taskForm" (ngSubmit)="addTasks()" autocomplete="off">
             <div class="form-group mb-3">
-                <label for="title">Exercise</label>
+                <label for="exercise">Exercise</label>
                 <input class="form-control" formControlName="exercise" id="exercise" type="text" placeholder="New Exercise" maxlength="200"/>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group">
                 <label for="link">Link</label>
                 <input class="form-control" formControlName="link" id="link" type="text"
                     placeholder="aBCdefGHiJ" maxlength="100"/>
             </div>
-            <ng-container *ngIf="selectedTask; else addButton;">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <button [disabled]="!taskForm.valid" type="button" class="btn btn-outline-success me-2" (click)="updateTask()">Save</button>
-                        <button type="button" class="btn btn-outline-warning" (click)="resetTaskForm()">Reset</button>
-                    </div>
-                    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
-                </div>
-            </ng-container>
-            <ng-template #addButton>
-                <button [disabled]="!taskForm.valid" type="submit" class="btn btn-primary">Add Exercise</button>
-            </ng-template>
         </form>
+    </div>
+    <div class="modal-footer">
+        <ng-container *ngIf="selectedTask; else addButton;">
+            <div class="w-100 d-flex justify-content-between">
+                <div>
+                    <button [disabled]="!taskForm.valid" type="button" class="btn btn-outline-success me-2" (click)="updateTask()">Save</button>
+                    <button type="button" class="btn btn-outline-warning" (click)="resetTaskForm()">Reset</button>
+                </div>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </ng-container>
+        <ng-template #addButton>
+            <div class="w-100 d-flex justify-content-between">
+                <button form="taskForm" [disabled]="!taskForm.valid" type="submit" class="btn btn-primary">Add Exercise</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </ng-template>
     </div>
 </ng-template>
 
@@ -49,11 +54,11 @@
 </ng-template>
 
 
-<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openTasksModal(addModal, filteredTasks.length === 1 ? filteredTasks[0] : null)" autocomplete="off">
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openTasksModal(addModal, null)" autocomplete="off">
     <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search..." maxlength="50" aria-label="Search Tasks"/>
     <div class="input-group-append">
         <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">
-            {{filteredTasks.length === 1 ? "Edit" : "Add"}}
+            Add
         </button>
     </div>
 </form>

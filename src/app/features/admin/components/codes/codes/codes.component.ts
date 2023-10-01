@@ -71,7 +71,7 @@ export class CodesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   filterCodes(value: string){
-    this.filteredCodes = this.codes.filter(code => code.title.toLowerCase().indexOf(value.toLowerCase()) > -1 )
+    this.filteredCodes = this.codes.filter(code => code.title.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1 )
   }
 
   get f() { return this.codeForm.controls; }
@@ -119,7 +119,6 @@ export class CodesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.filterCodes(this.search);
       },
       error: (err: Error) => {
-        console.log(err)
         this.error = err;
       }
     })
@@ -158,7 +157,7 @@ export class CodesComponent implements OnInit, AfterViewInit, OnDestroy {
     const code = new Code();
     code.title = this.f['title'].value;
     code.subscriptionId = this.f['subscriptionId'].value;
-    code.distountCode = this.f['discountCode'].value;
+    code.distountCode = this.f['discountCode'].value.toLocaleLowerCase();
     code.price = this.f['price'].value;
     code.codeType = this.f['codeType'].value;
 
@@ -208,10 +207,10 @@ export class CodesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateCode(){
-    if(this.selectedCode){
+    if(this.selectedCode && this.codeForm.valid){
       this.selectedCode.title = this.f['title'].value;
       this.selectedCode.subscriptionId = this.f['subscriptionId'].value;
-      this.selectedCode.distountCode = this.f['discountCode'].value;
+      this.selectedCode.distountCode = this.f['discountCode'].value.toLocaleLowerCase();
       this.selectedCode.price = this.f['price'].value;
       this.selectedCode.codeType = this.f['codeType'].value;
 
@@ -227,4 +226,5 @@ export class CodesComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
   }
+
 }

@@ -3,6 +3,7 @@ import { Workout } from '@app/@core/models/program/workout.model';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
 import { Subscription, of, switchMap } from 'rxjs';
 import { WorkoutService } from '../../services/workout.service';
+import { User } from '@app/@core/models/auth/user.model';
 
 @Component({
   selector: 'app-program-container',
@@ -10,7 +11,7 @@ import { WorkoutService } from '../../services/workout.service';
   styleUrls: ['./program-container.component.css']
 })
 export class ProgramContainerComponent implements OnDestroy {
-  @Input() uid: string;
+  @Input() user: User;
   programSub: Subscription;
   program: Workout;
   programKey: string;
@@ -19,19 +20,21 @@ export class ProgramContainerComponent implements OnDestroy {
   constructor(
     private service: WorkoutService,
     private lsService: LocalStorageService
-  ){ }
+  ){
+    this.program = this.lsService.getParseData('program');
+  }
 
   ngOnInit(): void {
-    // this.program = this.lsService.getParseData('program')
-    // this.programKey = this.lsService.getData('programKey');
+    this.program = this.lsService.getParseData('program');
 
     this.programSub = this.service
-      .getActiveWorkoutId(this.uid)
+      .getActiveWorkoutId(this.user.id)
       .pipe(
         switchMap((wid) => {
           if(wid.length > 0){
-            return this.service.getWorkout(this.uid, wid[0].id)
+            return this.service.getWorkout(this.user.id, wid[0].id)
           } else {
+            this.lsService.removeData('program');
             return of();
           }
         })
@@ -44,7 +47,6 @@ export class ProgramContainerComponent implements OnDestroy {
             this.lsService.saveData('programKey', result.id);
         },
         error: error => {
-          console.log(error)
           this.error = error;
           this.clearWorkout();
         }

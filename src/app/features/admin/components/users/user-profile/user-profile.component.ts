@@ -1,15 +1,17 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '@app/@core/models/auth/user.model';
 import { ToastService } from '@app/@core/services/toast.service';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { UserService } from '@app/features/admin/services/user.service';
 import { DietService } from '@app/features/diet/services/diet.service';
-import { MessageService } from '@app/features/messages/services/message.service';
+import { MessageService } from '@app/@shared/services/message.service';
 import { WorkoutService } from '@app/features/program/services/workout.service';
 import { WeighInService } from '@app/features/weigh-in/services/weigh-in.service';
+import { environment } from '@env/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { finalize, forkJoin } from 'rxjs';
+import { Subscription, finalize, forkJoin } from 'rxjs';
+
 
 
 @Component({
@@ -17,16 +19,17 @@ import { finalize, forkJoin } from 'rxjs';
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css']
 })
-export class UserProfileComponent {
+export class UserProfileComponent implements OnInit {
   @ViewChild('clearMessagesModal') clearMessagesModal: any;
   @ViewChild('clearDataModal') clearDataModal: any;
+  @ViewChild('editUserModal') editUserModal: any;
 
   @Input() user: User;
   @Input() adminUser: User;
+  paypalUrl: string;
 
   error: Error;
-
-  userForm: FormGroup;
+  userProfileForm: FormGroup;
 
   constructor(
     private modalService: NgbModal,
@@ -36,12 +39,60 @@ export class UserProfileComponent {
     private messagesService: MessageService,
     private workoutService: WorkoutService,
     private weighInService: WeighInService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private messageService: MessageService,
+    private fb: FormBuilder
+  ) {
+  }
 
-  ngOnInit(){ }
+  ngOnInit(){
+    this.paypalUrl = environment.billingSubscriptionUrl || 'https://www.paypal.com/billing/subscriptions/';
+
+    this.userProfileForm = this.fb.group({
+      username: [this.user.username, [Validators.required]],
+      billingId: [this.user.billingId],
+      surveySubmitted: [this.user.surveySubmitted],
+    })
+  }
+
+  patchProfileForm(user: User){
+    this.userProfileForm.patchValue({
+      username: user.username,
+      billingId: user.billingId || "",
+      surveySubmitted: user.surveySubmitted || false,
+    })
+  }
+
+  resetUserProfile(){
+    this.patchProfileForm(this.user);
+  }
 
   handleOpenModal(content: any){
+    this.modalService.open(content, {
+      size: 'lg',
+      centered: true,
+      backdrop: true,
+    });
+  }
+
+  updateUserProfile(){
+    const { username, billingId, surveySubmitted } = this.userProfileForm.value;
+    this.user.username = username;
+    this.user.billingId = billingId;
+    this.user.surveySubmitted = surveySubmitted;
+
+    this.userService.updateUserProfile(this.user)
+      .pipe(finalize(() => this.modalService.dismissAll()))
+      .subscribe({
+        next: () => {
+          this.toastService.showSuccess('User Profile Updated')
+        },
+        error: (err) => this.error = err
+      });
+  }
+
+  openProfileModal(content: any) {
+    this.resetUserProfile();
     this.modalService.open(content, {
       size: 'lg',
       centered: true,
@@ -88,5 +139,4 @@ export class UserProfileComponent {
       error: (err) => this.error = err
     });
   }
-
 }

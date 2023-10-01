@@ -57,7 +57,7 @@ export class TasksListComponent {
     }
   
   filterTasks(value: string){
-    this.filteredTasks = this.tasks.filter(task => task.e.toLowerCase().indexOf(value.toLowerCase()) > -1 )
+    this.filteredTasks = this.tasks.filter(task => task.e.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1 )
   }
 
   get f() { return this.taskForm.controls; }

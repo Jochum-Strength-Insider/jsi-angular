@@ -62,11 +62,12 @@
     </ng-container>
 </ng-template>
 
-<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openAddProgramModal(addProgramModal, filteredWorkouts.length === 1 ? filteredWorkouts[0] : null)" autocomplete="off">
+<!-- Tweak the add/edit logic a bit -->
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openAddProgramModal(addProgramModal,null)" autocomplete="off">
     <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search Programs..." maxlength="50" aria-label="Search Tasks"/>
     <div class="input-group-append">
         <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">
-            {{filteredWorkouts.length === 1 ? "Edit" : "Add"}}
+            Add
         </button>
     </div>
 </form>

@@ -12,14 +12,16 @@ export const environment = {
     confirmationEmailRedirect: process.env['CONFIRMATION_EMAIL_REDIRECT_PROD']
   },
   production: true,
-  hmr: false,
   version: '1.0',
   serverUrl: 'https://api.jochumstrengthinsider.com',
   test: process.env['TEST_PROD'],
   crytoKey: 'Ins1d3r!',
   login: '',
   password: '',
+  paypalId: process.env['PAYPAL_CLIENT_ID_PROD'],
   paypalSecret: process.env['PAYPAL_CLIENT_SECRET_PROD'],
   subscriptionId: process.env['SUBSCRIPTION_ID_PROD'],
   subscriptionPrice: process.env['SUBSCRIPTION_PRICE_PROD'],
+  userSubscriptionUrl: process.env['PAYPAL_USER_SUBSCRIPTION_URL_PROD'],
+  billingSubscriptionUrl: process.env['PAYPAL_BILLING_SUBSCRIPTION_URL_PROD'],
 };

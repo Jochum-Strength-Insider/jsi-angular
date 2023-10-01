@@ -80,8 +80,12 @@ export class MessageService {
     return this.db.object(`adminUnread/${mid}`);
   }
 
-  addAdminUnreadMessage(mid: string, message: Message): Observable<any> {
-    return defer( () => this.adminUnreadListRef().update(mid, message))
+  addAdminUnreadMessage(message: Message, mid: string | null = null): Observable<any> {
+    if(mid){
+      return defer( () => this.adminUnreadListRef().update(mid, message))
+    } else {
+      return  defer(() => this.adminUnreadListRef().push(message))
+    }
   }
 
   getAdminUnreadMessages(): Observable<Message[]> {
@@ -97,22 +101,70 @@ export class MessageService {
     return defer(() => this.adminUnreadListRef().remove())
   }
 
-  // *** CurrentlyMessaging API ***
+  // *** User Unread Messagse API ***
 
-  currentlyMessagingObjectRef(): AngularFireObject<{uid: string}> {
+  private usersUnreadMessasagesListRef(uid: string): AngularFireList<Message>{
+    return this.db.list(`unreadMessages/${uid}`);
+  }
+
+  getUserUnreadMessages(uid: string): Observable<Message[]> {
+    return this.usersUnreadMessasagesListRef(uid)
+      .valueChanges([], { idField: 'id' })
+  }
+
+  addUserUnreadMessage(uid: string, mid: string, message: Message): Observable<void> {
+    return defer(() => this.usersUnreadMessasagesListRef(uid).update(mid, message));
+  }
+
+  clearUserUnreadMessage(uid: string): Observable<void> {
+    return defer(() => this.usersUnreadMessasagesListRef(uid).remove());
+  }
+
+  // *** Admin CurrentlyMessaging API ***
+
+  adminCurrentlyMessagingObjectRef(): AngularFireObject<{uid: string}> {
     return this.db.object(`currentlyMessaging`);
   }
 
-  setCurrentlyMessaging(uid: string): Observable<any> {
-    return defer( () => this.currentlyMessagingObjectRef().update({ uid }));
+  setAdminCurrentlyMessaging(uid: string): Observable<any> {
+    return defer( () => this.adminCurrentlyMessagingObjectRef().update({ uid }));
+  }
+ 
+  clearAdminCurrentlyMessaging(): Observable<any> {
+    return defer( () => this.adminCurrentlyMessagingObjectRef().remove());
   }
 
-  clearCurrentlyMessaging(): Observable<any> {
-    return defer( () => this.currentlyMessagingObjectRef().remove());
-  }
-
-  getCurrentlyMessaging(): Observable<string | undefined> {
-    return <Observable<string>>this.currentlyMessagingObjectRef()
+  getAdminCurrentlyMessaging(): Observable<string | undefined> {
+    return <Observable<string>>this.adminCurrentlyMessagingObjectRef()
       .valueChanges().pipe(map(messaging => messaging?.uid));
   }
+
+  // *** Users CurrentlyMessaging API ***
+
+  usersCurrentlyMessagingObjectRef(uid: string): AngularFireObject<{ messaging: boolean }> {
+    return this.db.object(`usersCurrentlyMessaging/${uid}`);
+  }
+  
+  addUserCurrentlyMessaging(uid: string): Observable<any> {
+    return defer( () => this.usersCurrentlyMessagingObjectRef(uid).update({ messaging: true }));
+  }
+
+  removeUserCurrentlyMessaging(uid: string): Observable<any> {
+    return defer( () => this.usersCurrentlyMessagingObjectRef(uid).remove());
+  }
+
+  getUserCurrentlyMessaging(uid: string): Observable<boolean> {
+    return this.usersCurrentlyMessagingObjectRef(uid)
+      .valueChanges()
+      .pipe(map((user) => {
+        if(user){
+          return user.messaging
+        } else {
+          return false
+        }
+      }));
+  }
+
 }
+  
+

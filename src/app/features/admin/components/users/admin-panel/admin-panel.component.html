@@ -37,19 +37,13 @@
                 </div>
             </div>
             <div class="form-group mb-3">
-                <div class="d-flex justify-content-between">
-                    <label class="form-label" for="password">Password</label>
-                    <div class="float-right show-pssw" (click)="showPassword = !showPassword">
-                        <i *ngIf="showPassword" class="fas fa-eye-slash"></i>
-                        <i *ngIf="!showPassword" class="fas fa-eye"></i>
-                    </div>
-                </div>
-                <input 
+                <label class="form-label" for="password">Temporary Password</label>
+                <input
                     class="form-control"
                     id="password"
                     formControlName="password"
-                    [type]="showPassword ? 'text' : 'password'"
-                    placeholder="Password"
+                    type="text"
+                    placeholder="InsiderSignup!"
                     [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].errors, 'is-valid': f['password'].valid }"
                     autocomplete="off"
                 />
@@ -62,15 +56,17 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group">
                 <label for="message">Welcome Message</label>
                 <textarea class="form-control" formControlName="message" id="message" type="text" placeholder="Message..."></textarea>
             </div>
         </form>
     </div>
-    <div class="modal-footer justify-content-between">
-        <button [disabled]="addUserForm.invalid" form="addUserForm" type="submit" class="btn btn-primary">Add User</button>
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+    <div class="modal-footer">
+        <div class="w-100 d-flex-justify-content-between">
+            <button form="addUserForm" [disabled]="addUserForm.invalid" type="submit" class="btn btn-primary">Add User</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+        </div>
     </div>
 </ng-template>
 
@@ -97,9 +93,11 @@
             </div>
         </form>
     </div>
-    <div class="modal-footer justify-content-between">
-        <button [disabled]="!messageForm.valid" form="messageForm" type="submit" class="btn btn-primary">Send</button>
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+    <div class="modal-footer">
+        <div class="w-100 d-flex-justify-content-between">
+            <button form="messageForm" [disabled]="!messageForm.valid" type="submit" class="btn btn-primary">Send</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+        </div>
     </div>
 </ng-template>
 
@@ -137,21 +135,22 @@
             </div>
         </form>
     </div>
-    <div class="modal-footer justify-content-between">
-        <button [disabled]="!programForm.valid" form="programForm" type="submit" class="btn btn-outline-primary" >Set Programs</button>
-        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+    <div class="modal-footer">
+        <div class="w-100 d-flex-justify-content-between">
+            <button [disabled]="!programForm.valid" form="programForm" type="submit" class="btn btn-outline-primary" >Set Programs</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+        </div>
     </div>
 </ng-template>
 
 <mat-drawer-container class="sidenave-container">
-    <mat-drawer #drawer class="sidenav-drawer" [mode]="sideNavMode" opened (openedChange)="drawerOpenChanged($event)">
+    <mat-drawer #drawer class="sidenav-drawer" [mode]="mobile ? 'over' : 'side'" opened (openedChange)="drawerOpenChanged($event)">
         <div class="d-flex">
             <div class="sidenav-drawer-content">
                 <app-users-list
                     [users]="users"
                     [currentUser]="currentUser"
-                    [currentUserId]="userIdFromParams"
-                    (userClicked)="handleSetUser($event)"
+                    (userClicked)="handleUserClicked($event)"
                     (addUserClicked)="handleAddUserClicked()"
                     (sendGroupMessagesClicked)="handleSendGroupMessagesClicked($event)"
                     (setGroupProgramsClicked)="handleSetGroupProgramsClicked($event)">

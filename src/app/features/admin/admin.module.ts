@@ -36,6 +36,7 @@ import { WeighInModule } from '../weigh-in/weigh-in.module';
 import { AdminResourcesComponent } from './components/resources/resources/resources.component';
 import { QuestionnaireModule } from '../questionnaire/questionnaire.module';
 import { UserQuestionnaireComponent } from './components/users/user-questionnaire/user-questionnaire.component';
+import { SharedModule } from '@app/@shared/shared.module';
 
 
 @NgModule({
@@ -84,7 +85,8 @@ import { UserQuestionnaireComponent } from './components/users/user-questionnair
     MessagesModule,
     DietModule,
     WeighInModule,
-    QuestionnaireModule
+    QuestionnaireModule,
+    SharedModule
   ]
 })
 export class AdminModule { }

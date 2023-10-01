@@ -28,6 +28,7 @@ export class AppComponent {
   }  
 
   ngOnInit(){
+    // definitely clean this up
     console.log("APP_INIT", environment.test)
   }
 

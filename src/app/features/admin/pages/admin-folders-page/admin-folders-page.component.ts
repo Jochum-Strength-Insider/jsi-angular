@@ -4,11 +4,6 @@ import { User } from '@app/@core/models/auth/user.model';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { Observable, tap } from 'rxjs';
 
-/* ToDo:
-Figure out the nested routing
-Figure out how to structure the admin navigation
-  Only have a Programs or Folders link
-*/
 
 @Component({
   selector: 'app-admin-folders-page',

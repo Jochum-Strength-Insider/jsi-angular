@@ -1,6 +1,6 @@
-<ng-container *ngIf="currentUser$ | async as user">
-    <div class="user-item mt-2">
-        <h5 *ngIf="user" class="mb-0 text-light">{{user.username}}</h5>
+<ng-container *ngIf="authUser">
+    <div class="user-item mt-2" *ngIf="selectedUser">
+        <h5 class="mb-0 text-light">{{selectedUser.username}}</h5>
 
         <div class="my-tabs-dropdown mt-2 mb-3" ngbDropdown #myDrop="ngbDropdown">
             <button
@@ -18,6 +18,7 @@
                 <button ngbDropdownItem (click)="selectNavItem(3)">Messages</button>
                 <button ngbDropdownItem (click)="selectNavItem(4)">Diet</button>
                 <button ngbDropdownItem (click)="selectNavItem(5)">Weight</button>
+                <button ngbDropdownItem (click)="selectNavItem(6)">Questionnaire</button>
             </div>
         </div>
 
@@ -26,37 +27,37 @@
                 <div class="my-tabs-item" [ngbNavItem]="1" [destroyOnHide]="false">
                     <button class="my-tabs-link" [class.active]="active === 1" ngbNavLink>Profile</button>
                     <ng-template ngbNavContent>
-                        <app-user-profile [user]="user"></app-user-profile>
+                        <app-user-profile [user]="selectedUser"></app-user-profile>
                     </ng-template>
                 </div>
                 <div class="my-tabs-item" [ngbNavItem]="2" [destroyOnHide]="true">
                     <button class="my-tabs-link" [class.active]="active === 2" ngbNavLink>Programs</button>
                     <ng-template ngbNavContent>
-                        <app-user-programs-list [user]="user"></app-user-programs-list>
+                        <app-user-programs-list [user]="selectedUser"></app-user-programs-list>
                     </ng-template>
                 </div>
                 <div class="my-tabs-item" [ngbNavItem]="3" [destroyOnHide]="true">
                     <button class="my-tabs-link" [class.active]="active === 3" ngbNavLink>Messages</button>
                     <ng-template ngbNavContent>
-                        <app-user-messages [adminUser]="authUser$ | async" [user]="user"></app-user-messages>
+                        <app-user-messages [adminUser]="authUser" [user]="selectedUser"></app-user-messages>
                     </ng-template>
                 </div>
                 <div class="my-tabs-item" [ngbNavItem]="4" [destroyOnHide]="true">
                     <button class="my-tabs-link" [class.active]="active === 4" ngbNavLink>Diet</button>
                     <ng-template ngbNavContent>
-                        <app-user-diet [adminUser]="authUser$ | async" [user]="user"></app-user-diet>
+                        <app-user-diet [adminUser]="authUser" [user]="selectedUser"></app-user-diet>
                     </ng-template>
                 </div>
                 <div class="my-tabs-item" [ngbNavItem]="5" [destroyOnHide]="true">
                     <button class="my-tabs-link" [class.active]="active === 5" ngbNavLink>Weight</button>
                     <ng-template ngbNavContent>
-                        <app-user-weight [adminUser]="authUser$ | async" [user]="user"></app-user-weight>
+                        <app-user-weight [adminUser]="authUser" [user]="selectedUser"></app-user-weight>
                     </ng-template>
                 </div>
                 <div class="my-tabs-item" [ngbNavItem]="6" [destroyOnHide]="true">
                     <button class="my-tabs-link" [class.active]="active === 6" ngbNavLink>Questionnaire</button>
                     <ng-template ngbNavContent>
-                        <app-user-questionnaire [adminUser]="authUser$ | async" [user]="user"></app-user-questionnaire>
+                        <app-user-questionnaire [adminUser]="authUser" [user]="selectedUser"></app-user-questionnaire>
                     </ng-template>
                 </div>
             </nav>

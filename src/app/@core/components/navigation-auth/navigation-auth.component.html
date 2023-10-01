@@ -1,7 +1,7 @@
 <ng-template #template>
     <div class="d-flex">
-        <a *ngIf="authUser.emailVerified" [routerLink]="['/messages']" class="d-flex justify-content-center align-items-center me-3 px-2">
-            <app-message-icon [uid]="authUser.id" />
+        <a *ngIf="authUser.ACTIVE" [routerLink]="['/messages']" class="d-flex justify-content-center align-items-center me-3 px-2">
+            <app-message-icon [uid]="authUser.id" [unread]="messages"/>
         </a>
         <button class="navbar-toggler"
                 type="button"
@@ -32,7 +32,7 @@
                         (click)="onSelect()">Users</a>
                     <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/folders/list']"
                         (click)="onSelect()">Programs</a>
-                        <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/exercises']"
+                    <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/exercises']"
                             (click)="onSelect()">Exercises</a>
                     <a ngbDropdownItem class="dropdown-item ignore-active" [routerLink]="['/admin/resources']"
                         (click)="onSelect()">Resources</a>
@@ -57,8 +57,8 @@
                     </button>
                     <div ngbDropdownMenu aria-labelledby="userDropdown" class="dropdown-menu dropdown-menu-end">
                         <a ngbDropdownItem [routerLink]="['/account']">Account</a>
-                        <a ngbDropdownItem [routerLink]="['/resources']">Resources</a>
-                        <a ngbDropdownItem [routerLink]="['/questionnaire']">Questionnaire</a>
+                        <a *ngIf="authUser.ACTIVE" ngbDropdownItem [routerLink]="['/resources']">Resources</a>
+                        <a *ngIf="authUser.ACTIVE" ngbDropdownItem [routerLink]="['/questionnaire']">Questionnaire</a>
                         <div class="dropdown-divider" role="separator"></div>
                         <div ngbDropdownItem>
                             <app-sign-out-button></app-sign-out-button>

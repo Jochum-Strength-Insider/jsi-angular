@@ -42,7 +42,6 @@ export class AutoCompleteComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     ifPropChanged(changes['value'], () => {
        this.inputCtrl.setValue({ e: changes['value'].currentValue }, { emitEvent: false }) 
-      //  console.log('ifPropChanged:', changes['value'].currentValue)
       });
   }
 
@@ -59,9 +58,9 @@ export class AutoCompleteComponent implements OnInit {
   }
 
   filterTasksByExercise(options: Tasks[], label: string): Tasks[] {
-    const value = label.trim().toLowerCase();
+    const value = label.trim().toLocaleLowerCase();
     return options.filter((option: Tasks) => {
-      return option.e.toLowerCase().includes(value);
+      return option.e.toLocaleLowerCase().includes(value);
     });
   }
 

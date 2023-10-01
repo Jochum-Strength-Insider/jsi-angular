@@ -1,7 +1,7 @@
 <h3>Account</h3>
 <ng-container *ngIf="user">
-    <div class="row">
-        <div class="col col-xs-12 col-sm-6 mb-3">
+    <div class="row" *ngIf="user.ACTIVE">
+        <div class="col-xs-12 col-sm-6 mb-3">
             <app-user-image title="Before"
                 [image]="before"
                 [uploading]="uploading"
@@ -9,7 +9,7 @@
                 (removeImageClicked)="removeBeforeImage()">
             </app-user-image>
         </div>
-        <div class="col col-xs-12 col-sm-6 mb-3">
+        <div class="col-xs-12 col-sm-6 mb-3">
             <app-user-image title="After"
                 [image]="after"
                 [uploading]="uploading"
@@ -30,12 +30,22 @@
         </div>
     </div>
 
-    <div class="card mt-3 mb-5">
+    <div class="card mt-3 mb-3">
         <div class="card-header">
-            Sign out
+            Sign Out
         </div>
         <div class="card-body px-3 py-4">
             <app-sign-out-button></app-sign-out-button>
         </div>
     </div>
+
+    <div class="card mt-3 mb-5">
+        <div class="card-header">
+            Cancel Account
+        </div>
+        <div class="card-body px-3 py-4">
+            <app-user-cancellation (cancelClicked)="handleCancellation()" [cancelled]="cancelled"></app-user-cancellation>
+        </div>
+    </div>
+
 </ng-container>

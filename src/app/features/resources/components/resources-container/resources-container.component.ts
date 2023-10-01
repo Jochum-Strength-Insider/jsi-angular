@@ -33,7 +33,6 @@ export class ResourcesContainerComponent implements OnInit, OnDestroy {
         this.resources = resources;
       },
       error: (err: Error) => {
-        console.log(err)
         this.error = err;
       }
     })

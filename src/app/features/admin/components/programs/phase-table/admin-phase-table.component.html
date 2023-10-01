@@ -27,7 +27,7 @@
                 <label for="title">Day Title</label>
                 <input class="form-control" formControlName="title" id="title" type="text" placeholder="New Day" />
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group">
                 <label class="form-label" for="image">Image</label>
                 <select class="form-control" formControlName="image" id="image">
                     <option *ngFor="let option of imageOptions; let first = first" [selected]="first" [value]="option.value">{{option.title}}</option>

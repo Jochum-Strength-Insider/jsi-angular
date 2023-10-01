@@ -1,0 +1,11 @@
+<div class="messages" *ngIf="user">
+    <div #scrollContain class="messageContainer container-fluid ">
+        <div *ngIf="loading">Loading ...</div>
+
+        <button *ngIf="firstDateNotIncluded && enoughMessages" class="btn btn-outline-primary mt-3 messageLoadMore w-100" (click)="loadMore()">Load More</button>
+        
+        <app-messages-list [messages]="messages" [uid]="user.id"></app-messages-list>
+        <div class="mb-3" #scrollBottom></div>
+    </div>
+    <app-messages-form (sendMessageClicked)="handleSendMessage($event)"></app-messages-form>
+</div>

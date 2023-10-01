@@ -31,7 +31,6 @@ export class AdminProgramTableComponent implements OnInit, OnChanges {
   }
 
   handleSavePhase(event: Phase){
-    console.log('programTable sae phase')
     this.savePhase.emit(event);
   }
 }

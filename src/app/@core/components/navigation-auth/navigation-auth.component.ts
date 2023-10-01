@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { User } from '@app/@core/models/auth/user.model';
+import { Message } from '@app/@core/models/messages/message.model';
 
 @Component({
   selector: 'app-navigation-auth',
@@ -11,6 +12,7 @@ export class NavigationAuthComponent implements OnInit {
   @Input() onSelect: Function;
   @Input() onToggle: Function;
   @Input() collapsed: boolean;
+  @Input() messages: Message[] = [];
   @Input() authUser: User;
   error: Error;
 
@@ -19,6 +21,6 @@ export class NavigationAuthComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.viewContainerRef.createEmbeddedView(this.template);   
+    this.viewContainerRef.createEmbeddedView(this.template);
   }
 }

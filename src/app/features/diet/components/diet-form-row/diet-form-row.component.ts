@@ -13,6 +13,7 @@ double check max length validation
 })
 export class DietFormRowComponent {
   @Input() diet: Diet;
+  @Input() index: number = 0;
   @Input() isAdmin: boolean = false;
   @Output() saveDiet = new EventEmitter<Diet>();
   dietForm: FormGroup;

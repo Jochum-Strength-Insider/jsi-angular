@@ -5,7 +5,7 @@
                 <div class="d-flex justify-content-center">
                     <div class="contain-width px-1">
                         <div class="app-top">
-                            <app-program-container [uid]="authUser.id"></app-program-container>
+                            <app-program-container [user]="authUser"></app-program-container>
                         </div>
                     </div>
                 </div>
@@ -22,7 +22,7 @@
                             </div>
                             <div class="card-body">
                                 <p class="card-text text-center">
-                                    Please submit your user questionnaire to get started with a new program! <a [routerLink]="['../questionnaire']">Click here to submit your questionnaire.</a>
+                                    Please submit your user questionnaire to get started with a new program! <a class="p-link" [routerLink]="['../questionnaire']">Click here to submit your questionnaire.</a>
                                 </p>
                             </div>
                         </div>

@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -11,7 +11,6 @@ export class MessagesFormComponent implements OnDestroy {
   @Output() sendMessageClicked = new EventEmitter<string>();
   @ViewChild('messageInput') messageInput: ElementRef;
   messageForm: FormGroup;
-
   messageChangesSub?: Subscription;
 
   constructor(
@@ -24,7 +23,7 @@ export class MessagesFormComponent implements OnDestroy {
     });
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.messageChangesSub = this.message?.valueChanges
       .subscribe(() => {
         if(this.messageInput?.nativeElement){

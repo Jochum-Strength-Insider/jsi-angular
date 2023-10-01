@@ -8,8 +8,8 @@
  .admin-unread-btn .badge {
     position: absolute;
     background-color: var(--js-purple-light);
-    top: 0;
-    right: 0;
+    top: -6px;
+    right: -2px;
     border-radius: 50px;
  }
  

@@ -9,6 +9,7 @@ import { MessagesListComponent } from './components/messages-list/messages-list.
 import { MessagesItemComponent } from './components/messages-item/messages-item.component';
 import { MessagesFormComponent } from './components/messages-form/messages-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AdminMessagesContainerComponent } from './components/admin-messages-container/admin-messages-container.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MessagesComponent,
     MessagesPageComponent,
     MessagesContainerComponent,
+    AdminMessagesContainerComponent,
     MessagesListComponent,
     MessagesItemComponent,
     MessagesFormComponent
@@ -26,7 +28,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MessagesRoutingModule
   ],
   exports: [
-    MessagesContainerComponent
+    AdminMessagesContainerComponent
   ]
 })
 export class MessagesModule { }
