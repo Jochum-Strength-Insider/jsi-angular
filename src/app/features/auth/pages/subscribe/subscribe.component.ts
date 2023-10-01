@@ -7,7 +7,7 @@ import { AuthService } from '@app/@shared/services/auth.service';
 import { CodesService } from '@app/@shared/services/codes.service';
 import { UserAccountValidator } from '@app/@shared/validators/user-account.validator';
 import { UserService } from '@app/features/admin/services/user.service';
-import { MessageService } from '@app/features/messages/services/message.service';
+import { MessageService } from '@app/@shared/services/message.service';
 import { environment } from '@env/environment';
 import { Subscription, forkJoin, map, of, switchMap, take } from 'rxjs';
 import { IOnApproveCallbackData } from 'ngx-paypal';
@@ -129,7 +129,7 @@ export class SubscribeComponent implements OnInit, OnDestroy {
     
     const submission = new Submission();
     submission.plan_id = data.subscriptionID;
-    submission.create_time = new Date();
+    submission.create_time = new Date().getTime();
     submission.transaction_id = data.orderID;
     submission.email_address = email;
     submission.user = username;
@@ -163,7 +163,7 @@ export class SubscribeComponent implements OnInit, OnDestroy {
     )
     .subscribe({
       next: (result) => {
-        console.log('user created', result);
+        console.log('user created');
       },
       error: (err) => console.log(err)
     })

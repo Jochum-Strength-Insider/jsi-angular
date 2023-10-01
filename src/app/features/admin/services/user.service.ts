@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
 import { User as UserModel } from '@app/@core/models/auth/user.model';
-import { Message } from '@app/@core/models/messages/message.model';
 import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
 import { BehaviorSubject, Observable, defer, map, tap } from 'rxjs';
@@ -56,6 +55,10 @@ export class UserService {
         "billingId": user.billingId
       })
     )
+  }
+
+  updateUserProgramDate(uid: string){
+    return defer( () => this.usersObjectRef(uid).update({ "programDate": new Date().getTime() }))
   }
 
   getActiveUsers(): Observable<UserModel[]> {

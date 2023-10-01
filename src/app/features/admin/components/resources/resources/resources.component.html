@@ -40,11 +40,11 @@
     </ng-container>
 </ng-template>
 
-<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openResourceModal(addModal, filteredResources.length === 1 ? filteredResources[0] : null)" autocomplete="off">
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openResourceModal(addModal, null)" autocomplete="off">
     <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search..." maxlength="50" aria-label="Search Resources"/>
     <div class="input-group-append">
         <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">
-            {{ filteredResources.length === 1 ? "Edit" : "Add" }}
+            Add
         </button>
     </div>
 </form>

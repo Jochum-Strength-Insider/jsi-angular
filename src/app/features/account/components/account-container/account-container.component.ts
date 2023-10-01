@@ -9,7 +9,7 @@ import { LoginRequestModel } from '@app/@shared/models/auth/login-request.model'
 import { PasswordResetModel } from '@app/@shared/models/auth/password-reset.model';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
-import { MessageService } from '@app/features/messages/services/message.service';
+import { MessageService } from '@app/@shared/services/message.service';
 import { WorkoutService } from '@app/features/program/services/workout.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EMPTY, Observable, Subscription, catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
@@ -26,6 +26,7 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
   @Input() user: UserModel;
   @Input() authStatus: User;
   sent: boolean = false;
+  cancelled: boolean = false;
   workoutIds$: Observable<WorkoutId[]> = of([]);
   error: Error;
 
@@ -137,11 +138,7 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
       error: (err) => console.log(err)
     })
   }
-
-  removeImage(image: string){
-    console.log('removeImage', image);
-  }
-
+ 
   handleResetSubmitted(passwordReset: PasswordResetModel) {
     this.sent = true;
     const loginRequest = new LoginRequestModel(this.user.email, passwordReset.currentPassword)
@@ -174,16 +171,17 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
   handleCancellation() {
     const USER_CANCELLATION_MESSAGE = new Message(`${this.user.username} has cancelled their account.`, this.user.id, "Cancellation")
     forkJoin([
-      // this.userService.setUserIsActive(this.user.id, false),
       this.messageService.addAdminUnreadMessage(USER_CANCELLATION_MESSAGE),
       this.messageService.addUserMessage(this.user.id, USER_CANCELLATION_MESSAGE)
     ])
     .pipe(finalize(() => this.modalService.dismissAll()))
     .subscribe({
       next: () => {
-        const url = `${environment.userSubscriptionUrl}${this.user.billingId}`;
+        const paypalUrl = environment.userSubscriptionUrl || "https://www.paypal.com/myaccount/autopay/connect/";
+        const url = `${paypalUrl}${this.user.billingId}`;
         window.open(url, '_blank');
         this.toastService.showSuccess("Your account has been cancelled.");
+        this.cancelled = true;
       },
       error: (error: Error) => {
         this.toastService.showError();

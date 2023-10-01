@@ -5,7 +5,7 @@
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
         </div>
         <div class="modal-body submissions-modal-body">
-            <p>Are you sure you want to cancel your account? Clicking "Cancel Account" will open a link to your active paypal subsciption, after paypal sign in, where you can cancel the subscription and stop payments from recurring. It will also notify an Insider trainer that you have cancelled your account. You will have access to all Insider content until the end of your current program cycle.</p>
+            <p>Are you sure you want to cancel your account? Clicking "Cancel Account" will open a link to your active paypal subsciption. After signing in to paypal you can cancel the subscription and stop payments from recurring. To cancel click the "(Update)" link next to "Status: Active" or the three vertical dots button to the right of "Status: Active". It will also notify an Insider trainer that you have cancelled your account. You will have access to all Insider content until the end of your current program cycle.</p>
         </div>
         <div class="modal-footer">
             <div class="w-100 d-flex justify-content-between">
@@ -16,6 +16,6 @@
     </ng-container>
 </ng-template>
 
-<button class="btn btn-danger w-100" (click)="handleOpenModal(cancellationModal)">
+<button [disabled]="cancelled" class="btn btn-danger w-100" (click)="handleOpenModal(cancellationModal)">
     Cancel
 </button>

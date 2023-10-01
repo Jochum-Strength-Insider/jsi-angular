@@ -119,7 +119,6 @@ export class CodesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.filterCodes(this.search);
       },
       error: (err: Error) => {
-        console.log(err)
         this.error = err;
       }
     })

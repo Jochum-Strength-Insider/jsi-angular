@@ -73,11 +73,11 @@
 </ng-template>
 
 <h3 [class.header-button]="!state" (click)="openFoldersModal(editFolderModal)">{{ folder ? folder.title : this.state | titlecase }}</h3>
-<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openAddProgramModal(addProgramModal, filteredPrograms.length === 1 ? filteredPrograms[0] : null)" autocomplete="off">
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openAddProgramModal(addProgramModal,null)" autocomplete="off">
     <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search Programs..." maxlength="50" aria-label="Search Tasks"/>
     <div class="input-group-append">
         <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">
-            {{filteredPrograms.length === 1 ? "Edit" : "Add"}}
+            Add
         </button>
     </div>
 </form>

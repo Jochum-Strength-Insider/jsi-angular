@@ -50,7 +50,7 @@ export class WorkoutService {
       .valueChanges([], { idField: 'id' });
   }
 
-  setWorkoutIsActive(uid: string, wid: string, activate: boolean): Observable<void> {
+   setWorkoutIsActive(uid: string, wid: string, activate: boolean): Observable<void> {
     if(activate){
         return this.getActiveWorkoutId(uid).pipe(
           first(),

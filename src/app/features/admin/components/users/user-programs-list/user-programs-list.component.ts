@@ -9,6 +9,7 @@ import { ToastService } from '@app/@core/services/toast.service';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
 import { FOLDERS_STRING, PROGRAM_IDS_STRING, ProgramService, QUICK_SAVE_ID_STRING } from '@app/features/admin/services/programs.service';
+import { UserService } from '@app/features/admin/services/user.service';
 import { WorkoutService } from '@app/features/program/services/workout.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize, of, switchMap } from 'rxjs';
@@ -64,6 +65,7 @@ export class UserProgramsListComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private programService: ProgramService,
     private workoutService: WorkoutService,
+    private userService: UserService,
     private fb: FormBuilder,
     private modalService: NgbModal,
     private toastService: ToastService,
@@ -299,9 +301,14 @@ export class UserProgramsListComponent implements OnInit, OnDestroy, OnChanges {
 
   toggleWorkoutIsActive(workout: WorkoutId){
     if(!this.user){ return; }
-    this.workoutService.setWorkoutIsActive(this.user.id, workout.id, !workout.active)
+    const active = !workout.active;
+    this.workoutService.setWorkoutIsActive(this.user.id, workout.id, active)
+    .pipe(switchMap(() => active ? this.userService.updateUserProgramDate(this.user.id) : of("")))
     .subscribe({
-      error: (err: Error) => this.error = err
+      error: (err: Error) => {
+        this.error = err
+        this.toastService.showError(`An error occurred ${active ? 'activating' : 'deactivating'} this program.`);
+      }
     })
   }
 }

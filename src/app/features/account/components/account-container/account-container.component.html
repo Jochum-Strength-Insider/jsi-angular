@@ -1,6 +1,6 @@
 <h3>Account</h3>
 <ng-container *ngIf="user">
-    <div class="row">
+    <div class="row" *ngIf="user.ACTIVE">
         <div class="col-xs-12 col-sm-6 mb-3">
             <app-user-image title="Before"
                 [image]="before"
@@ -44,7 +44,7 @@
             Cancel Account
         </div>
         <div class="card-body px-3 py-4">
-            <app-user-cancellation (cancelClicked)="handleCancellation()"></app-user-cancellation>
+            <app-user-cancellation (cancelClicked)="handleCancellation()" [cancelled]="cancelled"></app-user-cancellation>
         </div>
     </div>
 

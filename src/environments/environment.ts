@@ -24,7 +24,6 @@ export const environment = {
     confirmationEmailRedirect: process.env['CONFIRMATION_EMAIL_REDIRECT_DEV']
   },
   production: false,
-  hmr: true,
   version: '1.0',
   serverUrl: 'http://localhost:3000',
   test: process.env['TEST_DEV'],
@@ -36,6 +35,7 @@ export const environment = {
   subscriptionId: process.env['SUBSCRIPTION_ID_DEV'],
   subscriptionPrice: process.env['SUBSCRIPTION_PRICE_DEV'],
   userSubscriptionUrl: process.env['PAYPAL_USER_SUBSCRIPTION_URL_DEV'],
+  billingSubscriptionUrl: process.env['PAYPAL_BILLING_SUBSCRIPTION_URL_DEV'],
 };
 
 /*

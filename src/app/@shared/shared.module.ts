@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SignOutButtonComponent } from './components/auth/sign-out-button/sign-out-button.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
+import { VerifyEmailCardComponent } from './components/verify-email-card/verify-email-card.component';
 
 
 
@@ -14,7 +15,8 @@ import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
     SignOutButtonComponent,
     SpinnerComponent,
     ResetPasswordComponent,
-    SanitizeUrlPipe
+    SanitizeUrlPipe,
+    VerifyEmailCardComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +27,8 @@ import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
     SignOutButtonComponent,
     ResetPasswordComponent,
     SpinnerComponent,
-    SanitizeUrlPipe
+    SanitizeUrlPipe,
+    VerifyEmailCardComponent
   ],
 })
 export class SharedModule { }

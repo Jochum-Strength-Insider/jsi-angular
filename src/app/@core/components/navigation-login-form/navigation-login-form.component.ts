@@ -43,7 +43,7 @@ export class NavigationLoginFormComponent {
           this.error = null;
           this.router.navigateByUrl('/program')
         },
-        error: (error) => {
+        error: (error: Error) => {
           this.error = error;
           this.toastService.showError('Email or Password is invalid')
           this.router.navigateByUrl('/auth/signin')

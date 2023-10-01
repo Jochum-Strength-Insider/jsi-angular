@@ -4,13 +4,7 @@ import { Message } from '@app/@core/models/messages/message.model';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { UserService } from '@app/features/admin/services/user.service';
 import { BehaviorSubject, Subject, Subscription, map, of, switchMap } from 'rxjs';
-import { MessageService } from '../../services/message.service';
-
-
-/*
- Fix scroll behavior
- Fix weird disappearing page bug
-*/
+import { MessageService } from '../../../../@shared/services/message.service';
 
 
 @Component({
@@ -56,8 +50,7 @@ export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, O
   loading: boolean = false;
 
   constructor(
-    private messageService: MessageService,
-    private userService: UserService
+    private messageService: MessageService
   ){}
 
   ngOnInit(): void {
@@ -144,30 +137,9 @@ export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, O
     });
   }
 
-  listenForAdminCurrentlyMessaging(){
-    this.currentlyMessagingSub?.unsubscribe();
-    this.currentlyMessagingSub = this.messageService.getAdminCurrentlyMessaging()
-        .subscribe((id) => {
-          this.currentlyMessaging = id === this.user.id
-        });
-  }
-
   setAdminCurrentlyMessaging(){
     this.messageService.setAdminCurrentlyMessaging(this.user.id)
     .subscribe();
-  }
-
-  setUserCurrentlyMessaging(){
-    this.messageService.addUserCurrentlyMessaging(this.user.id)
-      .subscribe();
-  }
-
-  clearUserUnreadMessages() {
-    this.messageService.clearUserUnreadMessage(this.user.id)
-      .subscribe({
-        next: () => console.log('unread messages cleared'),
-        error: (err) => console.log(err)
-      })
   }
 
   scrollToBottom(smooth: boolean = true): void {
@@ -178,7 +150,6 @@ export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, O
   handleSendMessage(message: string) {
     if(message.trim().length > 0) {
       const messageObject = new Message(message, this.adminUser.id, this.adminUser.username)
-
       this.messageService.addUserMessage(this.user.id, messageObject)
       .pipe(
         switchMap((key) => {

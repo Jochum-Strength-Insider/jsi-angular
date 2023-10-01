@@ -1,16 +1,8 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
-import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
-import { UserService } from '@app/features/admin/services/user.service';
 import { BehaviorSubject, Subject, Subscription, map, of, switchMap } from 'rxjs';
-import { MessageService } from '../../services/message.service';
-
-
-/*
- Fix scroll behavior
- Fix weird disappearing page bug
-*/
+import { MessageService } from '@shared/services/message.service';
 
 
 @Component({
@@ -55,8 +47,7 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
   loading: boolean = false;
 
   constructor(
-    private messageService: MessageService,
-    private userService: UserService
+    private messageService: MessageService
   ){}
 
   ngOnInit(): void {
@@ -118,25 +109,6 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
     });
   }
 
-  listenToNewUserMessages(){
-    this.setLimit(15);
-    this.messages = [];
-    this.enoughMessages = false;
-    this.initialLoad = true;
-
-    this.setAdminCurrentlyMessaging();
-    this.listenForUserCurrentlyMessaging();
-    this.listenForMessages();
-  }
-
-  listenForUserCurrentlyMessaging(){
-    this.currentlyMessagingSub?.unsubscribe();
-    this.currentlyMessagingSub = this.messageService.getUserCurrentlyMessaging(this.user.id)
-    .subscribe((messaging) => {
-      this.currentlyMessaging = messaging;
-    });
-  }
-
   listenForAdminCurrentlyMessaging(){
     this.currentlyMessagingSub?.unsubscribe();
     this.currentlyMessagingSub = this.messageService.getAdminCurrentlyMessaging()
@@ -171,13 +143,16 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
   handleSendMessage(message: string) {
     if(message.trim().length > 0) {
       const messageObject = new Message(message, this.user.id, this.user.username);
-
       this.messageService.addUserMessage(this.user.id, messageObject)
       .pipe(
-        switchMap((key) => 
-          this.messageService.addAdminUnreadMessage(messageObject, key)
-          .pipe(map(() => key))
-        ),
+        switchMap((key) => {
+          if( key && (!this.currentlyMessaging) ) {
+            return this.messageService.addAdminUnreadMessage(messageObject, key)
+              .pipe(map(() => key))
+          } else {
+            return of(key)
+          }
+        })
       )
       .subscribe({
         error: (err: Error) => this.error = err

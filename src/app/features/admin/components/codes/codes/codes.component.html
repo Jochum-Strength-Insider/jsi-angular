@@ -96,11 +96,11 @@
     </ng-template>
 </ng-template>
 
-<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openCodeModal(addModal, filteredCodes.length === 1 ? filteredCodes[0] : null)" autocomplete="off">
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openCodeModal(addModal, null)" autocomplete="off">
     <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search..." maxlength="50" aria-label="Search Codes"/>
     <div class="input-group-append">
         <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">
-            {{ filteredCodes.length === 1 ? "Edit" : "Add" }}
+            Add
         </button>
     </div>
 </form>

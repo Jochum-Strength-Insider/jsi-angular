@@ -2,8 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
 import { AuthService } from '@app/@shared/services/auth.service';
-import { UserService } from '@app/features/admin/services/user.service';
-import { MessageService } from '@app/features/messages/services/message.service';
+import { MessageService } from '@app/@shared/services/message.service';
 import { Subscription, of, switchMap, tap } from 'rxjs';
 
 @Component({

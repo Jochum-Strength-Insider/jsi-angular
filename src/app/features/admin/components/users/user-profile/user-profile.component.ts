@@ -5,9 +5,10 @@ import { ToastService } from '@app/@core/services/toast.service';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { UserService } from '@app/features/admin/services/user.service';
 import { DietService } from '@app/features/diet/services/diet.service';
-import { MessageService } from '@app/features/messages/services/message.service';
+import { MessageService } from '@app/@shared/services/message.service';
 import { WorkoutService } from '@app/features/program/services/workout.service';
 import { WeighInService } from '@app/features/weigh-in/services/weigh-in.service';
+import { environment } from '@env/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize, forkJoin } from 'rxjs';
 
@@ -25,11 +26,10 @@ export class UserProfileComponent implements OnInit {
 
   @Input() user: User;
   @Input() adminUser: User;
+  paypalUrl: string;
 
   error: Error;
   userProfileForm: FormGroup;
-
-  testSub: Subscription;
 
   constructor(
     private modalService: NgbModal,
@@ -42,9 +42,12 @@ export class UserProfileComponent implements OnInit {
     private authService: AuthService,
     private messageService: MessageService,
     private fb: FormBuilder
-  ) { }
+  ) {
+  }
 
   ngOnInit(){
+    this.paypalUrl = environment.billingSubscriptionUrl || 'https://www.paypal.com/billing/subscriptions/';
+
     this.userProfileForm = this.fb.group({
       username: [this.user.username, [Validators.required]],
       billingId: [this.user.billingId],

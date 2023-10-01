@@ -12,7 +12,6 @@ export const environment = {
     confirmationEmailRedirect: process.env['CONFIRMATION_EMAIL_REDIRECT_PROD']
   },
   production: true,
-  hmr: false,
   version: '1.0',
   serverUrl: 'https://api.jochumstrengthinsider.com',
   test: process.env['TEST_PROD'],
@@ -24,4 +23,5 @@ export const environment = {
   subscriptionId: process.env['SUBSCRIPTION_ID_PROD'],
   subscriptionPrice: process.env['SUBSCRIPTION_PRICE_PROD'],
   userSubscriptionUrl: process.env['PAYPAL_USER_SUBSCRIPTION_URL_PROD'],
+  billingSubscriptionUrl: process.env['PAYPAL_BILLING_SUBSCRIPTION_URL_PROD'],
 };

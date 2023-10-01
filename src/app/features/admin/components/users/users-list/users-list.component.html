@@ -9,6 +9,7 @@
                     <button class="dropdown-item" (click)="sortUsersBy('username')">Username {{ asc ? "▾" : "▴" }}</button>
                     <button class="dropdown-item" (click)="sortUsersBy('email')">Email {{ asc ? "▾" : "▴" }}</button>
                     <button class="dropdown-item" (click)="sortUsersBy('programDate')">Program Date {{ asc ? "▾" : "▴" }}</button>
+                    <button class="dropdown-item" (click)="sortUsersBy('createdAt')">Sign Up Date {{ asc ? "▾" : "▴" }}</button>
                     <button class="dropdown-item" (click)="filterUsersByActive()">{{ filter ? "Inactive" : "Active" }}</button>
                     <button class="dropdown-item" (click)="showAllUsers()">All</button>
                     <li><hr class="dropdown-divider"></li>
@@ -37,7 +38,7 @@
         <div class="users-list-contain">
             <div class="list-group list-group-flush">
                 <div *ngFor="let user of sortedUsers">
-                    <div class="list-group-item d-flex" [ngClass]="{'current' : currentUserId === user.id}">
+                    <div class="list-group-item d-flex" [ngClass]="{'current' : (currentUser && currentUser.id === user.id)}">
                         <div class="check-box d-flex align-items-center">
                             <div class="mb-3 form-check">
                                 <label [for]="'checkbox-'+user.id" class="sr-only"></label>

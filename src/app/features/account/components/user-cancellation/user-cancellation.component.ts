@@ -21,6 +21,7 @@ https://www.paypal.com/myaccount/autopay/connect/{billingId}
 })
 export class UserCancellationComponent {
   @Input() user: User;
+  @Input() cancelled: boolean = false;
   @Output() cancelClicked = new EventEmitter();
 
   constructor(private modalService: NgbModal){ }

@@ -13,7 +13,7 @@ import { LocalStorageService } from '@app/@shared/services/local-storage.service
 import { UserAccountValidator } from '@app/@shared/validators/user-account.validator';
 import { FOLDERS_STRING, PROGRAM_IDS_STRING, ProgramService } from '@app/features/admin/services/programs.service';
 import { UserService } from '@app/features/admin/services/user.service';
-import { MessageService } from '@app/features/messages/services/message.service';
+import { MessageService } from '@app/@shared/services/message.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription, debounceTime, finalize, forkJoin, fromEvent, map, of, switchMap, take } from 'rxjs';
 
@@ -77,7 +77,6 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(){
-    console.log('admin panel oninit')
     this.getUserFromRoute();
     this.fetchUsers(); 
     this.fetchFolders();
@@ -136,18 +135,16 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
   }
 
   fetchUsers() {
-    console.log('fetchUsers');
       this.usersListSub = this.userService.getUsers()
-      .pipe(take(1))
       .subscribe({  
         next: (users: User[]) => {
-          console.log('getUsers', users);
           this.users = users;
           const currentUser = this.users.find(x => x.id === this.userIdFromParams) || null;
-          // this.setUser(currentUser);
+          if(currentUser){
+            this.setUser(currentUser);
+          }
         },
         error: (err) => {
-          console.log(err)
           this.error = err;
           this.toastService.showError();
         }
@@ -169,7 +166,6 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
           this.folders = folders;
         },
         error: (err) => {
-          console.log(err)
           this.error = err;
           this.toastService.showError();
         }
@@ -192,7 +188,6 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
           this.filteredProgramIds = programs;
         },
         error: (err) => {
-          console.log(err)
           this.error = err;
           this.toastService.showError();
         }
@@ -207,7 +202,6 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
   }
 
   setUser(user: User | null){
-    console.log('admin-panel set user', user)
     this.currentUser = user;
     this.userService.setSelectedUser(user);
   }
@@ -241,7 +235,6 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
       next: () => this.toastService.showSuccess("Messages Sent"),
       error: (err) => {
         this.error = err;
-        console.log(err)
       }
     })
   }

@@ -94,9 +94,9 @@
         </div>
     </div>
     <div class="list-group-item no-top-border"><strong>E-Mail:</strong> {{ user.email }}</div>
-    <div class="list-group-item"><strong>Member Since:</strong> {{ user.createdAt | date }}</div>
-    <div class="list-group-item"><strong>Last Program:</strong> {{ user.programDate | date }}</div>
-    <div class="list-group-item"><strong>Billing Id: </strong><a target="_blank" [href]="'https://www.paypal.com/billing/subscriptions/' + user.billingId  | sanitizeUrl" >{{ user.billingId }}</a></div>
+    <div class="list-group-item"><strong>Program Date:</strong> {{ user.programDate | date }}</div>
+    <div class="list-group-item"><strong>Sign up Date:</strong> {{ user.createdAt | date }}</div>
+    <div class="list-group-item"><strong>Billing Id: </strong><a target="_blank" [href]="paypalUrl + user.billingId  | sanitizeUrl" >{{ user.billingId }}</a></div>
     <div class="list-group-item"><strong>Questionnaire Submitted:</strong> {{ user.surveySubmitted ? 'Yes' : 'No' }}</div>
     <div class="list-group-item">
         <button

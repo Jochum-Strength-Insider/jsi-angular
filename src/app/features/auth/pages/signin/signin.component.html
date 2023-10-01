@@ -1,54 +1,3 @@
-<!-- <div class="container app-top">
-    <div class="row">
-        <div class="col-12 col-md-8 offset-md-2">
-            <h1 class="text-center">Sign In</h1>
-            <form class="form w-100 needs-validation" id="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate autocomplete="off">
-                <div class="form-group mb-3">
-                    <label class="form-label">Email</label>
-                    <input class="form-control" formControlName="email" type="text" placeholder="Email Address" [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors, 'is-valid': f['email'].valid }"/>
-
-                    <div *ngIf="f['email'].touched && f['email'].errors" class="invalid-feedback">
-                        <div *ngIf="f['email'].errors['required']">
-                            Email is required.
-                        </div>
-                        <div *ngIf="f['email'].errors['email']">
-                            Email isn't valid. Please enter a valid email.
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 form-group">
-                    <label class="form-label">Password</label>
-                    <input class="form-control" formControlName="password" type="password"  placeholder="Password" [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].errors, 'is-valid': f['password'].valid }"
-                    />
-
-                    <div *ngIf="f['password'].touched && f['password'].errors"        class="invalid-feedback">
-                        <div *ngIf="f['password'].errors['required']">
-                            Password is required.
-                        </div>
-                    </div>
-                    
-                </div>
-                <div>
-                    <div class="d-flex justify-content-between mb-4">
-                        <a class="link" routerLink="/auth/forgot-password">Forgot Password?</a>
-                        <a class="link" routerLink="/auth/email-signin">Email Sign In</a>
-                    </div>
-
-                    <button class="btn btn-primary w-100 mb-3"[disabled]="loginForm.invalid" type="submit">
-                        Sign In
-                    </button>
-
-                    <ngb-alert *ngIf="error" #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
-                </div>
-            </form> 
-             
-        </div>
-
-    </div>
-</div> -->
-
-
-
 <div class="container-fluid ps-md-0 container-info">
     <div class="row g-0">
       <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
@@ -96,7 +45,7 @@
                             Sign In
                         </button>
     
-                        <ngb-alert *ngIf="error" #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
+                        <ngb-alert *ngIf="error" #alert type="warning" [dismissible]="false">{{errorMessage}}</ngb-alert>
                     </div>
                 </form> 
 

@@ -51,7 +51,7 @@
         <div ngbAccordionCollapse class="accordion-collapse card-collapse">
             <div ngbAccordionBody >
                 <ng-template>
-                    <app-diet-form-row [diet]="diet" [isAdmin]="adminUser !== null" (saveDiet)="handleSaveDiet($event)"></app-diet-form-row>
+                    <app-diet-form-row [diet]="diet" [index]="i" [isAdmin]="adminUser !== null" (saveDiet)="handleSaveDiet($event)"></app-diet-form-row>
                 </ng-template>
             </div>
         </div>

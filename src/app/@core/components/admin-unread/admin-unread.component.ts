@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Message } from '@app/@core/models/messages/message.model';
 import { FromNowPipe } from '@app/@core/pipes/from-now.pipe';
 import { UserService } from '@app/features/admin/services/user.service';
-import { MessageService } from '@app/features/messages/services/message.service';
+import { MessageService } from '@app/@shared/services/message.service';
 import { Observable, catchError, map, of } from 'rxjs';
 
 @Component({

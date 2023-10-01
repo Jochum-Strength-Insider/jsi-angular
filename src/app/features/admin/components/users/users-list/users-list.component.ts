@@ -18,7 +18,6 @@ export class UsersListComponent implements OnInit, OnChanges {
 
   @Input() users: UserWithSelection[] = [];
   @Input() currentUser: User | null = null;
-  @Input() currentUserId: string | null;
 
   searchSub: Subscription;
 
@@ -51,7 +50,10 @@ export class UsersListComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     ifPropChanged(changes['users'], () => {
       this.filterUsers();
-    })
+    });
+    ifPropChanged(changes['currentUser'], (user) => {
+      console.log(user)
+    });
   }
 
   ngOnDestroy() {

@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { Submission } from '@app/@core/models/codes/submission.model';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { environment } from '@env/environment';
 import { ICreateSubscriptionRequest, IOnApproveCallbackData, IPayPalConfig } from 'ngx-paypal';
@@ -50,7 +49,6 @@ export class PaymentComponent implements OnInit, OnChanges {
       },
       onApprove: (data: IOnApproveCallbackData, actions: any) => {
         const me = this;
-        console.log('onApprove', data);
         me.stepSubmit.emit(data);
 
         // The below code does not currently work with ngx-paypal.
@@ -81,19 +79,11 @@ export class PaymentComponent implements OnInit, OnChanges {
 
       },
       onCancel: (data, actions) => {
-        console.log('OnCancel', data, actions);
+        console.log('OnCancel');
       },
       onError: (err) => {
         console.log('OnError', err);
       }
     };
   }
-
-  // test() {
-  //   this.stepSubmit.emit({
-  //       orderID: 'orderID',
-  //       payerID: 'payerID',
-  //       subscriptionID: 'subscriptionID'
-  //   })
-  // }
 }

@@ -273,6 +273,7 @@ export class UserProgramComponent implements OnInit {
     }
     const active = !this.workoutId.active;
     this.workoutService.setWorkoutIsActive(this.user.id, this.workoutId.id, active)
+    .pipe(switchMap(() => active ? this.userService.updateUserProgramDate(this.user.id) : of("")))
     .subscribe({
       next: () => {
         if(this.workoutId){
@@ -281,7 +282,7 @@ export class UserProgramComponent implements OnInit {
       },
       error: (err: Error) => {
         this.error = err
-        this.toastService.showError();
+        this.toastService.showError(`An error occurred ${active ? 'activating' : 'deactivating'} this program.`);
       }
     })
   }
