@@ -5,6 +5,7 @@ import { Questionnaire } from '@app/@core/models/questionnaire/questionnaire.mod
 import { ToastService } from '@app/@core/services/toast.service';
 import { Subscription } from 'rxjs';
 import { QuestionnaireService } from '../../services/questionnaire.service';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
 @Component({
   selector: 'app-questionnaire-container',
@@ -18,11 +19,10 @@ export class QuestionnaireContainerComponent implements OnInit, OnDestroy {
   questionnaireSub: Subscription;
   questionnaire: Questionnaire;
 
-  error: Error;
-
   constructor(
     private toastService: ToastService,
-    private service: QuestionnaireService
+    private service: QuestionnaireService,
+    private errorService: ErrorHandlingService
   ){ }
 
   ngOnInit() {
@@ -40,7 +40,13 @@ export class QuestionnaireContainerComponent implements OnInit, OnDestroy {
         next: (questionnaire) => {
           this.questionnaire = questionnaire
         },
-        error: (err) => this.error = err
+        error: (err) => {
+          this.errorService.generateError(
+            err,
+            'Get User Questionnaire',
+            'An error getting your questionnaire. Please refresh the page and reach out to your Jochum Strengh trainer if the error continues.'
+          );
+        }
       })
   }
 
@@ -49,8 +55,11 @@ export class QuestionnaireContainerComponent implements OnInit, OnDestroy {
     .subscribe({
       next: () => this.toastService.showSuccess('Questionnaire Submitted'),
       error: (err) => {
-        this.error = err;
-        this.toastService.showError();
+        this.errorService.generateError(
+          err,
+          'Update User Questionnaire',
+          'An error submitting your questionnaire. Please tray again and reach out to your Jochum Strengh trainer if the error continues.'
+        );
       }
     })
   }

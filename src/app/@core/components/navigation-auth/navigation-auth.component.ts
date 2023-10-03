@@ -14,7 +14,6 @@ export class NavigationAuthComponent implements OnInit {
   @Input() collapsed: boolean;
   @Input() messages: Message[] = [];
   @Input() authUser: User;
-  error: Error;
 
   constructor(
     private viewContainerRef: ViewContainerRef,

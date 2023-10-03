@@ -9,9 +9,10 @@ import { UserAccountValidator } from '@app/@shared/validators/user-account.valid
 import { UserService } from '@app/features/admin/services/user.service';
 import { MessageService } from '@app/@shared/services/message.service';
 import { environment } from '@env/environment';
-import { Subscription, forkJoin, map, of, switchMap, take } from 'rxjs';
+import { Subscription, catchError, forkJoin, map, of, switchMap, take } from 'rxjs';
 import { IOnApproveCallbackData } from 'ngx-paypal';
 import { Submission } from '@app/@core/models/codes/submission.model';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
 
 @Component({
@@ -50,7 +51,8 @@ export class SubscribeComponent implements OnInit, OnDestroy {
     private codeService: CodesService,
     private authService: AuthService,
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private errorService: ErrorHandlingService
   ) {
     this.createForm();
   }
@@ -100,7 +102,10 @@ export class SubscribeComponent implements OnInit, OnDestroy {
     }
 
     this.codeService.getCodesByDiscountCode(codeSanitized)
-    .pipe(take(1))
+    .pipe(
+      take(1),
+      catchError(() => of([]))
+    )
     .subscribe({
       next: (codes) => {
         if (codes.length > 0) {
@@ -165,7 +170,13 @@ export class SubscribeComponent implements OnInit, OnDestroy {
       next: (result) => {
         console.log('user created');
       },
-      error: (err) => console.log(err)
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Create User Account',
+          'An error occurred creating your account. Please make note of the current time and the email, username, and paypal account you used to create your account and notify a Jochum Strengh trainer by email.'
+        );
+      }
     })
   }
 

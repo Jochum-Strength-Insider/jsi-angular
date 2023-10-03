@@ -112,6 +112,7 @@ export class AuthService {
     return defer( () => fetchSignInMethodsForEmail(this.auth, email));
   }
 
+  // Need to test this
   sendPasswordReset(email: string) : Observable<void> {
     return defer( () => sendPasswordResetEmail(this.auth, email));
   }
