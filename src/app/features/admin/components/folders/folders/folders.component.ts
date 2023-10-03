@@ -6,11 +6,6 @@ import { ProgramService } from '@app/features/admin/services/programs.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize } from 'rxjs';
 
-/*
-ToDo:
-Break out into components
-cache tasks
-*/
 
 @Component({
   selector: 'app-folders',
