@@ -9,7 +9,7 @@ import { AuthService } from '@app/@shared/services/auth.service';
 })
 export class PasswordForgetComponent {
   emailRequestForm: FormGroup;
-  error: Error| null = null;
+  errorMessage: string | null = null;
   sent: boolean = false;
 
   constructor(
@@ -32,10 +32,10 @@ export class PasswordForgetComponent {
       .sendPasswordReset(this.email?.value)
       .subscribe({
         next: () => {
-          this.error = null;
+          this.errorMessage = null;
           this.sent = true;        
         },
-        error: (err: Error) => this.error = err
+        error: (err: Error) => this.errorMessage = "An error occurred sending a pasword reset email. Please try again and reach out to a Jochum Strengh trainer if the errr continues."
       })
   };
 }

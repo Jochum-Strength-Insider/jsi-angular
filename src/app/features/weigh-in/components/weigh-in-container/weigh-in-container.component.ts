@@ -8,6 +8,7 @@ import { Subscription, delay, finalize } from 'rxjs';
 import { WeighInService } from '../../services/weigh-in.service';
 import { User } from '@app/@core/models/auth/user.model';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
 @Component({
   selector: 'app-weigh-in-container',
@@ -24,7 +25,6 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
   mostRecentSub: Subscription;
   weighIns: WeighIn[] = [];
   weightForm: FormGroup;
-  error: Error | null;
   currentDate: Date = new Date();
   queryDate: Date = new Date();
   isCurrentMonth: boolean = true;
@@ -37,7 +37,8 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
     private fb: FormBuilder,
     private weighInService: WeighInService,
     private lsService: LocalStorageService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private errorService: ErrorHandlingService
   ) { }
 
   ngOnInit(): void {
@@ -82,9 +83,13 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
         next: result => {
           this.weighIns = result;
         },
-        error: error => {
-          this.error = error;
+        error: (err) => {
           this.clearWeighIns();
+          this.errorService.generateError(
+            err,
+            'Get User Weigh Ins',
+            'An error occurred getting your weigh ins. Please refresh the page and reach out to your Jochum Strengh trainer if the error continues.'
+          );
         }
       })
 
@@ -148,8 +153,12 @@ export class WeighInContainerComponent implements OnInit, AfterViewInit, OnDestr
           this.alreadyCheckedIn = true;
           this.getWeighIns();
         },
-        error: (err: Error) => {
-          this.error = err
+        error: (err) => {
+          this.errorService.generateError(
+            err,
+            'Add User Weigh In',
+            'An error occurred saving your weigh ins. Please try again reach out to your Jochum Strengh trainer if the error continues.'
+          );
         }
       })
   }

@@ -32,7 +32,7 @@
                                         Sign In
                                     </button>
                 
-                                    <ngb-alert *ngIf="error" #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
+                                    <ngb-alert *ngIf="errorMessage" #alert type="warning" [dismissible]="false">{{errorMessage}}</ngb-alert>
                                     <ngb-alert *ngIf="sent" #alert type="success" [dismissible]="false">
                                         Email sign in link sent! Please check your inbox. <br />
                                         If this is your first time signing in please set up a new password on the account page after login.

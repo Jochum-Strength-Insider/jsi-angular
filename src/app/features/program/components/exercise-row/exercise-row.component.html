@@ -77,8 +77,5 @@
                 <button *ngIf="!saved" type="submit" class="btn btn-outline-primary w-100">Save</button>
             </div>
         </form>
-        <div *ngIf="error" class="form-row">   
-            <ngb-alert #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
-        </div>
     </div>
  </div>

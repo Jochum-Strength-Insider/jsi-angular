@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { USER_NOT_FOUND, WRONG_PASSWORD } from '@app/@core/utilities/firebase-auth-constants.utilities';
+import { TOO_MANY_REQUESTS, USER_NOT_FOUND, WRONG_PASSWORD } from '@app/@core/utilities/firebase-auth-constants.utilities';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { environment } from '@env/environment';
 
@@ -45,7 +45,10 @@ export class SigninComponent {
           this.error = error;
           if(error.message?.includes(WRONG_PASSWORD) || error.message?.includes(USER_NOT_FOUND)){
             this.errorMessage = "Email Or Password Is Incorrect."
-          } else {
+          } else if (error.message?.includes(TOO_MANY_REQUESTS)) {
+            this.errorMessage = "You have made too many failed login attempts. Please wait 30 minutes and try again. If you cannot remember your password try sending a password reset email or using email sign in."
+          }
+          else {
             this.errorMessage = "An error occurred signing in. Please try again and reach out to a Jochum Strength Coach if the error continues."
           }
         }

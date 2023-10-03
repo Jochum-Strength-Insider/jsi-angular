@@ -3,8 +3,9 @@ import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { UserService } from '@app/features/admin/services/user.service';
-import { BehaviorSubject, Subject, Subscription, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, finalize, map, of, switchMap } from 'rxjs';
 import { MessageService } from '../../../../@shared/services/message.service';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
 
 @Component({
@@ -39,7 +40,6 @@ export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, O
   scrollDelay: number = 0;
 
   currentlyMessaging: boolean = false;
-  error: Error | null;
 
   scroll: boolean = true;
 
@@ -50,7 +50,8 @@ export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, O
   loading: boolean = false;
 
   constructor(
-    private messageService: MessageService
+    private messageService: MessageService,
+    private errorService: ErrorHandlingService
   ){}
 
   ngOnInit(): void {
@@ -95,7 +96,8 @@ export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, O
       .pipe(
         switchMap((limit) => {
           return this.messageService.getUserMessagesWithLimit(this.user.id, limit)
-        })
+        }),
+        finalize(() => this.loading = false)
       )
     .subscribe({
       next: messages => {
@@ -111,9 +113,12 @@ export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, O
         }
         this.loading = false;
       },
-      error: (err: Error) => {
-        this.error = err;
-        this.loading = false;
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Get Messages',
+          'An error occurred while trying to get messages.'
+        );
       }
     });
   }
@@ -162,7 +167,13 @@ export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, O
         }),
       )
       .subscribe({
-        error: (err: Error) => this.error = err
+        error: (err) => {
+          this.errorService.generateError(
+            err,
+            'Send Message',
+            'An error occurred while trying to send your message.'
+          );
+        }
       })
     }
   }
@@ -178,8 +189,12 @@ export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, O
             this.scroll = false;
           }
         },
-        error: (err: Error) => {
-          this.error = err
+        error: (err) => {
+          this.errorService.generateError(
+            err,
+            'Load More Messages',
+            'An error occurred while trying to load more messages.'
+          )
         }
       })
     } else {

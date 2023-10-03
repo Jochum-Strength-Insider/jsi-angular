@@ -3,7 +3,7 @@ import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { MessageService } from '@app/@shared/services/message.service';
-import { Subscription, of, switchMap, tap } from 'rxjs';
+import { Subscription, catchError, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -31,10 +31,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
         } else {
           return of([]);
         }
-      }))
+        }),
+        catchError(() => of([]))
+      )
       .subscribe({
-        next: (messages) => this.messages = messages,
-        error: (err) => console.log(err)
+        next: (messages) => this.messages = messages
       })
   }
 
