@@ -298,7 +298,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
     )
     .subscribe({
       next: (result) => {
-        console.log('user created', result);
+        console.log('user created');
         this.toastService.showSuccess("New User Added");
       },
       error: (err) => {

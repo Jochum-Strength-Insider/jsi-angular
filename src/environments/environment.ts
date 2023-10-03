@@ -26,7 +26,6 @@ export const environment = {
   production: false,
   version: '1.0',
   serverUrl: 'http://localhost:3000',
-  test: process.env['TEST_DEV'],
   crytoKey: 'Ins1d3r!',
   login: process.env['TEST_USER_LOGIN'],
   password: process.env['TEST_USER_PASSWORD'],
