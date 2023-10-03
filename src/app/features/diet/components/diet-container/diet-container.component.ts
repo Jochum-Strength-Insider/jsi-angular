@@ -9,6 +9,7 @@ import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { NgbAccordionDirective, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize, tap, timer } from 'rxjs';
 import { DietService } from '../../services/diet.service';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
 @Component({
   selector: 'app-diet-container',
@@ -27,7 +28,6 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
   mostRecentSub: Subscription;
   timerSub: Subscription;
   dateForm: FormGroup;
-  error: Error | null;
   currentDate: Date = new Date();
   queryDate: Date = new Date();
   isCurrentMonth: boolean = true;
@@ -43,7 +43,8 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
     private fb: FormBuilder,
     private dietService: DietService,
     private modalService: NgbModal,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private errorService: ErrorHandlingService
   ) {}
 
   ngOnInit(): void {
@@ -93,8 +94,12 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
             this.addDietIdToCheckIns(dietId);
             this.fetchDiets();
           },
-          error: (err: Error) => {
-            this.error = err
+          error: (err) => {
+            this.errorService.generateError(
+              err,
+              'Add Diet Page',
+              'An error occurred while trying to add a diet page. Please try again and reach out to your Jochum Strengh trainer if the error continues.'
+            );
           }
         });
     }
@@ -129,7 +134,13 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
       )
     .subscribe({
       next: (diets: Diet[]) => this.diets = diets.sort(((a: Diet, b: Diet) => b.createdAt - a.createdAt)),
-      error: err => this.error = err
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Get Diet Pages',
+          'An error occurred while trying to get your diet pages. Please try again and reach out to your Jochum Strengh trainer if the error continues.'
+        );
+      }
     })
   }
 
@@ -174,9 +185,12 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
       next: () => {
         this.toastService.showSuccess();
       },
-      error: (error: Error) => {
-        this.toastService.showError();
-        this.error = error
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Save Diet Page',
+          'An error occurred while trying to save the diet page. Please try again and reach out to your Jochum Strengh trainer if the error continues.'
+        );
       }
     });
   }

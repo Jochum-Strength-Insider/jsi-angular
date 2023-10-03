@@ -18,7 +18,6 @@ export class ExerciseRowComponent {
   isModalOpen: boolean = false;
   modalExercise: Exercise;
   saved: boolean = false;
-  error: Error;
 
   constructor(
     private fb: FormBuilder

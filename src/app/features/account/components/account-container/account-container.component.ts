@@ -4,7 +4,7 @@ import { User as UserModel } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
 import { WorkoutId } from '@app/@core/models/program/workout-id.model';
 import { ToastService } from '@app/@core/services/toast.service';
-import { WRONG_PASSWORD } from '@app/@core/utilities/firebase-auth-constants.utilities';
+import { TOO_MANY_REQUESTS, WRONG_PASSWORD } from '@app/@core/utilities/firebase-auth-constants.utilities';
 import { LoginRequestModel } from '@app/@shared/models/auth/login-request.model';
 import { PasswordResetModel } from '@app/@shared/models/auth/password-reset.model';
 import { AuthService } from '@app/@shared/services/auth.service';
@@ -15,6 +15,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EMPTY, Observable, Subscription, catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
 import { AFTER_STRING, AccountService, BEFORE_STRING } from '../../services/account.service';
 import { environment } from '@env/environment';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
 
 @Component({
@@ -28,7 +29,6 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
   sent: boolean = false;
   cancelled: boolean = false;
   workoutIds$: Observable<WorkoutId[]> = of([]);
-  error: Error;
 
   afterSub: Subscription;
   beforeSub: Subscription;
@@ -43,7 +43,8 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private modalService: NgbModal,
     private messageService: MessageService,
-    private lsService: LocalStorageService
+    private lsService: LocalStorageService,
+    private errorService: ErrorHandlingService
   ){ }
 
   ngOnInit() {
@@ -66,7 +67,8 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     this.beforeSub = of(cashedBefore)
       .pipe(switchMap((url) => {
         if(url){
-          return of(url);
+          return of(url)
+          .pipe(catchError(() => of("")));
         } else {
           return this.accountService.getUserBefore(this.user.id)
             .pipe(catchError(() => of("")))
@@ -80,7 +82,8 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     this.afterSub = of(cashedAfter)
       .pipe(switchMap((url) => {
         if(url){
-            return of(url);
+            return of(url)
+            .pipe(catchError(() => of("")));
         } else {
           return this.accountService.getUserAfter(this.user.id)
             .pipe(catchError(() => of("")))
@@ -103,7 +106,13 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     )
     .subscribe({
       next: (url) => this.before = url,
-      error: (err) => console.log(err)
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Upload Image',
+          'An error occurred while trying to upload your image. Please try and again and reach out to support if the error continues.'
+        );
+      }
     })
   }
 
@@ -119,7 +128,13 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     )
     .subscribe({
       next: (url) => this.after = url,
-      error: (err) => console.log(err)
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Upload Image',
+          'An error occurred while trying to upload your image. Please try and again and reach out to support if the error continues.'
+        );
+      }
     })
   }
 
@@ -127,7 +142,13 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     this.accountService.deleteUserBefore(this.user.id)
     .subscribe({
       next: () => this.before = "",
-      error: (err) => console.log(err)
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Remove Image',
+          'An error occurred while trying to remove your image. Please try and again and reach out to support if the error continues.'
+        );
+      }
     })
   }
 
@@ -135,7 +156,13 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     this.accountService.deleteUserAfter(this.user.id)
     .subscribe({
       next: () => this.after = "",
-      error: (err) => console.log(err)
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Remove Image',
+          'An error occurred while trying to remove your image. Please try and again and reach out to support if the error continues.'
+        );
+      }
     })
   }
  
@@ -161,9 +188,13 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
         this.toastService.showSuccess();
       },
       error: (error: Error) => {
-        const errorMessage = error.message.includes(WRONG_PASSWORD) ? "Wrong Password" : "An error occurred, Please try again."
+        let errorMessage = "An error occured changing your password. Please try again and reach out to support if the error continues."
+        if(error.message?.includes(WRONG_PASSWORD)){
+          errorMessage = "Your password is incorrect."
+        } else if (error.message?.includes(TOO_MANY_REQUESTS)) {
+          errorMessage = "You have made too many attempts using the incorrect password. Please wait 30 minutes and try again. If you cannot remember your password try sending a password reset email or using email sign in."
+        }
         this.toastService.showError(errorMessage);
-        this.error = error
       }
     });
   }
@@ -174,18 +205,23 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
       this.messageService.addAdminUnreadMessage(USER_CANCELLATION_MESSAGE),
       this.messageService.addUserMessage(this.user.id, USER_CANCELLATION_MESSAGE)
     ])
-    .pipe(finalize(() => this.modalService.dismissAll()))
+    .pipe(
+      finalize(() => this.modalService.dismissAll())
+    )
     .subscribe({
       next: () => {
         const paypalUrl = environment.userSubscriptionUrl || "https://www.paypal.com/myaccount/autopay/connect/";
         const url = `${paypalUrl}${this.user.billingId}`;
         window.open(url, '_blank');
-        this.toastService.showSuccess("Your account has been cancelled.");
+        this.toastService.showSuccess("A Jochum Strength trainer has been notified that you intend to cancel your account.");
         this.cancelled = true;
       },
-      error: (error: Error) => {
-        this.toastService.showError();
-        this.error = error
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Account Cancellation',
+          'An error occurred notifying a Jochum Strength trainer that you intend to cancel your account. Please try again and reach out to your Jochum Strengh trainer if the error continues.'
+        );
       }
     });
 

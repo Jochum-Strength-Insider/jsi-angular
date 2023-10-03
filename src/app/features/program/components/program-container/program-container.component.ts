@@ -4,6 +4,7 @@ import { LocalStorageService } from '@app/@shared/services/local-storage.service
 import { Subscription, of, switchMap } from 'rxjs';
 import { WorkoutService } from '../../services/workout.service';
 import { User } from '@app/@core/models/auth/user.model';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
 @Component({
   selector: 'app-program-container',
@@ -15,11 +16,11 @@ export class ProgramContainerComponent implements OnDestroy {
   programSub: Subscription;
   program: Workout;
   programKey: string;
-  error: Error | null;
 
   constructor(
     private service: WorkoutService,
-    private lsService: LocalStorageService
+    private lsService: LocalStorageService,
+    private errorService: ErrorHandlingService
   ){
     this.program = this.lsService.getParseData('program');
   }
@@ -46,9 +47,13 @@ export class ProgramContainerComponent implements OnDestroy {
             this.lsService.saveStringifyData('program', result);
             this.lsService.saveData('programKey', result.id);
         },
-        error: error => {
-          this.error = error;
+        error: (err) => {
           this.clearWorkout();
+          this.errorService.generateError(
+            err,
+            'Get Program',
+            'An error occurred while trying to retreive your program. Please refresh the page and reach out to your Jochum Strengh trainer if the error continues.'
+          );
         }
       })
   }

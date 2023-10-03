@@ -5,6 +5,7 @@ import { ToastService } from '@app/@core/services/toast.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { YoutubeEmbedComponent } from '../youtube-embed/youtube-embed.component';
 import { WorkoutService } from '../../services/workout.service';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
 @Component({
   selector: 'app-day-table',
@@ -16,12 +17,12 @@ export class DayTableComponent implements OnInit {
   @Input() programKey: string;
   @Input() uid: string;
   @Input() phaseTitle: string;
-  error: Error | null = null;
 
   constructor(
     private modalService: NgbModal,
     private service: WorkoutService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private errorService: ErrorHandlingService
   ) {}
 
   ngOnInit(){}
@@ -44,9 +45,12 @@ export class DayTableComponent implements OnInit {
       next: () => {
         this.toastService.showSuccess();
       },
-      error: (error: Error) => {
-        this.toastService.showError();
-        this.error = error
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Save Tracking',
+          'An error occurred while trying to save exercise tracking information. Please try again and reach out to your Jochum Strengh trainer if the error continues.'
+        );
       }
     });
   }

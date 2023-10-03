@@ -81,8 +81,9 @@ export class PaymentComponent implements OnInit, OnChanges {
       onCancel: (data, actions) => {
         console.log('OnCancel');
       },
-      onError: (err) => {
-        console.log('OnError', err);
+      onError: (err: Error) => {
+        console.error(err);
+        throw err;
       }
     };
   }

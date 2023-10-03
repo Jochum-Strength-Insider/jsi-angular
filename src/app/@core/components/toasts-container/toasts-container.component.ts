@@ -8,8 +8,8 @@ import { ToastService } from '@app/@core/services/toast.service';
 	host: { class: 'toast-container w-100 d-flex justify-content-center position-fixed p-3', style: 'z-index: 1200' },
 })
 export class ToastsContainer {
+	autohide: boolean = true;
 	constructor(public toastService: ToastService) {}
-
 	isTemplate(toast: any) {
 		return toast.textOrTpl instanceof TemplateRef;
 	}

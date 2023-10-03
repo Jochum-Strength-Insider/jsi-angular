@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
-import { BehaviorSubject, Subject, Subscription, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, catchError, finalize, map, of, switchMap } from 'rxjs';
 import { MessageService } from '@shared/services/message.service';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
 
 @Component({
@@ -47,7 +48,8 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
   loading: boolean = false;
 
   constructor(
-    private messageService: MessageService
+    private messageService: MessageService,
+    private errorService: ErrorHandlingService
   ){}
 
   ngOnInit(): void {
@@ -86,7 +88,8 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
       .pipe(
         switchMap((limit) => {
           return this.messageService.getUserMessagesWithLimit(this.user.id, limit)
-        })
+        }),
+        finalize(() => this.loading = false)
       )
     .subscribe({
       next: messages => {
@@ -102,9 +105,12 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
         }
         this.loading = false;
       },
-      error: (err: Error) => {
-        this.error = err;
-        this.loading = false;
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Get User Messages',
+          'An error occurred getting your messages. Please refresh the page and reach out to your Jochum Strengh trainer if the error continues.'
+        );
       }
     });
   }
@@ -112,26 +118,28 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
   listenForAdminCurrentlyMessaging(){
     this.currentlyMessagingSub?.unsubscribe();
     this.currentlyMessagingSub = this.messageService.getAdminCurrentlyMessaging()
-        .subscribe((id) => {
-          this.currentlyMessaging = id === this.user.id
-        });
+      .subscribe((id) => {
+        this.currentlyMessaging = id === this.user.id
+      });
   }
 
   setAdminCurrentlyMessaging(){
     this.messageService.setAdminCurrentlyMessaging(this.user.id)
-    .subscribe();
+      .pipe(catchError(() => of('')))
+      .subscribe();
   }
 
   setUserCurrentlyMessaging(){
     this.messageService.addUserCurrentlyMessaging(this.user.id)
+      .pipe(catchError(() => of('')))
       .subscribe();
   }
 
   clearUserUnreadMessages() {
     this.messageService.clearUserUnreadMessage(this.user.id)
+      .pipe(catchError(() => of('')))
       .subscribe({
         next: () => console.log('unread messages cleared'),
-        error: (err) => console.log(err)
       })
   }
 
@@ -155,7 +163,13 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
         })
       )
       .subscribe({
-        error: (err: Error) => this.error = err
+        error: (err) => {
+          this.errorService.generateError(
+            err,
+            'Send Message',
+            'An error occurred sending your messages. Please refresh the page and reach out to your Jochum Strengh trainer if the error continues.'
+          );
+        }
       })
     }
   }
@@ -171,8 +185,12 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
             this.scroll = false;
           }
         },
-        error: (err: Error) => {
-          this.error = err
+        error: (err) => {
+          this.errorService.generateError(
+            err,
+            'Get More Messages',
+            'An error occurred loading more messages. Please refresh the page and reach out to your Jochum Strengh trainer if the error continues.'
+          );
         }
       })
     } else {

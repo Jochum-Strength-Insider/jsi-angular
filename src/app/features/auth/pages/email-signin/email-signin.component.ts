@@ -12,7 +12,7 @@ import { EMPTY, catchError, filter, switchMap } from 'rxjs';
 })
 export class EmailSigninComponent {
   emailRequestForm: FormGroup;
-  error: Error| null = null;
+  errorMessage: string | null = null;
   sent: boolean = false;
 
   constructor(
@@ -36,14 +36,14 @@ export class EmailSigninComponent {
           this.auth.doSignInWithEmailLink(email)
           .subscribe({
             next: () => {
-              this.error = null;
+              this.errorMessage = null;
               this.localStorage.removeData("emailForSignIn")
               this.router.navigateByUrl('/program')
             },
             error: (err: Error) => {
+              this.errorMessage = 'An error occurred while trying to send a verification email. Please try and again and reach out to support if the error continues.';
               this.localStorage.removeData("emailForSignIn")
-              this.error = err;
-            }         
+            }
           })
         }
     }
@@ -62,13 +62,13 @@ export class EmailSigninComponent {
       )
       .subscribe({
         next: () => {
-          this.error = null;
+          this.errorMessage = null;
           this.sent = true;
           this.localStorage.saveData("emailForSignIn", email)
         },
         error: (err: Error) => {
           this.localStorage.removeData("emailForSignIn")
-          this.error = new Error("Account does not exist. Please contact jochumstrength@gmail.com to become an Insider or for more information about Jochum Strength Insider.");
+          this.errorMessage = "Account does not exist.";
         }
       })
   };
