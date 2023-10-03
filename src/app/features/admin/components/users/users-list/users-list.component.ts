@@ -51,9 +51,6 @@ export class UsersListComponent implements OnInit, OnChanges {
     ifPropChanged(changes['users'], () => {
       this.filterUsers();
     });
-    ifPropChanged(changes['currentUser'], (user) => {
-      console.log(user)
-    });
   }
 
   ngOnDestroy() {

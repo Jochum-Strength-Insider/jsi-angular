@@ -28,8 +28,9 @@ export class AppComponent {
   }  
 
   ngOnInit(){
-    // definitely clean this up
-    console.log("APP_INIT", environment.test)
+    if(!environment.production){
+      console.log("APP_INIT", environment.firebase)
+    }
   }
 
 }
