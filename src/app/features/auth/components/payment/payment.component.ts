@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { environment } from '@env/environment';
 import { ICreateSubscriptionRequest, IOnApproveCallbackData, IPayPalConfig } from 'ngx-paypal';
@@ -14,7 +15,7 @@ export class PaymentComponent implements OnInit, OnChanges {
   @Input() subscriptionId: string = "";
   payPalConfig?: IPayPalConfig;
 
-  constructor() {}
+  constructor(private errorService: ErrorHandlingService) {}
 
   ngOnInit(): void {
     this.initConfig();
@@ -83,7 +84,11 @@ export class PaymentComponent implements OnInit, OnChanges {
       },
       onError: (err: Error) => {
         console.error(err);
-        throw err;
+        this.errorService.generateError(
+          err,
+          'Create Paypal Subscription',
+          'An Error occured creating the paypal Subscription. Please try again and reach out to support if the error continues.'
+        )
       }
     };
   }

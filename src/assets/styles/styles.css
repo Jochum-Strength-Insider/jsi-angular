@@ -168,6 +168,10 @@ span.required {
   font-size: unset;
 }
 
+.font-weight-bold {
+  font-weight: bold;
+}
+
 @media (max-width: 576px) {
   h1,
   h2,

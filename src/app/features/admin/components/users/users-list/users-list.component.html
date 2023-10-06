@@ -37,26 +37,24 @@
 
         <div class="users-list-contain">
             <div class="list-group list-group-flush">
-                <div *ngFor="let user of sortedUsers">
-                    <div class="list-group-item d-flex" [ngClass]="{'current' : (currentUser && currentUser.id === user.id)}">
-                        <div class="check-box d-flex align-items-center">
-                            <div class="mb-3 form-check">
-                                <label [for]="'checkbox-'+user.id" class="sr-only"></label>
-                                <input [(ngModel)]="user.checked" type="checkbox" [id]="'checkbox-'+user.id" (change)="selectionChanged(user)">
-                            </div>
+                <div *ngFor="let user of sortedUsers" class="list-group-item d-flex" [ngClass]="{'current' : (currentUser && currentUser.id === user.id)}">
+                    <div class="check-box d-flex align-items-center">
+                        <div class="mb-3 form-check">
+                            <label [for]="'checkbox-'+user.id" class="sr-only"></label>
+                            <input [(ngModel)]="user.checked" type="checkbox" [id]="'checkbox-'+user.id" (change)="selectionChanged(user)">
                         </div>
-                        
-                        <div class="user-list-item">
-                            <a [routerLink]="[user.id]"
-                                [state]="user"
-                                class="btn btn-link px-0 py-0"
-                                (click)="setCurrentUser(user)"
-                            >
-                                {{user.username}}
-                            </a>
-                            <div>{{user.email}}</div>
-                            <div>{{ user.programDate | date }}</div>
-                        </div>
+                    </div>
+                    
+                    <div class="user-list-item">
+                        <a [routerLink]="[user.id]"
+                            [state]="user"
+                            class="btn btn-link px-0 py-0"
+                            (click)="setCurrentUser(user)"
+                        >
+                            {{user.username}}
+                        </a>
+                        <div>{{user.email}}</div>
+                        <div>{{ user.programDate | date }}</div>
                     </div>
                 </div>
             </div>
