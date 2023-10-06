@@ -9,7 +9,7 @@
                   
                   <!-- Sign In Form -->
                 <h3 class="mb-4">Sign In</h3>
-                <form class="form w-100 needs-validation" id="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate autocomplete="off">
+                <form class="form w-100 needs-validation" id="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
                     <div class="form-group mb-3">
                         <label class="form-label">Email</label>
                         <input class="form-control" formControlName="email" type="text" placeholder="Email Address" [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors, 'is-valid': f['email'].valid }"/>

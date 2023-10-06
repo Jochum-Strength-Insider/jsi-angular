@@ -4,7 +4,7 @@ import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angula
 import { User as UserModel } from '@app/@core/models/auth/user.model';
 import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
-import { BehaviorSubject, Observable, defer, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, defer, tap } from 'rxjs';
 
 export const USERS_STRING = 'users';
 
@@ -20,7 +20,7 @@ export class UserService {
     private lsService: LocalStorageService
   ) {}
 
-  public setSelectedUser(user: UserModel | null){
+  public setSelectedUser(user: UserModel | null) {
     this.selectedUserSubject.next(user);
   }
 
@@ -32,7 +32,7 @@ export class UserService {
     return this.db.object(`${USERS_STRING}/${uid}`);
   }
 
-  getUserById(userId: string):Observable<UserModel> {
+  getUserById(userId: string): Observable<UserModel> {
     return this.usersObjectRef(userId)
       .snapshotChanges()
       .pipe( mapKeyToObjectOperator() );
@@ -43,7 +43,6 @@ export class UserService {
       .valueChanges([], { idField: 'id'})
       .pipe(
         tap((users) => this.lsService.saveStringifyData(USERS_STRING, users)),
-        map(users => users)
       );
   }
 

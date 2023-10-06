@@ -76,8 +76,7 @@
     <ng-container *ngIf="filteredWorkouts.length > 0; else noTasks;">
         <div *ngFor="let workout of filteredWorkouts | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item d-flex justify-content-between">
             <span class="d-flex align-items-center">
-                <strong class="me-2">{{ workout.active ? "Active " : "" }}Program:</strong>
-                <a class="me-2" [routerLink]="['./program/', workout.id]">{{ workout.title }}</a>
+                <a class="me-2" [class.font-weight-bold]="workout.active" [routerLink]="['./program/', workout.id]">{{ workout.title }}</a>
             </span>
             <div>
                 <div style="display: inline-block">{{ workout.createdAt | date:'shortDate' }}</div>
@@ -86,7 +85,7 @@
                 </button>
                 <span>
                     <button class="ms-2 btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(workout)">
-                        Delete
+                        X
                     </button>
                 </span>
             </div>

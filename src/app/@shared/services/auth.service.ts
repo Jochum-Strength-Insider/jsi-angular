@@ -17,12 +17,12 @@ import {
   signOut,
   updatePassword
 } from '@angular/fire/auth';
-import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/compat/database';
 import { User as UserModel } from '@app/@core/models/auth/user.model';
 import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import { environment } from '@env/environment';
 import { initializeApp } from '@firebase/app';
-import { BehaviorSubject, Observable, defer, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, defer, map, of, switchMap, take } from 'rxjs';
 import { LoginRequestModel } from '../models/auth/login-request.model';
 
 
@@ -95,10 +95,17 @@ export class AuthService {
     return this.auth.currentUser;
   }
 
-  getUserById(userId: string):Observable<UserModel> {
-    return <Observable<UserModel>>this.db.object(`users/${userId}`)
+  private userObjectRef(uid: string): AngularFireObject<UserModel> {
+    return this.db.object(`users/${uid}`);
+  }
+
+  getUserById(uid: string):Observable<UserModel> {
+    return this.userObjectRef(uid)
       .snapshotChanges()
-      .pipe( mapKeyToObjectOperator() );
+      .pipe(
+        take(1),
+        mapKeyToObjectOperator()
+      );
   }
 
   mergeAuthUserAndDbUser( credential: User, user: UserModel ): UserModel {
