@@ -4,7 +4,7 @@ import { CodeDetails } from '@app/@core/models/codes/code-details.model';
 import { Code } from '@app/@core/models/codes/code.model';
 import { Submission } from '@app/@core/models/codes/submission.model';
 import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
-import { Observable, defer, from, of, take } from 'rxjs';
+import { Observable, defer, of } from 'rxjs';
 
 export const CODES_STRING = 'codes';
 
@@ -95,7 +95,6 @@ export class CodesService {
   getCodeDetailsSubmissions(code: Code): Observable<Submission[]> {
     return this.codeDetailsSubmissionsListRef(code.id)
       .valueChanges([], { idField: 'id' })
-      .pipe(take(1))
     }
 
   addCodeDetailsSubmission(code: Code, submission: Submission): Observable<string | null> {

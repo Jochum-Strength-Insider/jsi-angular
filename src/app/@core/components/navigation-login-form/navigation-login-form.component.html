@@ -1,5 +1,4 @@
-<form [formGroup]="loginForm" id="navLoginForm" class="nav-login d-none d-sm-none d-md-none d-lg-inline-flex d-xl-inline-flex"
-      (ngSubmit)="onSubmit()" autocomplete="off">
+<form [formGroup]="loginForm" id="navLoginForm" class="nav-login d-none d-sm-none d-md-none d-lg-inline-flex d-xl-inline-flex" (ngSubmit)="onSubmit()">
     <div class="form-group me-2">
         <label class="sr-only" for="navEmail">Email: </label>
         <input id="navEmail" class="form-control form-control-sm" type="text" placeholder="Email Address" formControlName="email" />

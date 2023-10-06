@@ -10,12 +10,12 @@ import { ResizeService } from '@app/@core/services/resize.service';
 import { ToastService } from '@app/@core/services/toast.service';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
+import { MessageService } from '@app/@shared/services/message.service';
 import { UserAccountValidator } from '@app/@shared/validators/user-account.validator';
 import { FOLDERS_STRING, PROGRAM_IDS_STRING, ProgramService } from '@app/features/admin/services/programs.service';
 import { UserService } from '@app/features/admin/services/user.service';
-import { MessageService } from '@app/@shared/services/message.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subscription, debounceTime, finalize, forkJoin, fromEvent, map, of, switchMap, take } from 'rxjs';
+import { Observable, Subscription, debounceTime, finalize, forkJoin, fromEvent, map, of, switchMap } from 'rxjs';
 
 
 @Component({

@@ -5,7 +5,7 @@ import { Submission } from '@app/@core/models/codes/submission.model';
 import { ToastService } from '@app/@core/services/toast.service';
 import { CodesService } from '@app/@shared/services/codes.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, finalize } from 'rxjs';
+import { Subscription, finalize, take } from 'rxjs';
 
 // TODO
 // Separate components
@@ -197,6 +197,7 @@ export class CodesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showReferrals(code: Code){
     this.codesService.getCodeDetailsSubmissions(code)
+    .pipe(take(1))
     .subscribe({
       next: (details) => {
         this.submissions = details;
