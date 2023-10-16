@@ -15,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { YoutubePipePipe } from './pipes/youtube-pipe.pipe';
 import { YoutubeEmbedComponent } from './components/youtube-embed/youtube-embed.component';
 import { ProgramContainerComponent } from './components/program-container/program-container.component';
+import { SurveySubmittedCardComponent } from './components/survey-submitted-card/survey-submitted-card.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { ProgramContainerComponent } from './components/program-container/progra
     DayTableComponent,
     YoutubePipePipe,
     YoutubeEmbedComponent,
-    ProgramContainerComponent
+    ProgramContainerComponent,
+    SurveySubmittedCardComponent
   ],
   imports: [
     CommonModule,

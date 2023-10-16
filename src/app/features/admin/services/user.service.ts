@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
+import { UserSubscription } from '@app/@core/models/auth/user-subscription.model';
 import { User as UserModel } from '@app/@core/models/auth/user.model';
 import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
-import { BehaviorSubject, Observable, defer, tap } from 'rxjs';
+import { BehaviorSubject, Observable, defer, of, tap } from 'rxjs';
 
 export const USERS_STRING = 'users';
+export const USER_SUBSCRIPTION_STRING = 'userSubscriptions';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,8 @@ export class UserService {
   public setSelectedUser(user: UserModel | null) {
     this.selectedUserSubject.next(user);
   }
+
+  /* User Api */
 
   private usersListRef(): AngularFireList<UserModel>{
     return this.db.list(USERS_STRING);
@@ -51,7 +55,8 @@ export class UserService {
       .update({
         "username": user.username,
         "surveySubmitted": user.surveySubmitted,
-        "billingId": user.billingId
+        "ADMIN": user.ADMIN,
+        "ACTIVE": user.ACTIVE,
       })
     )
   }
@@ -77,7 +82,7 @@ export class UserService {
       .pipe( tap(() => this.lsService.removeData(USERS_STRING)) );
   }
 
-  addNewUser(uid: string, email: string, username: string, billingId: string = ""): Observable<void> {
+  addNewUser(uid: string, email: string, username: string): Observable<void> {
     const now = new Date().getTime();
     const newUser = new UserModel();
     newUser.username = username;
@@ -86,7 +91,39 @@ export class UserService {
     newUser.ACTIVE = true;
     newUser.createdAt = now;
     newUser.surveySubmitted = false;
-    newUser.billingId = billingId;
     return defer(() => this.usersObjectRef(uid).set(newUser));
   }
+
+  /* User Subscriptions API */
+
+  private userSubscriptionListRef(uid: string): AngularFireList<UserSubscription>{
+    return this.db.list(`${USER_SUBSCRIPTION_STRING}/${uid}`);
+  }
+
+  private userSubscriptionObjectRef(uid: string, sid: string): AngularFireObject<UserSubscription>{
+    return this.db.object(`${USER_SUBSCRIPTION_STRING}/${uid}/${sid}`);
+  }
+
+  getUserSubscriptions(uid: string): Observable<UserSubscription[]> {
+    return this.userSubscriptionListRef(uid)
+      .valueChanges([], {idField: 'id'})
+  }
+
+  addUserSubscription(uid: string, billingId: string, subscriptionId: string, active: boolean = true): Observable<string | null> {
+    const subscription = new UserSubscription(billingId, subscriptionId, active);
+    return of(this.userSubscriptionListRef(uid).push(subscription).key)
+  }
+
+  updateUserSubscription(uid: string, subscription: UserSubscription): Observable<void> {
+    return defer(() => this.userSubscriptionListRef(uid).update(subscription.id, subscription))
+  }
+
+  removeUserSubscription(uid: string, sid: string) : Observable<void> {
+    return defer( () => this.userSubscriptionObjectRef(uid, sid).remove())
+  }
+
+  cancelUserSubscription(uid: string, sid: string): Observable<void> {
+    return defer(() => this.userSubscriptionObjectRef(uid, sid).update({ active: false, cancelledAt: new Date().getTime() }));
+  }
+  
 }

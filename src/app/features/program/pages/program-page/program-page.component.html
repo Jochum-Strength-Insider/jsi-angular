@@ -1,35 +1,16 @@
 <ng-container *ngIf="authUser$ | async as authUser">
     <ng-container *ngIf="authUser.ACTIVE; else inActive">
-        <ng-container *ngIf="authUser.surveySubmitted; else questionnaire">
-            <div class="container-fluid">
-                <div class="d-flex justify-content-center">
-                    <div class="contain-width px-1">
-                        <div class="app-top">
-                            <app-program-container [user]="authUser"></app-program-container>
-                        </div>
+        <div class="container-fluid">
+            <div class="d-flex justify-content-center">
+                <div class="contain-width px-1">
+                    <div class="app-top">
+                        <app-verify-email-card *ngIf="!authUser.emailVerified"></app-verify-email-card>
+                        <app-survey-submitted-card *ngIf="!authUser.surveySubmitted"></app-survey-submitted-card>
+                        <app-program-container [user]="authUser"></app-program-container>
                     </div>
                 </div>
             </div>
-        </ng-container>
-
-        <ng-template #questionnaire>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col col-xs-12 col-md-6 mx-auto">
-                        <div class="card mt-5">
-                            <div class="card-header text-center">
-                                <strong>Questionnaire</strong>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text text-center">
-                                    Please submit your user questionnaire to get started with a new program! <a class="p-link" [routerLink]="['../questionnaire']">Click here to submit your questionnaire.</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </ng-template>
+        </div>
     </ng-container>
 
     <ng-template #inActive>
@@ -42,7 +23,7 @@
                         </div>
                         <div class="card-body">
                             <p class="card-text text-center">
-                                Your Account is currently deactivated. To reactivate your account reapply for Jochum Strength Insider or contact jochumstrength@gmail.com for more information.
+                                Your Account is currently deactivated. To reactivate your account please <a class="p-link" [routerLink]="['../auth/resubscribe']">click here to resubscribe</a> or reach out to jochumstrength@gmail.com for more information.
                             </p>
                         </div>
                     </div>

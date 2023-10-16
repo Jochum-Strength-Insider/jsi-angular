@@ -7,7 +7,7 @@ import { AccountContainerComponent } from './components/account-container/accoun
 import { SharedModule } from '@app/@shared/shared.module';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { UserImageComponent } from './components/user-image/user-image.component';
-import { UserCancellationComponent } from './components/user-cancellation/user-cancellation.component';
+import { UserSubscriptionsListComponent } from './components/user-subscriptions-list/user-subscriptions-list.component';
 
 
 @NgModule({
@@ -16,7 +16,7 @@ import { UserCancellationComponent } from './components/user-cancellation/user-c
     AccountPageComponent,
     UserInfoComponent,
     UserImageComponent,
-    UserCancellationComponent
+    UserSubscriptionsListComponent
   ],
   imports: [
     CommonModule,

@@ -7,4 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class DotsComponent {
   @Input() step: number = 1;
+  @Input() firstStep: string = "Account";
+  @Input() secondStep: string = "Payment";
+  @Input() thirdStep: string = "Welcome";
 }

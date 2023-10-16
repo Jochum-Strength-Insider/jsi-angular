@@ -27,7 +27,7 @@
                 <div class="my-tabs-item" [ngbNavItem]="1" [destroyOnHide]="false">
                     <button class="my-tabs-link" [class.active]="active === 1" ngbNavLink>Profile</button>
                     <ng-template ngbNavContent>
-                        <app-user-profile [user]="selectedUser"></app-user-profile>
+                        <app-user-profile [user]="selectedUser" [adminUser]="authUser"></app-user-profile>
                     </ng-template>
                 </div>
                 <div class="my-tabs-item" [ngbNavItem]="2" [destroyOnHide]="true">

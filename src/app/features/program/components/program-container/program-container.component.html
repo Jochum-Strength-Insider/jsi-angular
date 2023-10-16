@@ -1,6 +1,3 @@
-
-<app-verify-email-card *ngIf="!user.emailVerified"></app-verify-email-card>
-
 <ng-container *ngIf="program; else noProgram">
     <h1>{{ program.title }}</h1>
     <h4>{{ program.createdAt | date }}</h4>

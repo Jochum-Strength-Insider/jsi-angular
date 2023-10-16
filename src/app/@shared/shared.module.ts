@@ -7,6 +7,9 @@ import { SignOutButtonComponent } from './components/auth/sign-out-button/sign-o
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
 import { VerifyEmailCardComponent } from './components/verify-email-card/verify-email-card.component';
+import { PromoComponent } from './components/auth/promo/promo.component';
+import { PaymentComponent } from './components/auth/payment/payment.component';
+import { NgxPayPalModule } from 'ngx-paypal';
 
 
 
@@ -16,19 +19,24 @@ import { VerifyEmailCardComponent } from './components/verify-email-card/verify-
     SpinnerComponent,
     ResetPasswordComponent,
     SanitizeUrlPipe,
-    VerifyEmailCardComponent
+    VerifyEmailCardComponent,
+    PromoComponent,
+    PaymentComponent
   ],
   imports: [
     CommonModule,
     NgbAlertModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPayPalModule
   ],
   exports: [
     SignOutButtonComponent,
     ResetPasswordComponent,
     SpinnerComponent,
     SanitizeUrlPipe,
-    VerifyEmailCardComponent
+    VerifyEmailCardComponent,
+    PromoComponent,
+    PaymentComponent
   ],
 })
 export class SharedModule { }

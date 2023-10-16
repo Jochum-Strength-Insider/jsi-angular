@@ -44,18 +44,35 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-        <form #form class="form" id="userProfileForm" [formGroup]="userProfileForm" (ngSubmit)="updateUserProfile()" autocomplete="off">
+        <form class="form" id="userProfileForm" [formGroup]="userProfileForm" (ngSubmit)="updateUserProfile()" autocomplete="off">
             <div class="form-group mb-3">
-                <label for="username">Username</label>
+                <label for="username">Username:</label>
                 <input class="form-control" formControlName="username" id="username" type="text" placeholder="John Doe"/>
             </div>
-            <div class="form-group mb-3">
-                <label for="billingId">Billing Id</label>
-                <input class="form-control" formControlName="billingId" id="billingId" type="text" placeholder="I-1ABCDEFG2HIJ"/>
+            <div *ngIf="!selectedUserIsAdminUser" class="mb-3">
+                <div>Account Status:</div>
+                <div *ngIf="!selectedUserIsAdminUser" class="form-check form-switch">
+                    <input class="form-check-input" id="isActive" formControlName="isActive" type="checkbox" role="switch">
+                    <label class="form-check-label" for="isActive">Is Account Active</label>
+                </div>
             </div>
-            <div class="form-check form-switch">
-                <input class="form-check-input" formControlName="surveySubmitted" type="checkbox" role="switch">
-                <label class="form-check-label" for="surveySubmitted">Questionnaire Submitted</label>
+            <div>
+                <div>Questionnaire:</div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" id="surveySubmitted" formControlName="surveySubmitted" type="checkbox" role="switch">
+                    <label class="form-check-label" for="surveySubmitted">Is Submitted</label>
+                </div>
+            </div>
+            <div *ngIf="!selectedUserIsAdminUser">
+                <hr>
+                <div>Admin:</div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" id="isAdmin" formControlName="isAdmin" type="checkbox" role="switch">
+                    <label class="form-check-label" for="isAdmin">Is Admin</label>
+                </div>
+                <i>
+                    Please note. Setting a user as an Admin will give them full access to any Admin features.
+                </i>
             </div>
         </form>
     </div>
@@ -70,6 +87,115 @@
     </div>
 </ng-template>
 
+<ng-template #subscriptionsModal let-modal>
+    <ng-container>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">User Subscriptions</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body subscriptions-modal-body">
+            <div class="list-group list-group-flush">
+                <div *ngFor="let subscription of userSubscriptions; let i = index;" class="list-group-item">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <a target="_blank" [href]="paypalUrl + subscription.billingId  | sanitizeUrl" >{{ subscription.billingId }}</a>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <span *ngIf="subscription.active">
+                                Subscribed: {{ subscription.createdAt | date:'shortDate' }}
+                            </span>
+                            <span *ngIf="!subscription.active && subscription.cancelledAt">
+                                Cancelled: {{ subscription.cancelledAt | date:'shortDate' }}
+                            </span>
+                        </div>
+                        <div class="col-12 col-md-auto ms-md-auto mx-0">
+                            <button class="btn btn-link py-0" type="button" (click)="openEditSubscriptionModal(editSubscriptionModal, subscription)">
+                                Edit
+                            </button>
+                            <button class="btn btn-link py-0" type="button" (click)="openDeleteSubscriptionModal(deleteSubscriptionModal, subscription)">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100 d-flex justify-content-between">
+                <button class="btn btn-primary" type="button" (click)="openEditSubscriptionModal(editSubscriptionModal, null)">
+                    Add Subscription
+                </button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #editSubscriptionModal let-modal>
+    <ng-container>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{selectedSubscription ? "Edit" : "Add"}} Subscription</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body">
+            <form class="form" id="subcriptionForm" [formGroup]="subcriptionForm" (ngSubmit)="addSubscription()" autocomplete="off">
+                <div *ngIf="selectedSubscription" class="mb-3">
+                    <div>Subscribed:</div>
+                    <div>{{ selectedSubscription.createdAt | date:'shortDate' }}</div>
+                </div>
+                <div *ngIf="selectedSubscription && selectedSubscription.cancelledAt"  class="mb-3">
+                    <div>Cancelled:</div>
+                    <div>{{ selectedSubscription.cancelledAt | date:'shortDate' }}</div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="billingId">Billing Id:</label>
+                    <input class="form-control" formControlName="billingId" id="billingId" type="text"/>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="subscriptionId">Subscription Id:</label>
+                    <input class="form-control" formControlName="subscriptionId" id="subscriptionId" type="text"/>
+                </div>
+                <div>
+                    <div>Active:</div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" id="active" formControlName="active" type="checkbox" role="switch">
+                        <label class="form-check-label" for="active">Is Active</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100 d-flex justify-content-between">
+                <div *ngIf="selectedSubscription">
+                    <button (click)="updateSubscription()" type="button" [disabled]="!subcriptionForm.valid" class="btn btn-outline-success me-2">Update Subscription</button>
+                    <button (click)="resetSubscriptionForm()" type="button" class="btn btn-outline-warning">Reset</button>
+                </div>
+                <button *ngIf="!selectedSubscription" form="subcriptionForm" type="submit" [disabled]="!subcriptionForm.valid" class="btn btn-outline-success me-2">Add Subscription</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #deleteSubscriptionModal let-modal>
+    <ng-container *ngIf="selectedSubscription">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Delete {{ selectedSubscription.billingId }}?</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body submissions-modal-body">
+            <p>Are you sure you want to delete this subscription?</p>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100 d-flex justify-content-between">
+                <button type="button" class="btn btn-danger" (click)="deleteSelectedSubscription()">Delete</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+
 <div class="list-group mb-5">
     <div class="list-group-item d-flex justify-content-between align-items-center">
         <div>
@@ -77,26 +203,31 @@
         </div>
         <div>
             <button
-                class="btn btn-primary me-2"
+                class="btn btn-link py-0 ms-2"
                 type="button"
                 (click)="openProfileModal(updateUserModal)"
             >
                 Edit
             </button>
-            <buton 
-                class="btn"
-                type="button"
-                (click)="toggleUserIsActive()"
-                [ngClass]="user.ACTIVE ? 'btn-danger' : 'btn-success'"
-            >
-                {{ user.ACTIVE ? 'Deactivate' : 'Activate' }}
-            </buton>
         </div>
     </div>
     <div class="list-group-item no-top-border"><strong>E-Mail:</strong> {{ user.email }}</div>
     <div class="list-group-item"><strong>Program Date:</strong> {{ user.programDate | date }}</div>
     <div class="list-group-item"><strong>Sign up Date:</strong> {{ user.createdAt | date }}</div>
-    <div class="list-group-item"><strong>Billing Id: </strong><a target="_blank" [href]="paypalUrl + user.billingId  | sanitizeUrl" >{{ user.billingId }}</a></div>
+    <div class="list-group-item d-flex align-items-center">
+        <div>
+            <strong>Subscriptions:</strong>
+        </div>
+        <div>
+            <button
+                class="btn btn-link py-0"
+                type="button"
+                (click)="openUserSubscriptions(subscriptionsModal)"
+            >
+                Manage
+            </button>
+        </div>
+    </div>
     <div class="list-group-item"><strong>Questionnaire Submitted:</strong> {{ user.surveySubmitted ? 'Yes' : 'No' }}</div>
     <div class="list-group-item">
         <button
