@@ -8,12 +8,10 @@ import { EmailSigninComponent } from './pages/email-signin/email-signin.componen
 import { SubscribeComponent } from './pages/subscribe/subscribe.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DotsComponent } from './components/dots/dots.component';
-import { PaymentComponent } from './components/payment/payment.component';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '@app/@shared/shared.module';
-import { NgxPayPalModule } from 'ngx-paypal';
-import { PromoComponent } from './components/promo/promo.component';
 import { PasswordForgetComponent } from './pages/password-forget/password-forget.component';
+import { ResubscribeComponent } from './pages/resubscribe/resubscribe.component';
 
 
 @NgModule({
@@ -23,17 +21,15 @@ import { PasswordForgetComponent } from './pages/password-forget/password-forget
     EmailSigninComponent,
     PasswordForgetComponent,
     SubscribeComponent,
-    DotsComponent,
-    PaymentComponent,
-    PromoComponent
+    ResubscribeComponent,
+    DotsComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     NgbAlertModule,
     AuthRoutingModule,
-    SharedModule,
-    NgxPayPalModule
+    SharedModule
   ]
 })
 export class AuthModule { }

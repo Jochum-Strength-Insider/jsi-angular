@@ -16,6 +16,9 @@ import { EMPTY, Observable, Subscription, catchError, finalize, forkJoin, map, o
 import { AFTER_STRING, AccountService, BEFORE_STRING } from '../../services/account.service';
 import { environment } from '@env/environment';
 import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
+import { UserSubscription } from '@app/@core/models/auth/user-subscription.model';
+import { UserService } from '@app/features/admin/services/user.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -29,6 +32,8 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
   sent: boolean = false;
   cancelled: boolean = false;
   workoutIds$: Observable<WorkoutId[]> = of([]);
+  userSubscriptions: UserSubscription[] = [];
+  userSubscriptionsSub: Subscription;
 
   afterSub: Subscription;
   beforeSub: Subscription;
@@ -40,11 +45,13 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     private workoutService: WorkoutService,
     private accountService: AccountService,
     private authService: AuthService,
+    private userService: UserService,
     private toastService: ToastService,
     private modalService: NgbModal,
     private messageService: MessageService,
     private lsService: LocalStorageService,
-    private errorService: ErrorHandlingService
+    private errorService: ErrorHandlingService,
+    private router: Router
   ){ }
 
   ngOnInit() {
@@ -54,12 +61,27 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
         catchError(() => of([]))
       );
 
+    this.userSubscriptionsSub = this.userService.getUserSubscriptions(this.user.id)
+    .pipe(map(subscriptions => subscriptions.reverse()))
+    .subscribe({
+      next: (subscriptions) => this.userSubscriptions = subscriptions,
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Get Subscriptions',
+          'An error occurred while trying to get your subscriptions. Please refresh the page and reach out to support if the error continues.'
+        );
+      }
+    })
+     
+
     this.getUserImages();
   }
 
   ngOnDestroy(): void {
     this.beforeSub?.unsubscribe();
     this.afterSub?.unsubscribe();
+    this.userSubscriptionsSub?.unsubscribe();
   }
 
   getUserImages() {
@@ -199,21 +221,24 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleCancellation() {
-    const USER_CANCELLATION_MESSAGE = new Message(`${this.user.username} has cancelled their account.`, this.user.id, "Cancellation")
+  handleCancellation(subscription: UserSubscription) {
+    const USER_CANCELLATION_MESSAGE = new Message(`${this.user.username} has cancelled their current subscription.`, this.user.id, "Cancellation")
     forkJoin([
       this.messageService.addAdminUnreadMessage(USER_CANCELLATION_MESSAGE),
-      this.messageService.addUserMessage(this.user.id, USER_CANCELLATION_MESSAGE)
+      this.messageService.addUserMessage(this.user.id, USER_CANCELLATION_MESSAGE),
+      this.userService.cancelUserSubscription(this.user.id, subscription.id)
     ])
     .pipe(
-      finalize(() => this.modalService.dismissAll())
+      finalize(() => {
+        this.modalService.dismissAll();
+      })
     )
     .subscribe({
       next: () => {
         const paypalUrl = environment.userSubscriptionUrl || "https://www.paypal.com/myaccount/autopay/connect/";
-        const url = `${paypalUrl}${this.user.billingId}`;
+        const url = `${paypalUrl}${subscription.billingId}`;
         window.open(url, '_blank');
-        this.toastService.showSuccess("A Jochum Strength trainer has been notified that you intend to cancel your account.");
+        this.toastService.showSuccess("A Jochum Strength trainer has been notified that you intend to cancel your current subscription.");
         this.cancelled = true;
       },
       error: (err) => {
@@ -224,6 +249,9 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
 
+  handleSubscribe(){
+    this.router.navigate(['auth/resubscribe']);
   }
 }

@@ -6,6 +6,8 @@ import { ToastService } from '@app/@core/services/toast.service';
 import { Subscription } from 'rxjs';
 import { QuestionnaireService } from '../../services/questionnaire.service';
 import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
+import { Router } from '@angular/router';
+import { AuthService } from '@app/@shared/services/auth.service';
 
 @Component({
   selector: 'app-questionnaire-container',
@@ -20,9 +22,11 @@ export class QuestionnaireContainerComponent implements OnInit, OnDestroy {
   questionnaire: Questionnaire;
 
   constructor(
-    private toastService: ToastService,
     private service: QuestionnaireService,
-    private errorService: ErrorHandlingService
+    private toastService: ToastService,
+    private errorService: ErrorHandlingService,
+    private authService: AuthService,
+    private router: Router
   ){ }
 
   ngOnInit() {
@@ -44,7 +48,7 @@ export class QuestionnaireContainerComponent implements OnInit, OnDestroy {
           this.errorService.generateError(
             err,
             'Get User Questionnaire',
-            'An error getting your questionnaire. Please refresh the page and reach out to your Jochum Strengh trainer if the error continues.'
+            'An error occurred while trying to get your questionnaire. Please refresh the page and reach out to your Jochum Strengh trainer if the error continues.'
           );
         }
       })
@@ -53,12 +57,22 @@ export class QuestionnaireContainerComponent implements OnInit, OnDestroy {
   updateQuestionnaire(questionnaire: Questionnaire) {
     this.service.updateUserQuestionnaire(this.user.id, questionnaire)
     .subscribe({
-      next: () => this.toastService.showSuccess('Questionnaire Submitted'),
+      next: () => {
+        if(!this.user.surveySubmitted) {
+          this.toastService.showSuccess('Questionnaire Submitted. Redirecting to program page.');
+          this.authService.refreshCurrentUser();
+          setTimeout(() => {
+            this.router.navigate(['program']);
+          }, 1000);
+        } else {
+          this.toastService.showSuccess('Questionnaire Updated');
+        }
+      },
       error: (err) => {
         this.errorService.generateError(
           err,
           'Update User Questionnaire',
-          'An error submitting your questionnaire. Please tray again and reach out to your Jochum Strengh trainer if the error continues.'
+          'An error occurred while trying to submit your questionnaire. Please try again and reach out to your Jochum Strengh trainer if the error continues.'
         );
       }
     })

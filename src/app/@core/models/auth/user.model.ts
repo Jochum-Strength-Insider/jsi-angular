@@ -1,5 +1,3 @@
-import { Message } from "../messages/message.model";
-
 export class User {
     id: string;
     createdAt: number;

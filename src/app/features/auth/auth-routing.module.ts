@@ -5,6 +5,7 @@ import { PasswordForgetComponent } from '@app/features/auth/pages/password-forge
 import { SigninComponent } from './pages/signin/signin.component';
 import { SubscribeComponent } from './pages/subscribe/subscribe.component';
 import { canActivate, redirectLoggedInTo } from '@angular/fire/auth-guard';
+import { ResubscribeComponent } from './pages/resubscribe/resubscribe.component';
 
 
 const redirectLoggedInToProgram = () => redirectLoggedInTo(['program']);
@@ -16,6 +17,7 @@ const routes: Routes = [
     ...canActivate(redirectLoggedInToProgram),
   },
   { path: 'subscribe', component: SubscribeComponent },
+  { path: 'resubscribe', component: ResubscribeComponent },
   {
     path: 'email-signin', component: EmailSigninComponent,
     ...canActivate(redirectLoggedInToProgram),
