@@ -1,29 +1,38 @@
 import { Component } from '@angular/core';
+import { Event, NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { environment } from '@env/environment';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   template: `
-    <!--The content below is only a placeholder and can be replaced.-->
-    <div style="text-align:center" class="content">
-    <ul>
-      <li>
-        <h2><a routerLink="/">Home</a></h2>
-      </li>
-      <li>
-        <h2><a routerLink="/auth">Login</a></h2>
-      </li>
-      <li>
-        <h2><a routerLink="/program">Workout</a></h2>
-      </li>
-    </ul>
-    <router-outlet></router-outlet>
+    <div [class.switch-container]="showNav">
+      <app-header *ngIf="showNav"/>
+      <div class="contain container-fluid no-padding">
+        <app-toasts></app-toasts>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
   `,
   styles: []
 })
 export class AppComponent {
-  title = 'client';
+  showNav: boolean = true;
+
+  constructor(private router: Router) {
+    router.events
+      .pipe(filter((e: Event): e is RouterEvent => e instanceof NavigationEnd))
+      .subscribe((e: RouterEvent) => {
+          this.showNav = !e.url.includes('/auth/subscribe')
+            && !e.url.includes('/auth/signup')
+            && !e.url.includes('/auth/resubscribe')
+      });
+  }  
+
   ngOnInit(){
-    console.log("APP_INIT", environment.test)
+    if(!environment.production){
+      console.log("APP_INIT", environment.firebase)
+    }
   }
+
 }

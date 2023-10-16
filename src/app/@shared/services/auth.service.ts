@@ -1,32 +1,173 @@
-import {
-  Auth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from '@angular/fire/auth';
 
 import { Injectable } from '@angular/core';
+import {
+  ActionCodeSettings,
+  Auth,
+  User,
+  UserCredential,
+  createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+  initializeAuth,
+  isSignInWithEmailLink,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  sendSignInLinkToEmail,
+  signInWithEmailAndPassword,
+  signInWithEmailLink,
+  signOut,
+  updatePassword
+} from '@angular/fire/auth';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/compat/database';
+import { User as UserModel } from '@app/@core/models/auth/user.model';
+import { mapKeyToObjectOperator } from '@app/@core/utilities/mappings.utilities';
+import { environment } from '@env/environment';
+import { initializeApp } from '@firebase/app';
+import { BehaviorSubject, Observable, defer, map, of, switchMap, take } from 'rxjs';
 import { LoginRequestModel } from '../models/auth/login-request.model';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private auth: Auth) {}
+  public userIsLoggedIn: boolean = false;
 
-  login({ email, password }: LoginRequestModel) {
-    return signInWithEmailAndPassword(this.auth, email, password);
+  private authStatus = new BehaviorSubject<User | null>(null);
+  readonly currentAuthStatus$ = this.authStatus.asObservable();
+
+  private currentUserSub = new BehaviorSubject<UserModel | null>(null);
+  readonly currentUser$ = this.currentUserSub.asObservable();
+  
+  constructor(
+    private auth: Auth,
+    private db: AngularFireDatabase
+    ) {
+    this.onAuthStatusListener();
   }
 
-  register({ email, password }: LoginRequestModel) {
-    return createUserWithEmailAndPassword(this.auth, email, password);
+  onAuthStatusListener(){
+    this.auth.onAuthStateChanged((credential) => {
+      if(credential) {
+        this.getUserById(credential.uid)
+          .subscribe(( userResponse: UserModel ) => {
+            if(userResponse){
+              userResponse.emailVerified = credential.emailVerified;
+              this.currentUserSub.next(userResponse);
+              this.authStatus.next(credential);
+            } else {
+              this.clearUserInformation();
+            }
+          })
+      } else {
+        this.clearUserInformation();
+      }
+    })
   }
 
-  logout() {
-    return signOut(this.auth);
+  refreshCurrentUser(){
+    if(this.auth.currentUser){
+      this.getUserById(this.auth.currentUser.uid)
+      .subscribe(( userResponse: UserModel ) => {
+        if(userResponse){
+          userResponse.emailVerified = this.auth.currentUser?.emailVerified || false;
+          this.currentUserSub.next(userResponse);
+        } else {
+          this.clearUserInformation();
+        }
+      })
+    }
   }
 
-  doSignInWithEmailAndPassword(request: LoginRequestModel){
-    console.log('login', request);
+  clearUserInformation() {
+    this.authStatus.next(null);
+    this.currentUserSub.next(null);
+    console.log('User is logged out');
   }
+  
+  login({ email, password }: LoginRequestModel): Observable<UserCredential> {
+    return defer(() => signInWithEmailAndPassword(this.auth, email, password));
+  }
+
+  register({ email, password }: LoginRequestModel): Observable<UserCredential> {
+    return defer(() => createUserWithEmailAndPassword(this.auth, email, password));
+  }
+
+  adminRegisterNewUser({email, password}: LoginRequestModel): Observable<UserCredential> {
+    const otherApp = initializeApp(environment.firebase, "otherApp");
+    const otherAuth = initializeAuth(otherApp);
+    return defer(() => createUserWithEmailAndPassword(otherAuth, email, password))
+      .pipe(
+        switchMap((user) => defer(() => signOut(otherAuth)).pipe(map(() => user))),
+      );
+  }
+
+  logout(): Observable<void> {
+    return defer(() => signOut(this.auth));
+  }
+
+  public getCurrentAuthUser(){
+    return this.auth.currentUser;
+  }
+
+  private userObjectRef(uid: string): AngularFireObject<UserModel> {
+    return this.db.object(`users/${uid}`);
+  }
+
+  getUserById(uid: string):Observable<UserModel> {
+    return this.userObjectRef(uid)
+      .snapshotChanges()
+      .pipe(
+        take(1),
+        mapKeyToObjectOperator()
+      );
+  }
+
+  mergeAuthUserAndDbUser( credential: User, user: UserModel ): UserModel {
+    user.emailVerified = credential.emailVerified;
+    return user;
+  }
+
+  // *** Auth API ***
+
+  getSignInMethodsForEmail(email: string): Observable<string[]> {
+    return defer( () => fetchSignInMethodsForEmail(this.auth, email));
+  }
+
+  // Need to test this
+  sendPasswordReset(email: string) : Observable<void> {
+    return defer( () => sendPasswordResetEmail(this.auth, email));
+  }
+
+  sendEmailVerification(user: User | null = null) : Observable<void> {
+    const actionCodeSettings: ActionCodeSettings = { url: environment.firebase.confirmationEmailRedirect || "" }
+    if(user) {
+      return defer( () => sendEmailVerification(user, actionCodeSettings));
+    } else {
+      const currentUser = this.auth.currentUser;
+      return currentUser
+        ? defer( () => sendEmailVerification(currentUser, actionCodeSettings))
+        : of();
+    } 
+  }
+
+  updatePassword(user: User, password: string): Observable<void>{
+    return defer( () => updatePassword(user, password));
+  }
+
+  sendSignInLinkToEmail(email: string): Observable<void> {
+    const actionCodeSettings: ActionCodeSettings = {
+      url: environment.firebase.emailSignInRedirect || '',
+      handleCodeInApp: true
+    }
+    return defer( () => sendSignInLinkToEmail(this.auth, email, actionCodeSettings));
+  }
+
+  doSignInWithEmailLink(email: string): Observable<UserCredential> {
+    return defer( () => signInWithEmailLink(this.auth, email, window.location.href));
+  }
+
+  getIsSignInWithEmailLink(): boolean {
+    return isSignInWithEmailLink(this.auth, window.location.href)
+  }
+
 }

@@ -1,12 +1,10 @@
-import { Phase } from "./phase.model";
+import { IInstruction } from "./instructions.interface";
 
 export class Workout {
     id: string;
     createdAt: number;
-    userId: string;
-    completed: boolean;
-    instruction: Phase[];
+    instruction: IInstruction;
+    completed: boolean = false;
     title: string;
     notes: string;
-    parentFolderId: string;
   }

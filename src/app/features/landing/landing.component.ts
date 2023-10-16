@@ -2,13 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-landing',
-  template: `
-    <p>
-      landing works!
-    </p>
-  `,
-  styles: [
-  ]
+  templateUrl: './landing.component.html',
+  styleUrls: []
 })
 export class LandingComponent {
 

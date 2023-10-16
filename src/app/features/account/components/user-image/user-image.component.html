@@ -1,0 +1,52 @@
+<ng-template #fileUploadModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Change photo?</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <div #form class="form" id="fileForm" >
+            <div class="form-group">
+                <div class="custom-file">
+                    <input #fileUpload
+                        class="form-control"
+                        [class.is-invalid]="(isInvalid && touched)" 
+                        [class.is-valid]="(!isInvalid && touched)" 
+                        type="file" 
+                        id="formFile" 
+                        (change)="onFileSelected($event)"
+                        access=".png,.jpg,.jpeg">
+                    <label for="formFile" class="form-label sr-only">Upload File</label>
+                </div>
+                <div *ngIf="isInvalid && touched" class="invalid">
+                    {{ invalidMessage }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <button (click)="uploadFile()" [disabled]="isInvalid || uploading || !file" type="button" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+    </div>
+</ng-template>
+
+ <div class="card">
+    <div class="card-body">
+       <div class="aspect-ratio-box">
+          <div class="aspect-ratio-box-inside">
+             <div class="flexbox-centering">
+                
+                <img *ngIf="image" class="aspect-image" [src]="image" alt="After" />
+                <div *ngIf="!image" class="aspect-dummy"></div>
+
+                <div class="aspect-form-box">
+                   <button class="btn btn-primary aspect-form-edit" (click)="handleOpenModal(fileUploadModal)">Edit Photo</button>
+                   <button *ngIf="image" class="btn btn-danger aspect-form-remove" (click)="removeImg()">Remove Photo</button>
+                </div>
+
+             </div>
+          </div>
+       </div>
+       <hr />
+       <div class="card-title text-center mt-3 mb-0 h5">{{title}}</div>
+    </div>
+ </div>

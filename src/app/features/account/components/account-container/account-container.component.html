@@ -1,0 +1,51 @@
+<h3>Account</h3>
+<ng-container *ngIf="user">
+    <div class="row" *ngIf="user.ACTIVE">
+        <div class="col-xs-12 col-sm-6 mb-3">
+            <app-user-image title="Before"
+                [image]="before"
+                [uploading]="uploading"
+                (fileUploadClicked)="uploadBefore($event)"
+                (removeImageClicked)="removeBeforeImage()">
+            </app-user-image>
+        </div>
+        <div class="col-xs-12 col-sm-6 mb-3">
+            <app-user-image title="After"
+                [image]="after"
+                [uploading]="uploading"
+                (fileUploadClicked)="uploadAfter($event)"
+                (removeImageClicked)="removeAfterImage()">
+            </app-user-image>
+        </div>
+     </div>
+    
+    <app-user-info [user]="user" [workoutIds]="workoutIds$ | async"></app-user-info>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            Reset Password
+        </div>
+        <div class="card-body px-3 py-4">
+            <app-reset-password (formSubmitted)="handleResetSubmitted($event)"></app-reset-password>
+        </div>
+    </div>
+
+    <div class="card mt-3 mb-3">
+        <div class="card-header">
+            Subscriptions
+        </div>
+        <div class="card-body px-0 py-2">
+            <app-user-subscriptions-list [subscriptions]="userSubscriptions" (subscribeClicked)="handleSubscribe()" (cancelClicked)="handleCancellation($event)"></app-user-subscriptions-list>
+        </div>
+    </div>
+
+    <div class="card mt-3 mb-5">
+        <div class="card-header">
+            Sign Out
+        </div>
+        <div class="card-body px-3 py-4">
+            <app-sign-out-button></app-sign-out-button>
+        </div>
+    </div>
+
+</ng-container>

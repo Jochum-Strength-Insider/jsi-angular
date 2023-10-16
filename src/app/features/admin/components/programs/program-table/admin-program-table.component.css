@@ -1,0 +1,47 @@
+.workout-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    border: 1px solid white;
+    border-radius: 500px;
+ }
+ 
+ .workout-tabs .workout-tab.nav-item {
+    flex: 1 1 0;
+    text-align: center;
+    transition: color 250ms ease-in;
+    border: none;
+    background-color: transparent;
+    color: white;
+ }
+
+ .workout-tabs .workout-tab.nav-item .workout-tabs-button {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    color: white;
+ }
+
+ .workout-tabs .workout-tab.nav-item .workout-tabs-button:hover,
+ .workout-tabs .workout-tab.nav-item .workout-tabs-button:focus-visible {
+    color: #007BFF;
+ }
+
+ .workout-tabs .workout-tab.nav-item .workout-tabs-button.active {
+    background-color: white;
+    color: #007BFF;
+ }
+ 
+.workout-tabs .workout-tab.nav-item:first-of-type > .workout-tabs-button {
+    border-top-left-radius: 500px;
+    border-bottom-left-radius: 500px;
+    border-top-right-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+ }
+
+.workout-tabs .workout-tab.nav-item:last-of-type > .workout-tabs-button {
+    border-top-left-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+    border-top-right-radius: 500px;
+    border-bottom-right-radius: 500px;
+ }
+ 

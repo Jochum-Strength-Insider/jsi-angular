@@ -2,13 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-diet',
-  template: `
-    <p>
-      diet works!
-    </p>
-  `,
-  styles: [
-  ]
+  templateUrl: './diet.component.html',
+  styleUrls: []
 })
 export class DietComponent {
 

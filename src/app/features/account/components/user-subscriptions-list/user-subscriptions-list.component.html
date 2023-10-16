@@ -1,0 +1,44 @@
+<ng-template #cancellationModal let-modal>
+    <ng-container>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Cancel Subscription?</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body submissions-modal-body">
+            <p>Are you sure you want to cancel your Insider subscription? Clicking "Cancel Subscription" will open a link to your active paypal subsciption. After signing in to paypal you can cancel the subscription and stop payments from recurring. To cancel click the "(Update)" link next to "Status: Active" or the three vertical dots button to the right of "Status: Active". It will also notify an Insider trainer that you have cancelled your account. You will have access to all Insider content until the end of your current program cycle.</p>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100 d-flex justify-content-between">
+                <button type="button" class="btn btn-danger" (click)="cancelAccount()">Cancel Subscription</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<div class="list-group list-group-flush">
+    <div *ngFor="let subscription of subscriptions; let i = index;" class="list-group-item">
+        <div class="row">
+            <div class="col-12 col-md-3">
+                Status: {{ subscription.active ? "Active" : "Cancelled" }}
+            </div>
+            <div class="col-12 col-md-3">
+                Subscribed: {{ subscription.createdAt | date:'shortDate' }}
+            </div>
+            <div *ngIf="!subscription.active && subscription.cancelledAt" class="col-12 col-md-3">
+                Cancelled: {{ subscription.cancelledAt | date:'shortDate' }}
+            </div>
+            <div *ngIf="subscription.active" class="col-12 col-md-auto ms-md-auto mx-0">
+                <button class="ms-2 py-0 btn btn-link ms-2" type="button" (click)="handleOpenModal(cancellationModal, subscription)">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="noActiveSubs" class="list-group-item pt-3">
+        <button class="w-100 btn btn-outline-primary" type="button" (click)="subscribe()">
+            {{ subscribeText }}
+        </button>
+    </div>
+</div>

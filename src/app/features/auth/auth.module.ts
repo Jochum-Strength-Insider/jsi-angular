@@ -5,10 +5,13 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { AuthComponent } from './auth.component';
 import { SigninComponent } from './pages/signin/signin.component';
 import { EmailSigninComponent } from './pages/email-signin/email-signin.component';
-import { PasswordForgetComponent } from './pages/password-forget/password-forget.component';
 import { SubscribeComponent } from './pages/subscribe/subscribe.component';
-import { SignupComponent } from './pages/signup/signup.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DotsComponent } from './components/dots/dots.component';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '@app/@shared/shared.module';
+import { PasswordForgetComponent } from './pages/password-forget/password-forget.component';
+import { ResubscribeComponent } from './pages/resubscribe/resubscribe.component';
 
 
 @NgModule({
@@ -18,12 +21,15 @@ import { ReactiveFormsModule } from '@angular/forms';
     EmailSigninComponent,
     PasswordForgetComponent,
     SubscribeComponent,
-    SignupComponent,
+    ResubscribeComponent,
+    DotsComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    AuthRoutingModule
+    NgbAlertModule,
+    AuthRoutingModule,
+    SharedModule
   ]
 })
 export class AuthModule { }

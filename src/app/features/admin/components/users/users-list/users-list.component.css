@@ -1,0 +1,135 @@
+.users-list .dropdown-menu {
+    padding: .5rem;
+ }
+ 
+ .users-list .dropdown-toggle.btn,
+ .users-list .dropdown-menu {
+ 
+    width: 100%;
+    text-align: center;
+    border-radius: 1rem;
+    /* background-color: rgba(255, 255, 255, 0); */
+ }
+ 
+ .users-list .dropdown-toggle.btn {
+    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid var(--js-purple);
+    border-radius: 500px;
+    color: var(--js-purple);
+ }
+ 
+ .users-list .dropdown-menu .dropdown-item:first-of-type:hover {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+ }
+ 
+ .users-list .dropdown-menu .dropdown-item:last-of-type:hover {
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+ }
+ 
+ .users-list .list-group-item {
+    color: var(--js-purple);
+    transition: background-color 500ms ease-in-out;
+ }
+ 
+ .users-list .users-list-contain .list-group-item {
+    border-top: 1px solid rgba(0, 0, 0, 0.249);
+    padding: 0.5rem;
+ }
+ 
+ .users-list .users-list-contain .list-group-item:first-of-type {
+    border-top: none;
+ }
+ 
+ .users-list .users-list-contain .list-group-item:hover {
+    color: var(--js-purple);
+    background-color: rgba(0, 0, 0, 0.249);
+ }
+ 
+ .users-list .users-list-contain .list-group-item.current {
+    color: var(--js-purple);
+    background-color: rgba(0, 0, 0, 0.249);
+ }
+ 
+ .no-border {
+    border-radius: 0 !important;
+ }
+ 
+ .users-list-contain {
+    height: calc(100vh - 228px);
+    overflow-y: auto;
+ }
+ 
+ .users-list {
+    border: none;
+    border-radius: 0px;
+ }
+ 
+ .user-item {
+    width: 100%;
+ }
+ 
+ .user-item-contain {
+    height: calc(100vh - 99px);
+    overflow-y: scroll;
+    width: 100%;
+    padding-bottom: 30px;
+ }
+
+.add-user-button {
+    cursor: pointer;
+    text-align: center;
+    background-color: var(--js-purple);
+    border-color: var(--js-purple);
+    display: block;
+    width: 100%;
+    color: white;
+    text-align: center;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 500px;
+    transition: background-color .15s ease-in-out;
+ }
+ 
+ .add-user-button:hover,
+ .add-user-button:focus {
+    background-color: #412a34e4;
+ }
+ 
+ .users-list-contain::-webkit-scrollbar {
+    width: 8px;
+ 
+ }
+ 
+ .users-list-contain {
+    scrollbar-width: thin;
+    scrollbar-color: var(--js-purple) white;
+ }
+ 
+ .users-list-contain::-webkit-scrollbar-track {
+    background: white;
+ }
+ 
+ .users-list-contain::-webkit-scrollbar-thumb {
+    background-color: var(--js-purple);
+    border-radius: 6px;
+    border: 1px solid white;
+ }
+ 
+ .check-box {
+    flex: 0 0 20px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    margin-right: .5rem;
+    padding-right: .5rem;
+ }
+ 
+ .check-box input {
+    width: auto;
+ }
+ 
+ .user-list-item {
+    flex: 1;
+    word-break: break-all;
+ }

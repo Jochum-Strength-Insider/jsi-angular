@@ -1,0 +1,490 @@
+/* Landing Page Past Landing Page Past Landing Page Past */
+
+.landingContain {
+    display: block;
+    position: relative;
+    width: 100%;
+  }
+  
+  :root {
+    --text-shadow: 0 2px 0 black;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  .joinTitle {
+    color: white;
+    text-align: center;
+    font-size: 1.5rem;
+    text-shadow: var(--text-shadow);
+  }
+  
+  .joinTitle:hover {
+    color: var(--js-purple-light);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .info {
+    max-width: 750px;
+  }
+  
+  .signUpButton {
+    /* width: 100px;
+  height: 75px; */
+    font-size: 2rem;
+    border: 5px solid var(--js-purple-light);
+    color: var(--js-purple-light);
+    padding: 50px 50px;
+    text-align: center;
+    transition: border 0.5s ease-out, color 0.5s ease-out;
+  }
+  
+  .signUpButton:hover {
+    text-decoration: none;
+    border: 5px solid white;
+    color: white;
+  }
+  
+  .whatDoesVideo {
+    /* height: auto;
+     width: 33vw; */
+    /* height: 360px; */
+    /* width: 480px; */
+    max-width: 700px;
+    width: 75%;
+    height: 400px;
+    background-color: black;
+  }
+  
+  .topRow {
+    margin-bottom: -10px;
+  }
+  
+  .benefitCircle {
+    margin-left: 1vw;
+    margin-right: 1vw;
+    color: white;
+    text-align: center;
+    border-radius: 50%;
+    border: 4px solid #ab919d;
+    width: var(--circle-size);
+    height: var(--circle-size);
+    text-align: center;
+    font-weight: 900;
+  }
+  
+  .benefitsTitle {
+    font-weight: 900;
+    font-size: 3rem;
+  }
+  
+  .benefitCircle span {
+    height: var(--circle-size);
+    display: inline-block;
+    zoom: 1;
+    display: inline;
+    vertical-align: middle;
+  }
+  
+  .benefitCircle p {
+    max-width: 75%;
+    display: inline-block;
+    zoom: 1;
+    display: inline;
+    vertical-align: middle;
+    /* color: #fff; */
+    font-size: calc(0.5rem + 1vw);
+    color: white;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .onlineTitle {
+    font-weight: 900;
+    font-size: 4rem;
+    text-align: center;
+    text-shadow: var(--text-shadow);
+    padding-bottom: 10%;
+  }
+  
+  .whatDoesTitle {
+    font-size: 3rem;
+  }
+  
+  .detailsTitle {
+    font-weight: 900;
+    font-size: 3rem;
+    width: 100%;
+  }
+  
+  .discount-code {
+    font-size: .75rem;
+  }
+  
+  .sign-up {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+  
+  .sign-up img {
+    height: calc(100vh - 66px);
+    overflow: hidden;
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    object-fit: cover;
+  }
+  
+  .sign-up-info-contain {
+    background-color: rgba(0, 0, 0, 0.482);
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    overflow-y: scroll;
+  }
+  
+  .sign-up-info {
+    max-width: 500px;
+  }
+  
+  .sign-up-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+  
+  .sign-up-info p.includes {
+    margin-bottom: .5rem;
+  }
+  
+  .sign-up-button {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    border: 4px solid white;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.146);
+    padding: 10px 20px;
+    text-align: center;
+    transition:
+      border 500ms ease-out,
+      color 0.5s ease-out,
+      background-color 500ms ease-out;
+  }
+  
+  .sign-up-button:hover {
+    text-decoration: none;
+    border: 4px solid white;
+    color: var(--js-purple-light);
+    background-color: white;
+  }
+ 
+  .row-more {
+    position: relative;
+    bottom: 0;
+    z-index: 10;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .more-arrow {
+    text-decoration: none;
+    color: white;
+  }
+  
+  .more-arrow:hover {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.571);
+  }
+  
+  .no-padding {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .results-contain:hover .results-info {
+    opacity: 1;
+    transition: opacity 500ms ease-in, background-image 500ms ease-in;
+  }
+  
+  .results-contain {
+    border: 3px solid var(--js-purple);
+    padding: 20px;
+    border-radius: .25rem;
+    width: 100%;
+    position: relative;
+  }
+  
+  .results-contain img {
+    width: 100%;
+    border: 2px solid white;
+    border-radius: 0.25rem;
+  }
+  
+  .results-contain .results-info {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(to right, #412a34, rgba(0, 0, 0, 0.694));
+    transition: opacity 500ms ease-in;
+  }
+  
+  .results-row {
+    background-color: white;
+    border-radius: .5rem;
+    background-color: var(--js-purple);
+    border: 2px solid white;
+    border-radius: .25rem;
+  }
+  
+  .results1 .results-info {
+    width: 50%;
+  }
+  
+  .results2 .results-info {
+    width: 50%;
+  }
+  
+  .results3 .results-info {
+    width: 50%;
+  }
+  
+  .results-info div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .results-carousel {
+    max-width: 720px;
+    width: 100%;
+    flex: 1;
+  }
+  
+  .results-carousel .carousel-inner {
+    border-radius: .5rem;
+    background-color: none;
+  }
+  
+  .results-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .results-card img {
+    width: 100%;
+    max-width: 600px;
+    flex: 1;
+  }
+  
+  .results-card-body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0px;
+    border: 0px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .results-card-body-inner {
+    background-color: var(--js-purple);
+    color: white;
+    bottom: -30px;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+  
+  .results-card .testimonial {
+    height: 100%;
+    min-height: 150px;
+  }
+  
+  
+  .results-more a {
+    color: white;
+  }
+  
+  .results-more a:hover {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.564);
+  }
+  
+  @media (max-width: 992px) {
+    .sign-up {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  
+    .sign-up img {
+      height: calc(100vh - 66px);
+      overflow: hidden;
+      background: no-repeat center center scroll;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      object-fit: cover;
+    }
+  
+    .sign-up-info-contain {
+      background-color: rgba(0, 0, 0, 0.482);
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      padding: 30px 10px;
+      display: flex;
+      justify-content: center;
+    }
+  
+    .sign-up-info {
+      max-width: 500px;
+      width: 100%;
+    }
+  
+    .sign-up-info p.once {
+      margin-bottom: 0.5rem;
+    }
+  
+    .sign-up-title {
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+    }
+  }
+  
+  .results-contain2:hover .results-info2 {
+    opacity: 1;
+    transition: opacity 500ms ease-in, background-image 500ms ease-in;
+    display: none;
+  }
+  
+  .results-contain2 {
+    width: 100%;
+    position: relative;
+  }
+  
+  .results-contain2 img {
+    width: 100%;
+  }
+  
+  .results-contain2 .results-info2 {
+    display: none;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(to right, #412a34, rgba(0, 0, 0, 0.694));
+    transition: opacity 500ms ease-in;
+  }
+  
+  .results-row2 {
+    background-color: var(--js-purple);
+  }
+  
+  .results1 .results-info2 {
+    width: 50%;
+  }
+  
+  .results2 .results-info2 {
+    width: 50%;
+  }
+  
+  .results3 .results-info2 {
+    width: 50%;
+  }
+  
+  .results-info2 div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .results-person2 {
+    padding: 30px;
+  }
+  
+  .results-person2 p {
+    max-width: 500px;
+  }
+  
+  .reverse {
+    flex-direction: row-reverse;
+  }
+  
+  @media (max-width: 576px) {
+    .landingContain {
+      font-size: 1rem;
+    }
+  
+    .onlineTitle {
+      font-size: 2.5rem;
+      padding-bottom: 1rem;
+    }
+  
+    .benefitCircle {
+      width: calc(var(--circle-size) + 4vw);
+      height: calc(var(--circle-size) + 4vw);
+    }
+  
+    .benefitsTitle {
+      font-weight: 900;
+      font-size: 2rem;
+    }
+  
+    .benefitCircle span {
+      height: calc(var(--circle-size) + 4vw);
+    }
+  
+    .benefitCircle p {
+      font-size: calc(0.4rem + 1vw);
+    }
+  
+    .whatDoesTitle {
+      font-size: 2rem;
+    }
+  
+    .detailsTitle {
+      font-weight: 900;
+      font-size: 2rem;
+    }
+  
+    .reverse {
+      flex-direction: row;
+    }
+  
+    .sign-up-info-contain {
+      padding: 20px 10px;
+    }
+  
+    .sign-up-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: .5rem;
+    }
+  }

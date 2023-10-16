@@ -8,7 +8,7 @@
   status = 200
 
 [context.development]
-  command="ng build"
+  command="ng build --configuration=development"
 
 [context.staging]
   command="ng build --configuration=staging"

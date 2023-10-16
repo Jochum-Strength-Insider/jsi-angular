@@ -1,0 +1,125 @@
+<ng-template #addProgramModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ selectedProgram ? selectedProgram.title : "Add Program" }}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <form #form class="form" id="programForm" [formGroup]="programForm" (ngSubmit)="addProgram()" autocomplete="off">
+            <div class="form-group mb-3">
+                <label for="title">Program Title</label>
+                <input class="form-control" formControlName="title" id="exercise" type="text" placeholder="New Program" />
+            </div>
+            <button [disabled]="!programForm.valid" type="submit" class="btn btn-outline-primary">Add New Program</button>
+        </form>
+        <div *ngIf="folderId">
+            <hr />
+            <form class="form" id="existingProgramForm" [formGroup]="existingProgramForm" (ngSubmit)="addExistingProgram()" autocomplete="off">
+                <div class="form-group mb-3">
+                    <label class="form-label">Existing Program</label>
+                    <select class="form-control" formControlName="programId" >
+                        <option value="" disabled selected>Select Program</option>
+                        <option *ngFor="let option of uncategorizedPrograms;" [value]="option.id">{{option.title}}</option>
+                    </select>
+                </div>
+                <button [disabled]="!existingProgramForm.valid" type="submit" class="btn btn-outline-primary" >Add Existing Program</button>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #editFolderModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ folder ? folder.title : "Folder" }}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+        <form #form class="form" id="folderForm" [formGroup]="folderForm" (ngSubmit)="updateFolder()" autocomplete="off">
+            <div class="form-group mb-3">
+                <label for="title">Title</label>
+                <input class="form-control" formControlName="title" id="title" type="text" placeholder="Folder" maxlength="200"/>
+            </div>
+            <ng-container *ngIf="folder">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <button [disabled]="!folderForm.valid" type="submit" class="btn btn-outline-success me-2">Save</button>
+                        <button type="button" class="btn btn-outline-warning" (click)="resetFolderForm()">Reset</button>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+                </div>
+            </ng-container>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #deleteProgramModal let-modal>
+    <ng-container *ngIf="selectedProgram">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Delete {{ selectedProgram.title }}?</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body submissions-modal-body">
+            <p>Are you sure you want to delete this program?</p>
+        </div>
+        <div class="modal-footer">
+            <div class="w-100 d-flex justify-content-between">
+                <button type="button" class="btn btn-danger" (click)="removeSelectedProgram()">Delete</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<h3 [class.header-button]="!state" (click)="openFoldersModal(editFolderModal)">{{ folder ? folder.title : this.state | titlecase }}</h3>
+<form #form class="input-group" id="searchForm" [formGroup]="searchForm" (ngSubmit)="openAddProgramModal(addProgramModal,null)" autocomplete="off">
+    <input class="form-control" formControlName="search" id="search" type="text" placeholder="Search Programs..." maxlength="50" aria-label="Search Tasks"/>
+    <div class="input-group-append">
+        <button type="submit" class="btn btn-primary add-edit-button input-group-append-button">
+            Add
+        </button>
+    </div>
+</form>
+
+<div class="list-group mt-3 mb-5">
+    <ng-container *ngIf="filteredPrograms.length > 0; else noTasks;">
+        <div *ngFor="let program of filteredPrograms | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item d-flex justify-content-between">
+            <span class="d-flex align-items-center">
+                <strong class="me-2">Program:</strong>
+                <a class="me-2" [routerLink]="['../../programs/', program.id]">{{ program.title }}</a>
+            </span>
+            <span>
+                <div style="display: inline-block">{{ program.createdAt | date:'shortDate' }}</div>
+                <button class="ms-2 btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(program)">
+                    Delete
+                </button>
+            </span>
+        </div>
+    </ng-container>
+    <ng-template #noTasks>
+        <div class="list-group-item">
+            No Programs
+        </div>
+    </ng-template>
+
+    <div class="list-group-item">
+        <div>
+            <button type="button"
+                class="btn btn-primary me-2"
+                (click)="page > 1 ? page = page - 1 : page;"
+                [disabled]="page === 1">
+                <svg viewBox="-100.9 99.1 61.9 105.9" style="width: 7px; margin-right: 4px;"><path d="m-98.2 158.8 43.5 43.5c1.7 1.7 4 2.7 6.5 2.7s4.8-1 6.5-2.7c1.7-1.7 2.7-4 2.7-6.5s-1-4.8-2.7-6.5l-37.2-37.2 37.2-37.2c1.7-1.7 2.7-4 2.7-6.5s-1-4.8-2.6-6.5c-1.8-1.9-4.2-2.8-6.6-2.8-2.3 0-4.6.9-6.5 2.6-11.5 11.4-41.2 41-43.3 43l-.2.2c-3.6 3.6-3.6 10.3 0 13.9z" fill="#ffffff"></path></svg>
+                Prev
+            </button>
+            <button type="button"
+                class="btn btn-primary"
+                (click)="page = page * pageSize >= filteredPrograms.length ? page : page = page + 1;"
+                [disabled]="page * pageSize >= filteredPrograms.length">
+                Next
+                <svg viewBox="-100.9 99.1 61.9 105.9" style="width: 7px; margin-left: 4px;"><path d="m-41.7 145.3-43.5-43.5c-1.7-1.7-4-2.7-6.5-2.7s-4.8 1-6.5 2.7c-1.7 1.7-2.7 4-2.7 6.5s1 4.8 2.7 6.5L-61 152l-37.2 37.2c-1.7 1.7-2.7 4-2.7 6.5s1 4.8 2.6 6.5c1.8 1.9 4.2 2.8 6.6 2.8 2.3 0 4.6-.9 6.5-2.6 11.5-11.4 41.2-41 43.3-43l.2-.2c3.6-3.6 3.6-10.4 0-13.9z" fill="#ffffff" ></path></svg>
+            </button>
+        </div>
+    </div>
+
+</div>

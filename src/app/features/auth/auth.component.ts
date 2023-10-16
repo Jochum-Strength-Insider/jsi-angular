@@ -5,21 +5,8 @@ import { AuthService } from '@app/@shared/services/auth.service';
 
 @Component({
   selector: 'app-auth',
-  template: `
-    <app-signin (formData)="login($event)">
-  `,
-  styles: [
-  ]
+  templateUrl: './auth.component.html',
+  styleUrls: []
 })
 export class AuthComponent {
-  constructor(
-    private auth: AuthService,
-    private router: Router
-  ) {}
-
-  login(loginRequest: LoginRequestModel) {
-    this.auth.login(loginRequest)
-    .then(() => this.router.navigate(['/program']))
-    .catch((e) => console.log(e.message));;
-  }
 }

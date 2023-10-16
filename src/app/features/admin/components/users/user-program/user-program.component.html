@@ -1,0 +1,73 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-center">
+        <div class="w-100">
+            <div class="app-top">
+
+                <ng-container *ngIf="workout && user">
+                    <ng-template #editWorkoutModal let-modal>
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modal-basic-title">Edit {{ workout.title | titlecase }}</h4>
+                            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form #form class="workoutForm" id="workoutForm" [formGroup]="workoutForm" (ngSubmit)="updateWorkoutTitle()" autocomplete="off">
+                                <div class="form-group mb-3">
+                                    <label for="title">Title</label>
+                                    <input class="form-control" formControlName="title" id="exercise" type="text" placeholder="New Exercise" maxlength="200"/>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="w-100 d-flex justify-content-between">
+                                <div>
+                                    <button form="workoutForm" [disabled]="!workoutForm.valid" type="submit" class="btn btn-outline-success me-2">Save</button>
+                                    <button type="button" class="btn btn-outline-warning" (click)="resetWorkoutForm()">Reset</button>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #saveToProgramsModal let-modal>
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modal-basic-title">Save Program?</h4>
+                            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="w-100 d-flex justify-content-between">
+                                <div>
+                                    <button type="button" class="btn btn-success me-2" (click)="saveToPrograms()">Save To Programs</button>
+                                    <button type="button" class="btn btn-outline-success" (click)="quickSave()">Quick Save</button>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
+                            </div>
+                        </div>
+                    </ng-template>
+                
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a [routerLink]="['../../..']">Users</a></li>
+                            <li class="breadcrumb-item"><a [routerLink]="['../..']">{{ user.username }}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ workout.title }}</li>
+                        </ol>
+                    </nav>
+                    <span class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="header-button" (click)="openEditWorkoutModal()">{{ workout ? workout.title : 'Program' | titlecase }}</h4>
+                        <div>
+                            <button *ngIf="workoutId" class="btn active-state-button me-2"
+                                [ngClass]="workoutId.active ? 'btn-warning' : 'btn-success'"
+                                (click)="toggleWorkoutIsActive()">
+                                {{ workoutId.active ? "Deactivate" : "Activate" }}
+                            </button>
+                            <button type="button" class="btn btn-outline-success" (click)="openSaveToProgramsModal()">Quick Save</button>
+                        </div>
+                    </span>
+                    <div *ngIf="workout && uid">
+                        <app-admin-program-table [program]="workout" [tasks]="tasksList" [uid]="uid" (savePhase)="handleSavePhase($event)"></app-admin-program-table>
+                    </div>
+                </ng-container>
+
+            </div>
+        </div>
+    </div>
+</div>

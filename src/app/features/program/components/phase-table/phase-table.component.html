@@ -1,0 +1,22 @@
+<div ngbAccordion [destroyOnHide]="false" #accordion="ngbAccordion" class="accordion mb-5">
+    <div *ngFor="let day of phase.days; let i = index;" [ngbAccordionItem]="day.title" class="user-program-day my-5">
+        <div [tabIndex]="0" ngbAccordionHeader (click)="accordion.toggle(day.title)" (keydown.enter)="accordion.toggle(day.title)">
+            <img class="card-img-top" [src]="'../../../../assets/images/' + day.image + '.jpg'" />
+            <div class="bg-purple card-body">
+                <h3 class="my-0" role="button" style="color: white;">Day {{i + 1}}: {{day.title | titlecase }}</h3>
+            </div>
+        </div>
+        <div ngbAccordionCollapse class="accordion-collapse card-collapse">
+            <div ngbAccordionBody class="px-0 py-0 mx-0 my-0">
+                <ng-template>
+                    <app-day-table
+                        [day]="day"
+                        [phaseTitle]="phase.title"
+                        [uid]="uid"
+                        [programKey]="programKey">
+                    </app-day-table>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+ </div>

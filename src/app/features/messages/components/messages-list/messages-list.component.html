@@ -1,0 +1,19 @@
+<ng-container *ngIf="messages.length > 0; else noMessages;">
+    <div *ngFor="let message of messages; let i = index; let first = first; let last = last;">
+        <app-messages-item
+            [message]="message"
+            [index]="i"
+            [isSender]="uid === message.userId"
+            [isFirstMessage]="first"
+            [isLastMessage]="last"
+            [nextMessage]="i + 1 < messages.length ? messages[i + 1] : null"
+            [prevMessage]="i - 1 >= 0 ? messages[i - 1] : null"
+            [days]="days"
+        ></app-messages-item>
+    </div>
+</ng-container>
+<ng-template #noMessages>
+    <div class="w-100">
+        <p class="text-center">There are no messages...</p>
+    </div>
+</ng-template>

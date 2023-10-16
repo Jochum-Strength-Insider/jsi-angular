@@ -1,1 +1,132 @@
-<p>subscribe works!</p>
+<div class="container-fluid px-0 container-info">
+    <div class="row g-0">
+      <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+      <div class="col-md-8 col-lg-6" style="overflow: auto;">
+        <app-dots [step]="step" />
+
+        <div class="d-flex align-items-center py-4">
+          <div class="container">
+
+            <div class="row">
+              <div class="col px-5">
+                  
+                <div class="pb-2 text-center">
+                    <h2 class="font-weight-bold">Insider Sign Up</h2>
+                    <p class="lead mb-0">Our Online Training Platform For People Looking To Level Up Their Lives!</p>
+                </div>
+
+                <div *ngIf="step === 1">
+                    <h3 class="mb-3">Account Info</h3>
+                    <form
+                        class="form w-100 needs-validation"
+                        [formGroup]="signupForm"
+                        (ngSubmit)="infoStepSubmit()"
+                        novalidate
+                        >   
+                        <div class="form-group mb-3">
+                            <label class="form-label" for="email">Email</label>
+                            <input class="form-control" formControlName="email" id="email" type="text" placeholder="Email Address" [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors, 'is-valid': f['email'].valid }" autocomplete="email"/>
+
+                            <div *ngIf="f['email'].touched && f['email'].errors" class="invalid-feedback">
+                                <div *ngIf="f['email'].errors['required']">
+                                    Email is required.
+                                </div>
+                                <div *ngIf="f['email'].errors['email']">
+                                    Email isn't valid. Please enter a valid email.
+                                </div>
+                                <div *ngIf="f['email'].errors['userAccountAlreadyExists']">
+                                    Email address already in use. Please login to resubscribe.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label" for="username">Username</label>
+                            <input class="form-control" formControlName="username" id="username" type="text" placeholder="Username" [ngClass]="{ 'is-invalid': f['username'].touched && f['username'].errors, 'is-valid': f['username'].valid }" autocomplete="username"/>
+                            
+                            <div *ngIf="f['username'].touched && f['username'].errors" class="invalid-feedback">
+                                <div *ngIf="f['username'].errors['required']">
+                                    Username is Required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="d-flex justify-content-between">
+                                <label class="form-label" for="password">Password</label>
+                                <div class="float-right show-pssw" (click)="showPassword = !showPassword">
+                                    <i *ngIf="showPassword" class="fas fa-eye-slash"></i>
+                                    <i *ngIf="!showPassword" class="fas fa-eye"></i>
+                                </div>
+                            </div>
+                            <input 
+                                class="form-control"
+                                id="password"
+                                formControlName="password"
+                                [type]="showPassword ? 'text' : 'password'"
+                                placeholder="Password"
+                                [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].errors, 'is-valid': f['password'].valid }"
+                                autocomplete="new-password"
+                            />
+
+                            <div *ngIf="f['password'].touched && f['password'].errors" class="invalid-feedback">
+                                <div *ngIf="f['password'].errors['required']">
+                                    Password is required
+                                </div>
+                                <div *ngIf="f['password'].errors['minlength']">
+                                    Password must be at least 7 characters long.
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-success w-100 py-2 my-3" [disabled]="signupForm.invalid" type="submit">
+                                Continue To Payment
+                            </button>
+
+                            <p className="text-center"><i>Sign Up Complete After Payment</i></p>
+                            <ngb-alert *ngIf="error" #alert type="warning" [dismissible]="false">{{error.message}}</ngb-alert>
+                        </div>
+                    </form>   
+                </div>
+
+                <div *ngIf="step === 2" class="payment-step-container">
+                  <div class="payment-step-wrapper">
+                    <h4 class="mb-2">Cart</h4>
+                    <app-promo
+                      [discountApplied]="discountApplied"
+                      [discountFailed]="discountFailed"
+                      [appliedCode]="selectedCode"
+                      [defaultAmount]="defaultCode.price"
+                      (applyPromo)="handleApplyPromo($event)"
+                    ></app-promo>
+                    <hr />
+                    <div class="text-dark">
+                        <button class="px-0 py-0 mb-2 btn btn-link" (click)="navigateToStep(1)">Click here to edit Sign Up Details.</button>
+                        <p><i>Insider account details do not need to match PayPal information.</i></p>
+                    </div>
+                    <hr />
+
+                    <ng-container *ngIf="paramsChecked">
+                      <app-payment
+                        [subscriptionId]="subscriptionId"
+                        (stepSubmit)="handlePaymentStepSubmit($event)"
+                      />
+                    </ng-container>
+                    <p class="payment-info mb-2 text-dark"><i>* This program will be automatically charged every three weeks until you decide to cancel. Discount codes apply to first payment period only, after the initial period the cost of your program will revert back to regular price.</i></p>
+                  </div>
+                </div>
+                    
+                <div class="pt-4" *ngIf="step === 3">
+                    <h3 class="mb-3">Welcome! The Sign Up Process Is Complete.</h3>
+                    <p>Thank you for subscribing to Jochum Strength Insider!</p>
+                    <p>To get your program rolling please <a class="p-link" [routerLink]="['/questionnaire']">click here to submit your welcome questionnaire</a>. A trainer will review your questionnaire after it is complete to get a custom program started.</p>
+                    <p>A verification email has been sent to <b>{{ f['email'].value }}</b>. Please verify your email as soon as possible.</p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  

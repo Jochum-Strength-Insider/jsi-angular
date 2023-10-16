@@ -1,0 +1,67 @@
+<ng-container *ngIf="unread$ | async as unread;">
+
+    <button class="d-none d-md-flex admin-unread-btn"
+            #p="ngbPopover"
+            [ngbPopover]="popContent"
+            [autoClose]="'outside'"
+            placement="bottom"
+            type="button"
+            triggers="manual"
+            popoverClass="px-0 py-0"
+            (click)="p.open()">
+        <svg class="admin-unread-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 4.99L4 6h16zm0 12H4V8l8 5 8-5v10z" /></svg>
+
+        <div *ngIf="unread.length > 0">
+            <div class="badge">{{unread.length}}</div>
+            <span class="sr-only">unread messages</span>
+        </div>
+    </button>
+
+    <ng-template #popContent>
+        <div class="admin-unread my-0 mx-0">
+            <div class="popover admin-unread-popover d-none d-md-flex">
+                <div class="list-group admin-unread-list">
+                    <ng-container *ngIf="unread.length > 0; else noMessages;">
+                        <div class="list-group-item" *ngFor="let message of unread">
+                            <div class="unread-message-header">
+                                <strong class="me-auto">
+                                    <a class="btn btn-link px-0 py-0"
+                                        [routerLink]="['/admin/users/', message.userId]"
+                                        (click)="setSelectedUser(message.userId)"
+                                        >
+                                        {{message.username}}
+                                    </a>
+                                </strong>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-dismiss="toast"
+                                        (click)="handleClose(message)">
+                                    <span aria-hidden="true"></span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                            </div>
+                            <div class="unread-message-body">
+                                <p>{{ message.text }}</p>
+                                <small>{{ message.createdAt | fromNow }}</small>
+                            </div>
+                        </div>
+
+                        <div class="list-group-item py-2 px-2">
+                            <button (click)="clearUnread()" class="w-100 btn btn-outline-danger admin-unread-clear-btn">Clear Messages</button>
+                        </div>
+                    </ng-container>
+                    <ng-template #noMessages>
+                        <div class="list-group-item">
+                            <div class="toast-header">
+                                <strong class="me-auto">Unread</strong>
+                            </div>
+                            <div class="toast-body">
+                                No unread messages.
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</ng-container>

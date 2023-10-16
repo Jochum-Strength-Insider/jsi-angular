@@ -1,1 +1,51 @@
-<p>email-signin works!</p>
+<div class="container-fluid ps-md-0 container-info">
+    <div class="row g-0">
+        <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+        <div class="col-md-8 col-lg-6">
+            <div class="d-flex align-items-center py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-10 mx-auto">
+                            
+                            <h3 class="mb-4">Email Sign In</h3>
+                            <form class="form w-100" id="emailRequestForm" [formGroup]="emailRequestForm" (ngSubmit)="onSubmit()">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input class="form-control" formControlName="email" type="text" placeholder="Email Address" [ngClass]="{ 'is-invalid': email?.touched && email?.errors, 'is-valid': email?.valid }"
+                                    autocomplete="email"
+                                    />
+                
+                                    <div *ngIf="email && email.touched && email.errors" class="invalid-feedback">
+                                        <div *ngIf="email.errors['required']">
+                                            Email is required.
+                                        </div>
+                                        <div *ngIf="email.errors['email']">
+                                            Email isn't valid. Please enter a valid email.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <a class="link" routerLink="/auth/forgot-password">Forgot Password?</a>
+                                        <a class="link" routerLink="/auth/signin">Sign In</a>
+                                    </div>
+                
+                                    <button class="btn btn-primary w-100 mb-3" [disabled]="emailRequestForm.invalid || sent" type="submit">
+                                        Sign In
+                                    </button>
+                
+                                    <ngb-alert *ngIf="errorMessage" #alert type="warning" [dismissible]="false">{{errorMessage}}</ngb-alert>
+                                    <ngb-alert *ngIf="sent" #alert type="success" [dismissible]="false">
+                                        Email sign in link sent! Please check your inbox. <br />
+                                        If this is your first time signing in please set up a new password on the account page after login.
+                                    </ngb-alert>
+                                </div>
+                            </form>  
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

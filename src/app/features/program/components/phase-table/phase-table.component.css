@@ -1,0 +1,37 @@
+@media (max-width: 576px) {
+    .user-program-day.my-5 {
+       margin-bottom: 2rem !important;
+       margin-top: 2rem !important;
+    }
+ 
+    .user-program-day h3 {
+       font-size: 1.25rem;
+    }
+ }
+ 
+ 
+ .user-program-day {
+    border-top: 1px solid white;
+    border-radius: .25rem;
+    cursor: pointer;
+ }
+ 
+ .user-program-day .card-img-top {
+    flex-shrink: 0;
+    width: 100%;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+ }
+ 
+ .user-program-day .card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1.25rem;
+ 
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+ }
+
+  .accordion-collapse {
+    border-radius: 0.25rem;
+  }

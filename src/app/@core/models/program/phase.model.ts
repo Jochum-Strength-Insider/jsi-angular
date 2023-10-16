@@ -1,8 +1,7 @@
-import { Day } from "./program/day.model";
+import { Day } from "./day.model";
 
 export class Phase {
-    id: string;
     title: string;
+    completed?: boolean;
     days: Day[];
-    completed: boolean;
 }

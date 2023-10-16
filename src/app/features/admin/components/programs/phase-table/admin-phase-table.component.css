@@ -1,0 +1,116 @@
+@media (max-width: 576px) {
+    .user-program-day.my-5 {
+       margin-bottom: 2rem !important;
+       margin-top: 2rem !important;
+    }
+ 
+    .user-program-day h3 {
+       font-size: 1.25rem;
+    }
+ }
+ 
+ .user-program-day {
+    border-top: 1px solid white;
+    border-radius: .25rem;
+    cursor: pointer;
+ }
+ 
+ .user-program-day .card-img-top {
+    flex-shrink: 0;
+    width: 100%;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+ }
+ 
+ .user-program-day .card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1.25rem;
+ 
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+ }
+
+.accordion-collapse {
+   border-radius: 0.25rem;
+}
+
+.line-container .cell {
+   display: table-cell;
+}
+
+.line-container .left {
+   border: 1px solid #ced4da;
+   border-radius: .25rem 0 0 .25rem;
+   border-right: none;
+}
+
+.line-container .left span {
+   height: 100%;
+   padding-left: .25rem;
+   padding-right: .25rem;
+}
+
+.line-container .left span:first-of-type {
+   border-right: 1px solid #ced4da;
+}
+
+.line-container .right {
+   border: 1px solid #ced4da;
+   border-radius: 0 .25rem .25rem 0;
+}
+
+
+.dth-number {
+   min-width: 3rem;
+   width: 3rem;
+}
+
+.dth-description {
+   min-width: 13rem;
+   width: 13rem;
+}
+
+.dth-link {
+   min-width: 10rem;
+   width: 10rem;
+}
+
+.dth-sets {
+   min-width: 3rem;
+   width: 3rem;
+}
+
+.dth-reps {
+   min-width: 10rem;
+   width: 10rem;
+}
+
+.dth-tempo {
+   min-width: 10rem;
+   width: 10rem;
+}
+
+.dth-rest {
+   min-width: 6rem;
+   width: 6rem;
+}
+
+.dth-w1 {
+   min-width: 6rem;
+   width: 6rem;
+}
+
+.dth-w2 {
+   min-width: 6rem;
+   width: 6rem;
+}
+
+.dth-w3 {
+   min-width: 6rem;
+   width: 6rem;
+}
+
+.dth-btn {
+   width: 45px;
+}

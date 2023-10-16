@@ -1,0 +1,15 @@
+<form [formGroup]="loginForm" id="navLoginForm" class="nav-login d-none d-sm-none d-md-none d-lg-inline-flex d-xl-inline-flex" (ngSubmit)="onSubmit()">
+    <div class="form-group me-2">
+        <label class="sr-only" for="navEmail">Email: </label>
+        <input id="navEmail" class="form-control form-control-sm" type="text" placeholder="Email Address" formControlName="email"
+        autocomplete="email"
+    />
+    </div>
+    <div class="form-group me-2">
+        <label class="sr-only" for="navPassword">Password: </label>
+        <input id="navPassword" class="form-control form-control-sm" type="password" placeholder="Password" formControlName="password"
+        autocomplete="current-password"
+    />
+    </div>
+    <button class="btn btn-outline-light btn-sm" type="submit">Sign In</button>
+</form>

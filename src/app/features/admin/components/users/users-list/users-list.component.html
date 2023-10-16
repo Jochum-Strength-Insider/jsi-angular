@@ -1,0 +1,66 @@
+<div class="mx-0 users-list">
+    <div class="list-group-flush">
+        <div class="list-group-item py-2 px-2">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" [class.show]="show" (click)="show=!show" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filter
+                </button>
+                <ul class="dropdown-menu" [class.show]="show">
+                    <button class="dropdown-item" (click)="sortUsersBy('username')">Username {{ asc ? "▾" : "▴" }}</button>
+                    <button class="dropdown-item" (click)="sortUsersBy('email')">Email {{ asc ? "▾" : "▴" }}</button>
+                    <button class="dropdown-item" (click)="sortUsersBy('programDate')">Program Date {{ asc ? "▾" : "▴" }}</button>
+                    <button class="dropdown-item" (click)="sortUsersBy('createdAt')">Sign Up Date {{ asc ? "▾" : "▴" }}</button>
+                    <button class="dropdown-item" (click)="filterUsersByActive()">{{ filter ? "Inactive" : "Active" }}</button>
+                    <button class="dropdown-item" (click)="showAllUsers()">All</button>
+                    <li><hr class="dropdown-divider"></li>
+                    <button class="dropdown-item" [class.disabled]="selectedUsers.length === 0" (click)="sendUserMessages()">Group Message</button>
+                    <button class="dropdown-item" [class.disabled]="selectedUsers.length === 0" (click)="setUserPrograms()">Group Programs</button>
+                    <li><hr class="dropdown-divider"></li>
+                    <button class="dropdown-item" [class.disabled]="selectedUsers.length === 0" (click)="clearSelection()">Clear Selection</button>
+                </ul>
+            </div>
+        </div>
+
+        <div class="list-group-item pt-1 pb-2 px-2">
+            <form id="searchForm" autocomplete="off">
+                <label for="search" class="sr-only"></label>
+                <input
+                    class="form-control"
+                    type="text"
+                    [formControl]="searchCtrl"
+                    name="search-input"
+                    placeholder="Search for users..."
+                    id="search"
+                >
+            </form>
+        </div>
+
+        <div class="users-list-contain">
+            <div class="list-group list-group-flush">
+                <div *ngFor="let user of sortedUsers" class="list-group-item d-flex" [ngClass]="{'current' : (currentUser && currentUser.id === user.id)}">
+                    <div class="check-box d-flex align-items-center">
+                        <div class="mb-3 form-check">
+                            <label [for]="'checkbox-'+user.id" class="sr-only"></label>
+                            <input [(ngModel)]="user.checked" type="checkbox" [id]="'checkbox-'+user.id" (change)="selectionChanged(user)">
+                        </div>
+                    </div>
+                    
+                    <div class="user-list-item">
+                        <a [routerLink]="[user.id]"
+                            [state]="user"
+                            class="btn btn-link px-0 py-0"
+                            (click)="setCurrentUser(user)"
+                        >
+                            {{user.username}}
+                        </a>
+                        <div>{{user.email}}</div>
+                        <div>{{ user.programDate | date }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item py-2 px-3">
+            <button class="add-user-button" (click)="addUser()">Add User</button>
+        </div>
+    </div>
+</div>

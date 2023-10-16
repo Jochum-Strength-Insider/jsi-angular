@@ -1,0 +1,11 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-center">
+        <div class="contain-width">
+            <div class="app-top">
+                <div class="messages-max-height" *ngIf="authUser$ | async as authUser">
+                    <app-messages-container [user]="authUser"></app-messages-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,30 +7,37 @@ import {
   redirectUnauthorizedTo,
 } from '@angular/fire/auth-guard';
 
-const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['']);
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['auth/login']);
 const redirectLoggedInToProgram = () => redirectLoggedInTo(['program']);
+// const adminOnly = () => hasCustomClaim('admin');
+// { path: 'admin', component: AdminComponent, canActivate: [AngularFireAuthGuard], data: { authGuardPipe: adminOnly }},
+// const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
+// const redirectLoggedInToItems = () => redirectLoggedInTo(['items']);
+
+// canActivate: mapToCanActivate([AdminGuard]),
+
+// ...canActivate(redirectLoggedInToProgram),
+// Same as
+// canActivate: [AuthGuard],
+// data: { authGuardPipe: redirectUnauthorizedToLogin },
 
 const routes: Routes = [
   { 
     path:  '',
     loadChildren: () => import('./features/landing/landing.module').then(m => m.LandingModule),
-    ...canActivate(redirectLoggedInToProgram)
+    ...canActivate(redirectLoggedInToProgram),
   },
   { 
     path: 'admin',
     loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule),
     ...canActivate(redirectUnauthorizedToLogin)
-    // Same as
-    // canActivate: [AuthGuard],
-    // data: { authGuardPipe: redirectUnauthorizedToLogin },
   },
-  { 
+  {
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule),
-    ...canActivate(redirectLoggedInToProgram),
   },
   { 
-    path: 'diet',
+    path: 'diet-sheet',
     loadChildren: () => import('./features/diet/diet.module').then(m => m.DietModule),
     ...canActivate(redirectUnauthorizedToLogin)
   },
@@ -45,13 +52,23 @@ const routes: Routes = [
     ...canActivate(redirectUnauthorizedToLogin)
   },
   { 
-    path: 'user',
-    loadChildren: () => import('./features/user/user.module').then(m => m.UserModule),
+    path: 'account',
+    loadChildren: () => import('./features/account/account.module').then(m => m.AccountModule),
     ...canActivate(redirectUnauthorizedToLogin)
   },
   { 
     path: 'weigh-in',
     loadChildren: () => import('./features/weigh-in/weigh-in.module').then(m => m.WeighInModule),
+    ...canActivate(redirectUnauthorizedToLogin)
+  },
+  { 
+    path: 'resources',
+    loadChildren: () => import('./features/resources/resources.module').then(m => m.ResourcesModule),
+    ...canActivate(redirectUnauthorizedToLogin)
+  },
+  { 
+    path: 'questionnaire',
+    loadChildren: () => import('./features/questionnaire/questionnaire.module').then(m => m.QuestionnaireModule),
     ...canActivate(redirectUnauthorizedToLogin)
   },
   {

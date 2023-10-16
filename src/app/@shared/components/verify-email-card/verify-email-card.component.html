@@ -1,0 +1,4 @@
+<ngb-alert [type]="!emailSent ? 'warning' : 'success'" [dismissible]=" emailSent ? true : false">
+    <span *ngIf="!emailSent">Please verify your email address. <button class="btn btn-link px-0 py-0" (click)="sendEmailVerification()">Click here to send a verification email.</button></span>
+    <span *ngIf=emailSent>Email Verification Sent!</span>
+</ngb-alert>

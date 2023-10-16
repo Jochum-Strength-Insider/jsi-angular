@@ -2,13 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-messages',
-  template: `
-    <p>
-      messages works!
-    </p>
-  `,
-  styles: [
-  ]
+  templateUrl: './messages.component.html',
+  styleUrls: []
 })
 export class MessagesComponent {
 

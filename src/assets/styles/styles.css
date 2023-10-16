@@ -1,10 +1,214 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '@angular/cdk/overlay-prebuilt.css';
 
 :root {
-    --js-purple: #412a34;
-    --js-purple-light: #a76884;
-    --js-gray: #1a1a1a;
+  --circle-size: min(25vw, 15rem);
+  --js-purple: #412a34;
+  --js-purple-light: #a76884;
+  --js-gray: #1a1a1a;
+}
+
+/* font-family: 'Raleway', Arial, sans-serif; weights: regular, italic, 900 */
+body {
+  color: white;
+  font-family: 'Raleway', Arial, sans-serif;
+  background: radial-gradient(var(--js-purple), var(--js-gray));
+}
+
+body::-webkit-scrollbar {
+  /* Remove scrollbar space */
+  width: 0px;
+  /* Optional: just make scrollbar invisible */
+  background: transparent;
+}
+
+.switch-container {
+  margin-top: 66px;
+}
+
+.app-top {
+  padding-top: 1rem;
+}
+
+.no-padding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.contain {
+  min-height: calc(100vh - 66px);
+}
+
+.contain-width {
+  width: 100%;
+  max-width: 1000px;
+  /* flex: 1; */
+}
+
+.tab-content {
+  color: black;
+}
+
+.list-group {
+  color: black;
+  /* border: 1px solid white;
+   border-radius: .25rem; */
+}
+
+.no-border {
+  border: none;
+}
+
+.rounded {
+  border-radius: 0.25rem;
+}
+
+.modal-content {
+  color: black;
+}
+
+.card {
+  color: black;
+}
+
+.navbar.on-top {
+  z-index: 9999;
+}
+
+.navbar {
+  box-shadow: 0 10px 10px -5px rgba(0, 0, 0, .2);
+}
+
+.nav-link:focus {
+  outline: -webkit-focus-ring-color auto 5px;
+}
+
+.bg-purple {
+  background-color: var(--js-purple);
+}
+
+.bg-purple-light {
+  background-color: var(--js-purple-light);
+}
+
+.bg-gray {
+  background-color: var(--js-gray);
+  color: white;
+}
+
+.bg-black {
+  background-color: black;
+}
+
+.bg-clear {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.color-black {
+  color: black !important;
+}
+
+.dropdown-item.ignore-active {
+  color: #212529;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.bg-gray-light {
+  background-color: rgb(55, 55, 55);
+  color: white;
+}
+
+/* responsive text */
+/* html {
+   font-size: calc(.5rem + 1vw);
+   font-size: min(calc(.5rem + 1vw), 2rem);
+} */
+
+/* Extra small devices (phones, less than 768px) */
+/* No media query since this is the default in Bootstrap */
+
+.data-grid-control,
+.data-grid-control input {
+  background-color: rgba(173, 216, 230, 0);
+  border: none;
+  width: 100%;
+}
+
+table .vertical-align-center {
+  vertical-align: middle;
+}
+
+.program-title {
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 100ms ease-in;
+}
+
+.program-title:hover {
+  opacity: 0.7;
+}
+
+.active-state-button {
+  width: 7rem;
+  text-align: center;
+}
+
+.header-button:hover {
+  cursor: pointer;
+  opacity: .7;
+} 
+
+span.required {
+  color: red;
+}
+
+.p-link {
+  font-size: unset;
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+@media (max-width: 576px) {
+  h1,
+  h2,
+  h3,
+  .h1,
+  .h2,
+  .h3 {
+    font-size: 1.5rem;
   }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Raleway, "Helvetica Neue", sans-serif; }
+  h4,
+  h5,
+  h6,
+  .h4,
+  .h5,
+  .h6 {
+    font-size: 1rem;
+  }
+
+  body {
+    font-size: 0.8rem;
+  }
+
+  a {
+    font-size: 1rem;
+  }
+
+  .sm-block {
+    width: 100%;
+    display: block;
+  }
+
+  .sm-hide {
+    display: none;
+  }
+
+  .app-container {
+    padding-top: 0.5rem;
+  }
+}

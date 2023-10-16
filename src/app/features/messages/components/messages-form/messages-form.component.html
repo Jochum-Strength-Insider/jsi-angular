@@ -1,0 +1,20 @@
+<form [formGroup]="messageForm"
+      id="messageForm"
+      class="chat-form"
+      (ngSubmit)="sendMessage()"
+      (keydown.enter)="sendBtn.click()"
+      autocomplete="off">
+   <div class="chat-form-corner"></div>
+   <label for="messageInput" class="sr-only"></label>
+   <textarea
+        #messageInput
+        id="messageInput"
+        (keydown.enter)="onEnterKeydown($event)"
+        class="chat-form-input"
+        formControlName="message"
+        rows="1"
+        placeholder="Reply..."
+        type="text">
+    </textarea>
+   <button #sendBtn class="chat-form-submit btn btn-primary" type="submit">Send</button>
+</form>

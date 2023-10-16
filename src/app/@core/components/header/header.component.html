@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-purple fixed-top px-3">
+    <div class="container-fluid navigation-wrapper">
+        <a class="navbar-brand" [routerLink]="authUser ? ['/program'] : ['/']">
+            <img src="../../../../assets/images/logo.png" width="120" height="40" class="d-inline-block align-top"
+                alt="Jochum Strength" />
+        </a>
+        <app-navigation-auth *ngIf="authUser; else nonAuth;"
+            [onToggle]="onToggle"
+            [onSelect]="onSelect"
+            [collapsed]="collapsed"
+            [authUser]="authUser"
+            [messages]="messages">
+        </app-navigation-auth>
+        <ng-template #nonAuth>
+            <app-navigation
+                [onToggle]="onToggle"
+                [onSelect]="onSelect"
+                [collapsed]="collapsed"></app-navigation>
+        </ng-template>
+    </div>
+</nav>

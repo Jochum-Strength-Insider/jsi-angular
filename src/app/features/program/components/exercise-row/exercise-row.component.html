@@ -1,0 +1,81 @@
+ <div class="row pb-3">
+    <div class="col-6 d-md-none">#</div>
+    <div  class="col-6 col-md-1">{{exercise.Number}}</div>
+    <div class="col-12 d-md-none">
+        <hr />
+    </div>
+
+    <div class="col-6 d-md-none">Description</div>
+    <div class="col-6 col-md-3">{{exercise.Description}}</div>
+    <div class="col-12 d-md-none">
+        <hr />
+    </div>
+
+    <div class="col-6 d-md-none">Link</div>
+    <div class="col-6 col-md-1">
+        <button class="btn btn-link px-0 py-0 mx-0 my-0" (click)="setModal(exercise)">Link</button>
+    </div>
+    <div class="col-12 d-md-none">
+        <hr />
+    </div>
+
+    <div class="col-6 d-md-none">Sets</div>
+    <div class="col-6 col-md-1">{{exercise.Sets}}</div>
+    <div class="col-12 d-md-none">
+        <hr />
+    </div>
+
+    <div class="col-6 d-md-none">Reps</div>
+    <div class="col-6 col-md-2">{{exercise.Reps}}</div>
+    <div class="col-12 d-md-none">
+        <hr />
+    </div>
+
+    <div class="col-6 d-md-none">Tempo</div>
+    <div class="col-6 col-md-2">{{exercise.Tempo}}</div>
+    <div class="col-12 d-md-none">
+        <hr />
+    </div>
+
+    <div class="col-6 d-md-none">Rest</div>
+    <div class="col-6 col-md-1">{{exercise.Rest}}</div>
+    <div class="col-12 d-md-none">
+        <hr />
+    </div>
+
+    <div class="col-12 col-md-1">
+       <button
+            class="btn btn-outline-primary d-block text-center sm-block w-100"
+            (click)="collapse.toggle()"
+            type="button"
+            [attr.aria-expanded]="!isCollapsed"
+            aria-controls="collapseExample"
+       >
+          <span>{{ !isCollapsed ? '&minus;' : '&#65291;' }}</span>
+       </button>
+    </div>
+</div>
+
+ <div class="collapse" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+    <div class="form-row mb-3">
+        <form class="form w-100 needs-validation" id="trackingForm" [formGroup]="trackingForm" (ngSubmit)="onSubmit()" novalidate autocomplete="off">
+            <div class="form-group mb-3 col">
+                <label class="form-label" [for]="'week1' + index">Week 1</label>
+                <input class="form-control" [id]="'week1' + index" formControlName="week1" type="text" placeholder="10lb" [class.is-valid]="f['week1'].value.trim()"/>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label" [for]="'week2' + index + index">Week 2</label>
+                <input class="form-control" [id]="'week2' + index + index" formControlName="week2" type="text" placeholder="10lb" [class.is-valid]="f['week2'].value.trim()"/>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label" [for]="'week3' + index">Week 3</label>
+                <input class="form-control" [id]="'week3' + index" formControlName="week3" type="text" placeholder="10lb" [class.is-valid]="f['week3'].value.trim()"/>
+            </div>
+
+            <div class="form-group">
+                <button *ngIf="saved" type="submit" class="btn btn-outline-success w-100">Saved!</button>
+                <button *ngIf="!saved" type="submit" class="btn btn-outline-primary w-100">Save</button>
+            </div>
+        </form>
+    </div>
+ </div>

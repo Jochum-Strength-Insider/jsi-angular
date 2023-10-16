@@ -1,5 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { TOO_MANY_REQUESTS, USER_NOT_FOUND, WRONG_PASSWORD } from '@app/@core/utilities/firebase-auth-constants.utilities';
+import { AuthService } from '@app/@shared/services/auth.service';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-signin',
@@ -7,34 +11,47 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent {
-  @Output() formData: EventEmitter<{
-    email: string;
-    password: string;
-  }> = new EventEmitter();
+  testEmail : string = environment.login || "";
+  testPassword : string = environment.password || "";
+  loginForm: FormGroup;
+  error: Error| null = null;
+  errorMessage: string | null = null;
 
-  testEmail : string = 'speedyneppl@gmail.com';
-  testPassword : string = 'Ins1derTr@ding';
-  form: FormGroup;
-
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private auth: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.form = this.fb.group({
+    this.loginForm = this.fb.group({
       email: [this.testEmail, [Validators.required, Validators.email]],
       password: [this.testPassword, Validators.required],
     });
   }
 
-  get email() {
-    return this.form.get('email');
-  }
-
-  get password() {
-    return this.form.get('password');
-  }
-
+  get f() { return this.loginForm.controls; }
+  
   onSubmit() {
-    console.log('onSubmit');
-    this.formData.emit(this.form.value);
-  }
+    this.auth
+      .login(this.loginForm.value)
+      .subscribe({
+        next: () => {
+          this.error = null;
+          this.errorMessage = null;
+          this.router.navigateByUrl('/program')
+        },
+        error: (error: Error) => {
+          this.error = error;
+          if(error.message?.includes(WRONG_PASSWORD) || error.message?.includes(USER_NOT_FOUND)){
+            this.errorMessage = "Email Or Password Is Incorrect."
+          } else if (error.message?.includes(TOO_MANY_REQUESTS)) {
+            this.errorMessage = "You have made too many failed login attempts. Please wait 30 minutes and try again. If you cannot remember your password try sending a password reset email or using email sign in."
+          }
+          else {
+            this.errorMessage = "An error occurred signing in. Please try again and reach out to a Jochum Strength Coach if the error continues."
+          }
+        }
+      })
+  };
 }
