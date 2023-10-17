@@ -8,7 +8,6 @@ export class User {
     surveySubmitted: boolean;
     ACTIVE: boolean;
     ADMIN: boolean;
-    billingId: string;
 }
 
 export class UserWithSelection extends User {

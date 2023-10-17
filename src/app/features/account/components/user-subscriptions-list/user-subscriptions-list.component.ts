@@ -29,7 +29,6 @@ export class UserSubscriptionsListComponent implements OnChanges {
   }
 
   handleOpenModal(content: any, subscription: UserSubscription){
-    console.log('handleOpenModal', subscription);
     this.selectedSubscription = subscription;
     this.modalService.open(content, {
       size: 'lg',
