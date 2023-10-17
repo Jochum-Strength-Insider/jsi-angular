@@ -35,7 +35,7 @@
                                     Email isn't valid. Please enter a valid email.
                                 </div>
                                 <div *ngIf="f['email'].errors['userAccountAlreadyExists']">
-                                    Email address already in use. Please login to resubscribe.
+                                    Email address already in use. <a class="p-link" [routerLink]="['/auth/resubscribe']">Click here to resubscribe.</a>
                                 </div>
                             </div>
                         </div>

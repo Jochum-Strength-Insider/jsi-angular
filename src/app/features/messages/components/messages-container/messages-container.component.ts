@@ -138,9 +138,7 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
   clearUserUnreadMessages() {
     this.messageService.clearUserUnreadMessage(this.user.id)
       .pipe(catchError(() => of('')))
-      .subscribe({
-        next: () => console.log('unread messages cleared'),
-      })
+      .subscribe()
   }
 
   scrollToBottom(smooth: boolean = true): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '@app/@core/models/auth/user.model';
 import { Code } from '@app/@core/models/codes/code.model';
@@ -12,7 +12,7 @@ import { MessageService } from '@app/@shared/services/message.service';
 import { UserService } from '@app/features/admin/services/user.service';
 import { environment } from '@env/environment';
 import { IOnApproveCallbackData } from 'ngx-paypal';
-import { catchError, forkJoin, of, take } from 'rxjs';
+import { Subscription, catchError, forkJoin, of, take } from 'rxjs';
 
 
 @Component({
@@ -20,10 +20,12 @@ import { catchError, forkJoin, of, take } from 'rxjs';
   templateUrl: './resubscribe.component.html',
   styleUrls: ['./resubscribe.component.css']
 })
-export class ResubscribeComponent implements OnInit { 
-  authUser: User | null;
+export class ResubscribeComponent implements OnInit, OnDestroy { 
   step: number = 1;
+  authUser: User | null;
+  userSub: Subscription;
   loginForm: FormGroup;
+  loggedIn: boolean = false;
   error: Error| null = null;
   selectedCode: Code;
   defaultCode: Code = {
@@ -57,16 +59,23 @@ export class ResubscribeComponent implements OnInit {
     this.getCurrentUser();
   }
 
+  ngOnDestroy(): void {
+    this.userSub?.unsubscribe();
+  }
+
   get f() { return this.loginForm.controls; }
 
   getCurrentUser(){
-    this.authService.currentUser$
+    this.userSub = this.authService.currentUser$
       .pipe(take(2))
       .subscribe(user => {
-        if(user){
-          this.authUser = user;
+        if(!user){ return; }
+
+        this.authUser = user;
+        if(!this.loggedIn){
           this.navigateToStep(2);
         }
+        this.loggedIn = true;
       });
   }
 
@@ -151,7 +160,7 @@ export class ResubscribeComponent implements OnInit {
       return;
     }
 
-    const {id, username, email} = this.authUser;
+    const { id, username, email} = this.authUser;
     
     const submission = new Submission();
     submission.plan_id = data.subscriptionID;
@@ -163,7 +172,7 @@ export class ResubscribeComponent implements OnInit {
 
     const USER_RESUBSCRIBE_MESSAGE = new Message(`${username} just resubscribed!`, id, "New Subscription!")
     forkJoin([
-          this.userService.addUserSubscription(id, submission.plan_id, submission.transaction_id),
+          this.userService.addUserSubscription(id, submission.plan_id, this.subscriptionId),
           this.userService.setUserIsActive(id, true)
             .pipe(catchError(error => of(error))),
           this.codeService.addCodeDetailsSubmission(this.selectedCode, submission)
@@ -175,6 +184,7 @@ export class ResubscribeComponent implements OnInit {
       next: () => {
         console.log('Subscription Complete');
         this.navigateToStep(3);
+        this.authService.refreshCurrentUser();
       },
       error: (err) => {
         this.errorService.generateError(

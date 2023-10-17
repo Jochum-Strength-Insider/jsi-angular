@@ -130,7 +130,6 @@ export class SubscribeComponent implements OnInit, OnDestroy {
 
   createUser(data: IOnApproveCallbackData) {
     const { username, email, password } = this.signupForm.value;
-    
     const submission = new Submission();
     submission.plan_id = data.subscriptionID;
     submission.create_time = new Date().getTime();
@@ -149,7 +148,7 @@ export class SubscribeComponent implements OnInit, OnDestroy {
         return forkJoin([
           this.authService.sendEmailVerification(user),
           this.userService.addNewUser(user.uid, email, username),
-          this.userService.addUserSubscription(user.uid, submission.plan_id, submission.transaction_id)
+          this.userService.addUserSubscription(user.uid, submission.plan_id, this.subscriptionId)
             .pipe(catchError(error => of(error))),
           this.messageService.addAdminUnreadMessage(USER_SIGN_UP_MESSAGE)
             .pipe(catchError(error => of(error))),

@@ -149,11 +149,17 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="billingId">Billing Id:</label>
-                    <input class="form-control" formControlName="billingId" id="billingId" type="text"/>
+                    <input class="form-control" formControlName="billingId" id="billingId" type="text" placeholder="billingId" [ngClass]="{ 'is-invalid': sf['billingId'].touched && sf['billingId'].errors, 'is-valid': sf['billingId'].valid }" placeholder="A-1BC2D345EFGH"/>
+
+                    <div *ngIf="sf['billingId'].touched && sf['billingId'].errors" class="invalid-feedback">
+                        <div *ngIf="sf['billingId'].errors['required']">
+                            BillingId is Required.
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group mb-3">
                     <label for="subscriptionId">Subscription Id:</label>
-                    <input class="form-control" formControlName="subscriptionId" id="subscriptionId" type="text"/>
+                    <input class="form-control" formControlName="subscriptionId" id="subscriptionId" type="text" placeholder="A-1BC2D345EFGH"/>
                 </div>
                 <div>
                     <div>Active:</div>

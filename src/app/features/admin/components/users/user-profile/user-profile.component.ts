@@ -90,8 +90,8 @@ export class UserProfileComponent implements OnInit, OnChanges {
   createSubscriptionForm(){
     this.subcriptionForm = this.fb.group({
       billingId: ["", [Validators.required]],
-      subscriptionId: ["", [Validators.required]],
-      active: [false]
+      subscriptionId: "",
+      active: true
     })
   }
 
@@ -99,7 +99,7 @@ export class UserProfileComponent implements OnInit, OnChanges {
     this.subcriptionForm.patchValue({
       billingId: subscription ? subscription.billingId : "",
       subscriptionId: subscription ? subscription.subscriptionId : "",
-      active: subscription ? subscription.active : false
+      active: subscription ? subscription.active : true
     })
   }
 
@@ -161,7 +161,6 @@ export class UserProfileComponent implements OnInit, OnChanges {
   }
 
   openEditSubscriptionModal(content: any, subscription: UserSubscription | null){
-    console.log(subscription);
     if(subscription){
       this.selectedSubscription = subscription;
       this.patchSubscriptionForm(subscription);
