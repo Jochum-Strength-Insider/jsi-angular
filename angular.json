@@ -53,6 +53,8 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
+              "src/logo192.png",
+              "src/logo512.png",
               "src/assets"
             ],
             "styles": [

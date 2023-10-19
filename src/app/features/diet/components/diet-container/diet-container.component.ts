@@ -7,7 +7,7 @@ import { Diet } from '@app/@core/models/diet/diet.model';
 import { ToastService } from '@app/@core/services/toast.service';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { NgbAccordionDirective, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, finalize, tap, timer } from 'rxjs';
+import { Subscription, debounceTime, distinctUntilChanged, finalize, of, switchMap, tap, timer } from 'rxjs';
 import { DietService } from '../../services/diet.service';
 import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
@@ -28,6 +28,7 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
   mostRecentSub: Subscription;
   timerSub: Subscription;
   dateForm: FormGroup;
+  dateFormSub: Subscription;
   currentDate: Date = new Date();
   queryDate: Date = new Date();
   isCurrentMonth: boolean = true;
@@ -48,19 +49,13 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
   ) {}
 
   ngOnInit(): void {
-    this.dateForm = this.fb.group({
-      date: [{value: formatDate(this.currentDate,'yyyy-MM-dd','en'), disabled: false }, [
-          Validators.required
-        ]
-      ],
-    });
-
+    this.createDateForm();
     this.fetchDiets();
   }
 
   ngAfterViewInit(): void {
     if(!this.adminUser){
-      this.timerSub = timer(1000).subscribe(() => this.checkDietSheet());
+      this.timerSub = timer(1000).subscribe(() => this.checkDietSheet(this.queryDate));
     }
   }
 
@@ -68,6 +63,7 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
     this.dietSub?.unsubscribe();
     this.mostRecentSub?.unsubscribe();
     this.timerSub?.unsubscribe();
+    this.dateFormSub?.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -77,33 +73,33 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
     })
   }
 
-  get date() {
-    return this.dateForm.get('date');
+  createDateForm(){
+    this.dateForm = this.fb.group({
+      date: [formatDate(this.currentDate, 'yyyy-MM-dd','en'), [Validators.required]]
+    });
+
+    this.dateFormSub = this.dateForm.controls['date']
+      .valueChanges
+      .pipe(
+        tap(() => this.alreadyCheckedIn = true),
+        debounceTime(400),
+        distinctUntilChanged(),
+        switchMap((date) => {
+          if(date.length === 0) { return of(null) }
+          const dietId = this.getDietIdStringByDate(date);
+          return dietId !== null
+            ? of(dietId)
+            : this.dietService.getUserDietIdByDate(this.user.id, date)
+        })
+      ).subscribe( value => this.alreadyCheckedIn = value ? true : false )
   }
+
+  patchForm(date: Date, emitEvent: boolean){
+    this.dateForm.patchValue({date: formatDate(date,'yyyy-MM-dd','en')}, { emitEvent })
+  }
+
+  get f() { return this.dateForm.controls; }
   
-  addDateSheet() {
-    if(this.dateForm.invalid){
-      return;
-    }
-    
-    if(this.date?.value){
-      this.dietService.addUserDietSheet(this.user.id, this.date.value)
-        .pipe(finalize(() => this.modalService.dismissAll()))
-        .subscribe({
-          next: (dietId) => {
-            this.addDietIdToCheckIns(dietId);
-            this.fetchDiets();
-          },
-          error: (err) => {
-            this.errorService.generateError(
-              err,
-              'Add Diet Page',
-              'An error occurred while trying to add a diet page. Please try again and reach out to your Jochum Strengh trainer if the error continues.'
-            );
-          }
-        });
-    }
-  }
 
   handleChangeQueryDate(event: {date: number, check: boolean}) {
     this.queryDate = new Date(event.date);
@@ -112,15 +108,11 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
       if(dietId !== null){
         this.toggleDietSheetPanel(dietId);
       } else {
-        this.checkDietSheet()
+        this.checkDietSheet(this.queryDate)
       }
     } else {
       this.fetchDiets();
     }
-  }
-
-  patchForm(date: Date){
-    this.dateForm.patchValue({date: formatDate(date,'yyyy-MM-dd','en')})
   }
 
   fetchDiets() {
@@ -165,18 +157,45 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
     }
   }
 
-  checkDietSheet() {
-    this.dietService.getUserDietIdByDate(this.user.id, this.queryDate)
+  checkDietSheet(date: Date) {
+    this.dietService.getUserDietIdByDate(this.user.id, date)
     .subscribe(checkedIn => {
       if(checkedIn){
         this.addDietIdToCheckIns(checkedIn);
         const id = Object.keys(checkedIn)[0];
         this.toggleDietSheetPanel(id);
+        this.alreadyCheckedIn = true;
       } else {
-        this.patchForm(this.queryDate);
+        this.alreadyCheckedIn = false;
+        this.patchForm(date, false);
         this.openAddDietModal(this.addModal);
       }
     });
+  }
+
+  addDateSheet() {
+    if(this.dateForm.invalid || this.alreadyCheckedIn){
+      return;
+    }
+    
+    const date = this.f['date']?.value;
+    if(date){
+      this.dietService.addUserDietSheet(this.user.id, date)
+        .pipe(finalize(() => this.modalService.dismissAll()))
+        .subscribe({
+          next: (dietId) => {
+            this.addDietIdToCheckIns(dietId);
+            this.fetchDiets();
+          },
+          error: (err) => {
+            this.errorService.generateError(
+              err,
+              'Add Diet Page',
+              'An error occurred while trying to add a diet page. Please try again and reach out to your Jochum Strengh trainer if the error continues.'
+            );
+          }
+        });
+    }
   }
 
   handleSaveDiet(diet: Diet){
@@ -201,6 +220,11 @@ export class DietContainerComponent implements OnInit, AfterViewInit, OnDestroy,
       centered: true,
       backdrop: true,
     });
+  }
+
+  openModalWithAddDietSheetButton(){
+    this.patchForm(this.currentDate, true);
+    this.openAddDietModal(this.addModal);
   }
 
   toggleDietSheetPanel(dietId: string) {
