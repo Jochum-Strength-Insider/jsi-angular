@@ -72,7 +72,11 @@ export class SubscribeComponent implements OnInit, OnDestroy {
 
   createForm() {
     this.signupForm = this.fb.group({
-      email: ["", [Validators.required, Validators.email],[UserAccountValidator.createValidator(this.auth)]],
+      email: [
+        "",
+        [Validators.required, Validators.email],
+        [UserAccountValidator.createValidator(this.auth)]
+      ],
       username: ["", [Validators.required]],
       password: ["", [Validators.required, Validators.minLength(7)]],
     });

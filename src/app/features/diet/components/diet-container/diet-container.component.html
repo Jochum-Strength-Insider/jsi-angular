@@ -1,26 +1,35 @@
 <ng-template #addModal let-modal>
 	<div class="modal-header">
-		<h4 class="modal-title" id="modal-basic-title">Add Diet Sheet</h4>
+		<h4 class="modal-title" id="modal-basic-title">Add Diet Sheet?</h4>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
 	</div>
 	<div class="modal-body">
-		<form class="form" id="dateForm" [formGroup]="dateForm" (ngSubmit)="addDateSheet()" autocomplete="off">
+		<form class="form  needs-validation" id="dateForm" [formGroup]="dateForm" (ngSubmit)="addDateSheet()" autocomplete="off">
             <div class="mb-1">Date</div>
 			<div class="form-group mb-3">
 				<label class="sr-only" for="date">Add Date Sheet</label>
                 <input
                     class="form-control"
                     formControlName="date"
+                    id="date"
                     type="date"
+                    [ngClass]="{ 'is-invalid': f['date'].errors || alreadyCheckedIn, 'is-valid': f['date'].valid }"
                     max="{{ currentDate | date: 'yyyy-MM-dd' }}"
-                    readonly
                 />
+                <ng-container *ngIf="f['date']">
+                    <div *ngIf="alreadyCheckedIn" class="invalid-feedback">
+                        Diet Sheet Already Added
+                    </div>
+                    <div *ngIf="(f['date'].errors && f['date'].errors['required'])" class="invalid-feedback">
+                        Date is Invalid
+                    </div>
+                </ng-container>
 			</div>
 		</form>
 	</div>
     <div class="modal-footer">
         <div class="w-100 d-flex justify-content-between">
-            <button form="dateForm" [disabled]="alreadyCheckedIn" type="submit" class="btn btn-primary">Add Page</button>
+            <button form="dateForm" [disabled]="dateForm.invalid || alreadyCheckedIn" type="submit" class="btn btn-primary">Add Page</button>
             <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
         </div>
     </div>
@@ -33,27 +42,33 @@
     </div>
 </div>
 
-<div ngbAccordion [destroyOnHide]="false" #accordion="ngbAccordion" class="accordion mb-5">
-    <div *ngFor="let diet of diets; let i = index;" [ngbAccordionItem]="diet.id" #panel class="card date-card my-3 rounded">
-        <div [tabIndex]="0" ngbAccordionHeader (click)="accordion.toggle(diet.id)" (keydown.enter)="accordion.toggle(diet.id)">
-            <div class="card-body bg-purple" > 
-                <div class="d-flex justify-content-between">
-                    <h3 class="day-name" tabIndex="0" style="color: white;">{{ diet.createdAt | date: 'EEEE' }}</h3>
-                    <div class="date d-flex align-items-center justify-content-center">
-                        <div>
-                            <div class="day">{{ diet.createdAt | date: 'dd' }}</div>
-                            <div class="month">{{ diet.createdAt | date: 'MMM' }}</div>
+<div class="mb-5">
+    <div ngbAccordion [destroyOnHide]="false" #accordion="ngbAccordion" class="accordion mb-2">
+        <div *ngFor="let diet of diets; let i = index;" [ngbAccordionItem]="diet.id" #panel class="card date-card my-3 rounded">
+            <div [tabIndex]="0" ngbAccordionHeader (click)="accordion.toggle(diet.id)" (keydown.enter)="accordion.toggle(diet.id)">
+                <div class="card-body bg-purple" > 
+                    <div class="d-flex justify-content-between">
+                        <h3 class="day-name" tabIndex="0" style="color: white;">{{ diet.createdAt | date: 'EEEE' }}</h3>
+                        <div class="date d-flex align-items-center justify-content-center">
+                            <div>
+                                <div class="day">{{ diet.createdAt | date: 'dd' }}</div>
+                                <div class="month">{{ diet.createdAt | date: 'MMM' }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div ngbAccordionCollapse class="accordion-collapse card-collapse">
-            <div ngbAccordionBody >
-                <ng-template>
-                    <app-diet-form-row [diet]="diet" [index]="i" [isAdmin]="adminUser !== null" (saveDiet)="handleSaveDiet($event)"></app-diet-form-row>
-                </ng-template>
+            <div ngbAccordionCollapse class="accordion-collapse card-collapse">
+                <div ngbAccordionBody >
+                    <ng-template>
+                        <app-diet-form-row [diet]="diet" [index]="i" [isAdmin]="adminUser !== null" (saveDiet)="handleSaveDiet($event)"></app-diet-form-row>
+                    </ng-template>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div *ngIf="!adminUser" class="d-flex justify-content-center">
+        <button class="py-2 weigh-button btn btn-primary" variant="primary" (click)="openModalWithAddDietSheetButton()">Add Diet Sheet</button>
     </div>
 </div>
