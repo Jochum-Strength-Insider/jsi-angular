@@ -1,5 +1,3 @@
-import { Message } from "../messages/message.model";
-
 export class User {
     id: string;
     createdAt: number;
@@ -10,7 +8,6 @@ export class User {
     surveySubmitted: boolean;
     ACTIVE: boolean;
     ADMIN: boolean;
-    billingId: string;
 }
 
 export class UserWithSelection extends User {

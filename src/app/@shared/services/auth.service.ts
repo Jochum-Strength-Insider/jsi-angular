@@ -46,7 +46,7 @@ export class AuthService {
   }
 
   onAuthStatusListener(){
-    this.auth.onAuthStateChanged((credential)=> {
+    this.auth.onAuthStateChanged((credential) => {
       if(credential) {
         this.getUserById(credential.uid)
           .subscribe(( userResponse: UserModel ) => {
@@ -62,6 +62,20 @@ export class AuthService {
         this.clearUserInformation();
       }
     })
+  }
+
+  refreshCurrentUser(){
+    if(this.auth.currentUser){
+      this.getUserById(this.auth.currentUser.uid)
+      .subscribe(( userResponse: UserModel ) => {
+        if(userResponse){
+          userResponse.emailVerified = this.auth.currentUser?.emailVerified || false;
+          this.currentUserSub.next(userResponse);
+        } else {
+          this.clearUserInformation();
+        }
+      })
+    }
   }
 
   clearUserInformation() {

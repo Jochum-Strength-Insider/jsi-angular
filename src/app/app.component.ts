@@ -23,7 +23,9 @@ export class AppComponent {
     router.events
       .pipe(filter((e: Event): e is RouterEvent => e instanceof NavigationEnd))
       .subscribe((e: RouterEvent) => {
-          this.showNav = !e.url.includes('/auth/subscribe') && !e.url.includes('/auth/signup')
+          this.showNav = !e.url.includes('/auth/subscribe')
+            && !e.url.includes('/auth/signup')
+            && !e.url.includes('/auth/resubscribe')
       });
   }  
 

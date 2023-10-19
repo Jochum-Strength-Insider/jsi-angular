@@ -32,19 +32,19 @@
 
     <div class="card mt-3 mb-3">
         <div class="card-header">
-            Sign Out
+            Subscriptions
         </div>
-        <div class="card-body px-3 py-4">
-            <app-sign-out-button></app-sign-out-button>
+        <div class="card-body px-0 py-2">
+            <app-user-subscriptions-list [subscriptions]="userSubscriptions" (subscribeClicked)="handleSubscribe()" (cancelClicked)="handleCancellation($event)"></app-user-subscriptions-list>
         </div>
     </div>
 
     <div class="card mt-3 mb-5">
         <div class="card-header">
-            Cancel Account
+            Sign Out
         </div>
         <div class="card-body px-3 py-4">
-            <app-user-cancellation (cancelClicked)="handleCancellation()" [cancelled]="cancelled"></app-user-cancellation>
+            <app-sign-out-button></app-sign-out-button>
         </div>
     </div>
 

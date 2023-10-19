@@ -16,7 +16,7 @@ export class ToastService {
 	}
 
 	showError(textOrTpl: string | TemplateRef<any> = 'An Error Occured. Please try again.') {
-		const options = { classname: 'bg-danger text-light', delay: 8000 };
+		const options = { classname: 'bg-danger text-light', delay: 5000 };
 		this.toasts.push({ textOrTpl, ...options });
 	}
 

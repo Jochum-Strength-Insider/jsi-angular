@@ -25,7 +25,7 @@
                         >   
                         <div class="form-group mb-3">
                             <label class="form-label" for="email">Email</label>
-                            <input class="form-control" formControlName="email" id="email" type="text" placeholder="Email Address" [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors, 'is-valid': f['email'].valid }"/>
+                            <input class="form-control" formControlName="email" id="email" type="text" placeholder="Email Address" [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors, 'is-valid': f['email'].valid }" autocomplete="email"/>
 
                             <div *ngIf="f['email'].touched && f['email'].errors" class="invalid-feedback">
                                 <div *ngIf="f['email'].errors['required']">
@@ -35,13 +35,13 @@
                                     Email isn't valid. Please enter a valid email.
                                 </div>
                                 <div *ngIf="f['email'].errors['userAccountAlreadyExists']">
-                                    Email address already in use.
+                                    Email address already in use. <a class="p-link" [routerLink]="['/auth/resubscribe']">Click here to resubscribe.</a>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group mb-3">
                             <label class="form-label" for="username">Username</label>
-                            <input class="form-control" formControlName="username" id="username" type="text" placeholder="Username" [ngClass]="{ 'is-invalid': f['username'].touched && f['username'].errors, 'is-valid': f['username'].valid }"/>
+                            <input class="form-control" formControlName="username" id="username" type="text" placeholder="Username" [ngClass]="{ 'is-invalid': f['username'].touched && f['username'].errors, 'is-valid': f['username'].valid }" autocomplete="username"/>
                             
                             <div *ngIf="f['username'].touched && f['username'].errors" class="invalid-feedback">
                                 <div *ngIf="f['username'].errors['required']">
@@ -64,6 +64,7 @@
                                 [type]="showPassword ? 'text' : 'password'"
                                 placeholder="Password"
                                 [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].errors, 'is-valid': f['password'].valid }"
+                                autocomplete="new-password"
                             />
 
                             <div *ngIf="f['password'].touched && f['password'].errors" class="invalid-feedback">
@@ -113,11 +114,11 @@
                   </div>
                 </div>
                     
-                <div *ngIf="step === 3">
+                <div class="pt-4" *ngIf="step === 3">
                     <h3 class="mb-3">Welcome! The Sign Up Process Is Complete.</h3>
                     <p>Thank you for subscribing to Jochum Strength Insider!</p>
                     <p>To get your program rolling please <a class="p-link" [routerLink]="['/questionnaire']">click here to submit your welcome questionnaire</a>. A trainer will review your questionnaire after it is complete to get a custom program started.</p>
-                    <p>A verification email has been sent to <b>{{ f['email'].value }}</b>. Please verify your email as soon as possible.
+                    <p>A verification email has been sent to <b>{{ f['email'].value }}</b>. Please verify your email as soon as possible.</p>
                 </div>
 
               </div>

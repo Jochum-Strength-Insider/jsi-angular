@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { User } from '@app/@core/models/auth/user.model';
 import { Questionnaire } from '@app/@core/models/questionnaire/questionnaire.model';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 import { ToastService } from '@app/@core/services/toast.service';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
 import { QuestionnaireService } from '@app/features/questionnaire/services/questionnaire.service';
@@ -18,11 +19,10 @@ export class UserQuestionnaireComponent implements OnChanges, OnDestroy {
   questionnaireSub: Subscription;
   questionnaire: Questionnaire;
 
-  error: Error;
-
   constructor(
     private questionnaireService: QuestionnaireService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private errorService: ErrorHandlingService
   ){}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -42,17 +42,28 @@ export class UserQuestionnaireComponent implements OnChanges, OnDestroy {
       next: (questionnaire) => {
         this.questionnaire = questionnaire;
       },
-      error: (err) => this.error = err
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Fetch User Questionnaire',
+          'An error occurred while getting the questionnaire. Please refresh the page and reach out to support if the error continues.'
+        )
+      }
     })
   }
 
   updateQuestionnaire(questionnaire: Questionnaire) {
     this.questionnaireService.updateUserQuestionnaire(this.user.id, questionnaire)
     .subscribe({
-      next: () => this.toastService.showSuccess('User Questionnaire Updated'),
+      next: () => {
+        this.toastService.showSuccess('User Questionnaire Updated');
+      },
       error: (err) => {
-        this.error = err;
-        this.toastService.showError();
+       this.errorService.generateError(
+          err,
+          'Update User Questionnaire',
+          'An error occurred while submitting the questionnaire. Please try again and reach out to support if the error continues.'
+        );
       }
     })
   }

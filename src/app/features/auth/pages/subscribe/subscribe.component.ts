@@ -117,8 +117,7 @@ export class SubscribeComponent implements OnInit, OnDestroy {
         } else {
           this.discountAttemptFailed();
         }
-      },
-      error: (err) => console.log(err)
+      }
     })
   }
 
@@ -131,7 +130,6 @@ export class SubscribeComponent implements OnInit, OnDestroy {
 
   createUser(data: IOnApproveCallbackData) {
     const { username, email, password } = this.signupForm.value;
-    
     const submission = new Submission();
     submission.plan_id = data.subscriptionID;
     submission.create_time = new Date().getTime();
@@ -149,9 +147,13 @@ export class SubscribeComponent implements OnInit, OnDestroy {
         const USER_SIGN_UP_MESSAGE = new Message(`${username} just created an new account!`, user.uid, "New User")
         return forkJoin([
           this.authService.sendEmailVerification(user),
-          this.userService.addNewUser(user.uid, email, username, submission.plan_id),
-          this.messageService.addAdminUnreadMessage(USER_SIGN_UP_MESSAGE),
+          this.userService.addNewUser(user.uid, email, username),
+          this.userService.addUserSubscription(user.uid, submission.plan_id, this.subscriptionId)
+            .pipe(catchError(error => of(error))),
+          this.messageService.addAdminUnreadMessage(USER_SIGN_UP_MESSAGE)
+            .pipe(catchError(error => of(error))),
           this.codeService.addCodeDetailsSubmission(this.selectedCode, submission)
+            .pipe(catchError(error => of(error))),
         ]).pipe(map(() => user.uid))
       }),
       switchMap((uid) => {
@@ -167,8 +169,8 @@ export class SubscribeComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe({
-      next: (result) => {
-        console.log('user created');
+      next: () => {
+        console.log('User created');
       },
       error: (err) => {
         this.errorService.generateError(
