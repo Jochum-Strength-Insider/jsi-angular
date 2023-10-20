@@ -124,19 +124,24 @@
 
 <div class="list-group mt-3">
     <ng-container *ngIf="filteredCodes.length > 0; else noCodes;">
-        <div *ngFor="let code of filteredCodes; let i = index;" class="list-group-item d-flex justify-content-between">
-            <span class="d-flex align-items-center">
-                <strong class="me-2">Code:</strong> <a target="_blank" [href]="'https://www.paypal.com/billing/plans/' + code.subscriptionId | sanitizeUrl">{{code.title}}</a>
-            </span>
-            <span>
-                <button class="btn active-state-button me-3" [ngClass]="code.active ? 'btn-outline-warning' : 'btn-outline-success'" (click)="toggleCodeIsActive(code)">
-                    {{ code.active ? "Deactivate" : "Activate" }}
-                </button>
-                <button class="ml-2 btn btn-outline-primary ms-2" (click)="openCodeModal(addModal, code)">Details</button>
-                <button class="ml-2 btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(code)">
-                    Delete
-                </button>
-            </span>
+        <div *ngFor="let code of filteredCodes; let i = index;" class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-md-6 d-flex align-items-center">
+                    <strong class="me-2">Code:</strong> <a target="_blank" [href]="'https://www.paypal.com/billing/plans/' + code.subscriptionId | sanitizeUrl">{{code.title}}</a>
+                </div>
+                <div class="col-10 offset-1 d-md-none">
+                    <hr>
+                </div>
+                <div class="col-12 col-md-auto ms-md-auto">
+                    <button class="btn active-state-button me-3" [ngClass]="code.active ? 'btn-outline-warning' : 'btn-outline-success'" (click)="toggleCodeIsActive(code)">
+                        {{ code.active ? "Deactivate" : "Activate" }}
+                    </button>
+                    <button class="ml-2 btn btn-outline-primary ms-2" (click)="openCodeModal(addModal, code)">Details</button>
+                    <button class="ml-2 btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(code)">
+                        Delete
+                    </button>
+                </div>
+            </div>
         </div>
     </ng-container>
     <ng-template #noCodes>

@@ -62,7 +62,6 @@
             <ng-container *ngFor="let day of phaseForm.controls['days'].controls; let dayIndex = index; let first = first;">
                 <div class="list-group-item" [formGroupName]="dayIndex" [ngbAccordionItem]="'day'+dayIndex" [collapsed]="!first">
                     <button class="btn btn-link w-100 text-start ps-0" ngbAccordionHeader (click)="accordion.toggle('day'+dayIndex)">
-                        <!-- <h5 class="my-0">{{ 'title' | titlecase }}</h5> -->
                         <h5 class="my-0">{{ dayTitle(dayIndex) | titlecase}}</h5>
                     </button>
 

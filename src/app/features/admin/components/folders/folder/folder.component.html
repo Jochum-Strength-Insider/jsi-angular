@@ -84,17 +84,22 @@
 
 <div class="list-group mt-3 mb-5">
     <ng-container *ngIf="filteredPrograms.length > 0; else noTasks;">
-        <div *ngFor="let program of filteredPrograms | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item d-flex justify-content-between">
-            <span class="d-flex align-items-center">
-                <strong class="me-2">Program:</strong>
-                <a class="me-2" [routerLink]="['../../programs/', program.id]">{{ program.title }}</a>
-            </span>
-            <span>
-                <div style="display: inline-block">{{ program.createdAt | date:'shortDate' }}</div>
-                <button class="ms-2 btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(program)">
-                    Delete
-                </button>
-            </span>
+        <div *ngFor="let program of filteredPrograms | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-sm-8 d-flex align-items-center">
+                    <strong class="me-2">Program:</strong>
+                    <a class="me-2" [routerLink]="['../../programs/', program.id]">{{ program.title }}</a>
+                </div>
+                <div class="col-10 offset-1 d-sm-none">
+                    <hr>
+                </div>
+                <div class="col-12 col-sm-auto ms-sm-auto">
+                    <div style="display: inline-block">{{ program.createdAt | date:'shortDate' }}</div>
+                    <button class="ms-2 btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(program)">
+                        Delete
+                    </button>
+                </div>
+            </div>
         </div>
     </ng-container>
     <ng-template #noTasks>
