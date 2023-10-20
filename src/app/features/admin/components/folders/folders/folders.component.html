@@ -71,17 +71,22 @@
         </span>
     </div>
     <ng-container *ngIf="filteredFolders.length > 0; else noTasks;">
-        <div *ngFor="let folder of filteredFolders | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item d-flex justify-content-between">
-            <span class="d-flex align-items-center">
-                <strong class="me-2">Folder:</strong>
-                <a [routerLink]="['../', folder.id]">{{folder.title}}</a>
-            </span>
-            <span>
-                <button class="btn btn-outline-primary ms-2" (click)="openFoldersModal(addModal, folder)">Edit</button>
-                <button class="btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(folder)">
-                    Delete
-                </button>
-            </span>
+        <div *ngFor="let folder of filteredFolders | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-sm-8 d-flex align-items-center">
+                    <strong class="me-2">Folder:</strong>
+                    <a [routerLink]="['../', folder.id]">{{folder.title}}</a>
+                </div>
+                <div class="col-10 offset-1 d-sm-none">
+                    <hr>
+                </div>
+                <div class="col-12 col-sm-auto ms-sm-auto">
+                    <button class="btn btn-outline-primary me-2" (click)="openFoldersModal(addModal, folder)">Edit</button>
+                    <button class="btn btn-outline-danger" type="button" (click)="openRemoveModal(folder)">
+                        Delete
+                    </button>
+                </div>
+            </div>
         </div>
     </ng-container>
     <ng-template #noTasks>
