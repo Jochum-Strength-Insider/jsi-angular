@@ -36,7 +36,8 @@
 </ng-template>
 
 <div class="card date-select-card">
-    <img *ngIf="!adminUser" class="card-img-top" src="../../../../assets/images/diet.jpg" />
+    <img *ngIf="!adminUser" class="card-img-top img-responsive" src="../../../../assets/images/diet.jpg" height="500" width="1000" 
+    style="background-color:#412a34;"/>
     <div class="card-body">
         <app-diet-date-circles [queryDate]="queryDate" [isAdmin]="adminUser !== null" (queryDateChanged)="handleChangeQueryDate($event)"></app-diet-date-circles>
     </div>

@@ -2,6 +2,7 @@
     <h1>{{ program.title }}</h1>
     <h4>{{ program.createdAt | date }}</h4>
     <app-program-table
+        *ngIf="loaded"
         [program]="program"
         [uid]="user.id"
     />
