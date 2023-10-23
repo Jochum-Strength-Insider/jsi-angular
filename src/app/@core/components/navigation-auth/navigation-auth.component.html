@@ -1,6 +1,6 @@
 <ng-template #template>
     <div class="d-flex">
-        <a *ngIf="authUser.ACTIVE" [routerLink]="['/messages']" class="d-flex justify-content-center align-items-center me-3 px-2">
+        <a *ngIf="authUser.ACTIVE" [routerLink]="['/messages']" aria-label="Navigate to the messages page" class="d-flex justify-content-center align-items-center me-3 px-2">
             <app-message-icon [uid]="authUser.id" [unread]="messages"/>
         </a>
         <button class="navbar-toggler"
