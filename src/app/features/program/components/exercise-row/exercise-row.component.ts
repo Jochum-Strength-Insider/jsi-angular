@@ -11,6 +11,8 @@ import { Tracking } from '@app/@core/models/program/tracking.model';
 export class ExerciseRowComponent {
   @Input() exercise: Exercise;
   @Input() index: number = 0;
+  @Input() phaseTitle: string;
+  @Input() dayTitle: string;
   @Output() showModal = new EventEmitter<Exercise>();
   @Output() saveTracking = new EventEmitter();
   trackingForm: FormGroup;

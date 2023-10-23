@@ -37,7 +37,7 @@
 
 <div class="card date-select-card">
     <img *ngIf="!adminUser" class="card-img-top img-responsive" src="../../../../assets/images/diet.jpg" height="500" width="1000" 
-    style="background-color:#412a34;"/>
+    style="background-color:#412a34;" alt="A healthy looking meal that includes rice, tempeh, seaweed, salmon, and edamame in a ceramic bowl."/>
     <div class="card-body">
         <app-diet-date-circles [queryDate]="queryDate" [isAdmin]="adminUser !== null" (queryDateChanged)="handleChangeQueryDate($event)"></app-diet-date-circles>
     </div>

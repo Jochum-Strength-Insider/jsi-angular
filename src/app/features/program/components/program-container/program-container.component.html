@@ -1,6 +1,6 @@
 <ng-container *ngIf="program; else noProgram">
-    <h1>{{ program.title }}</h1>
-    <h4>{{ program.createdAt | date }}</h4>
+    <h1 class="h2">{{ program.title }}</h1>
+    <h2 class="h4">{{ program.createdAt | date }}</h2>
     <app-program-table
         *ngIf="loaded"
         [program]="program"
