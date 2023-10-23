@@ -29,7 +29,7 @@
     </div>
 </ng-template>
 
-<h3 class="header-button" (click)="openEditProgramModal()">{{ program ? program.title : 'Program' | titlecase }}</h3>
+<h1 class="h3 header-button" (click)="openEditProgramModal()">{{ program ? program.title : 'Program' | titlecase }}</h1>
 <div *ngIf="program">
     <app-admin-program-table [program]="program" [tasks]="tasksList" [uid]="uid" (savePhase)="handleSavePhase($event)"></app-admin-program-table>
 </div>

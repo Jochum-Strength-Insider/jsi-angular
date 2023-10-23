@@ -13,6 +13,6 @@
     </div>
 
     <div *ngFor="let exercise of day.exercises; let i = index;" class="list-group-item">
-        <app-exercise-row [exercise]="exercise" [index]="i" (saveTracking)="handleSaveTracking()" (showModal)="handleShowModal($event)" />
+        <app-exercise-row [exercise]="exercise" [phaseTitle]="phaseTitle" [dayTitle]="day.title" [index]="i" (saveTracking)="handleSaveTracking()" (showModal)="handleShowModal($event)" />
     </div>
 </div>

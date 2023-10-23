@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy } from '@angular/core';
+import { User } from '@app/@core/models/auth/user.model';
 import { Workout } from '@app/@core/models/program/workout.model';
+import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 import { LocalStorageService } from '@app/@shared/services/local-storage.service';
 import { Subscription, of, switchMap } from 'rxjs';
 import { WorkoutService } from '../../services/workout.service';
-import { User } from '@app/@core/models/auth/user.model';
-import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
 @Component({
   selector: 'app-program-container',
@@ -16,6 +16,7 @@ export class ProgramContainerComponent implements OnDestroy {
   programSub: Subscription;
   program: Workout;
   programKey: string;
+  loaded: boolean = false;
 
   constructor(
     private service: WorkoutService,
@@ -46,6 +47,7 @@ export class ProgramContainerComponent implements OnDestroy {
             this.programKey = result?.id;
             this.lsService.saveStringifyData('program', result);
             this.lsService.saveData('programKey', result.id);
+            this.loaded = true;
         },
         error: (err) => {
           this.clearWorkout();
