@@ -124,7 +124,7 @@
 
 <div class="list-group mt-3">
     <ng-container *ngIf="filteredCodes.length > 0; else noCodes;">
-        <div *ngFor="let code of filteredCodes; let i = index;" class="list-group-item">
+        <div *ngFor="let code of filteredCodes | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item">
             <div class="row">
                 <div class="col-12 col-md-6 d-flex align-items-center">
                     <strong class="me-2">Code:</strong> <a target="_blank" [href]="'https://www.paypal.com/billing/plans/' + code.subscriptionId | sanitizeUrl">{{code.title}}</a>

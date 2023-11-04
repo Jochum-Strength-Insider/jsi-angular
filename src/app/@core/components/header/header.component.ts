@@ -3,7 +3,7 @@ import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
 import { AuthService } from '@app/@shared/services/auth.service';
 import { MessageService } from '@app/@shared/services/message.service';
-import { Subscription, catchError, of, switchMap, tap } from 'rxjs';
+import { Subscription, catchError, interval, mergeMap, of, startWith, switchMap, take, tap } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -27,7 +27,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
         tap((user) => this.authUser = user),
         switchMap((user) => {
         if(user){
-          return this.messagesService.getUserUnreadMessages(user.id)
+          return interval(6000)
+            .pipe(
+              startWith(0),
+              mergeMap(() => this.messagesService.getUserUnreadMessages(user.id).pipe(take(1)))
+            )
         } else {
           return of([]);
         }

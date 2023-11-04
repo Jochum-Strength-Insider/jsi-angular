@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Resource } from '@app/@core/models/resources/resources.model';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { ResourcesService } from '../../services/resources.service';
 import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
 
@@ -29,6 +29,7 @@ export class ResourcesContainerComponent implements OnInit, OnDestroy {
 
   fetchResources(): void {
     this.resourcesSub = this.resourcesService.getActiveResources()
+    .pipe(take(1))
     .subscribe({
       next: (resources) => {
         this.resources = resources;
