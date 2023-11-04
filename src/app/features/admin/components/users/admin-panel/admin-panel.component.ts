@@ -226,7 +226,12 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
     const messagesObservables: Observable<string | null>[] = this.selectedUsers.map(
       (user: User) => {
         const newMessage = new Message(message, this.authUser.id, this.authUser.username)
-        return this.messagesService.addUserMessage(user.id, newMessage);
+        return this.messagesService.addUserMessage(user.id, newMessage)
+          .pipe(switchMap(
+            (key) => key
+                ? this.messagesService.addUserUnreadMessage(user.id, key, newMessage).pipe(map(() => key))
+                : of(key)
+          ));
       }
     );
 
@@ -235,6 +240,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
       next: () => this.toastService.showSuccess("Messages Sent"),
       error: (err) => {
         this.error = err;
+        this.toastService.showError("An error occurred sending group messages.")
       }
     })
   }
