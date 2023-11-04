@@ -54,7 +54,7 @@ export class WeighInService {
     );
 
     return <Observable<WeighIn[]>>weighInsRef
-    .valueChanges([], { idField: 'id' });
+      .valueChanges([], { idField: 'id' });
   }
 
   addUserWeighIn(uid: string, weighIn: WeighIn): Observable<any> {

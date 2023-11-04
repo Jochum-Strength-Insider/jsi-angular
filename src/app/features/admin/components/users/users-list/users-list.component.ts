@@ -105,8 +105,15 @@ export class UsersListComponent implements OnInit, OnChanges {
     }
   }
 
+  selectVisible(){
+    this.sortedUsers.forEach(each => each.checked = true);
+    this.selectedUsers = [...this.sortedUsers];
+    this.show = false;
+  }
+
   clearSelection(){
     this.sortedUsers.forEach(each => each.checked = false);
+    this.selectedUsers = [];
     this.show = false;
   }
 

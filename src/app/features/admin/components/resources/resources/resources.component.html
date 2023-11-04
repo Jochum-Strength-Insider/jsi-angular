@@ -32,7 +32,7 @@
             </ng-container>
             <ng-template #addButton>
                 <div class="w-100 d-flex justify-content-between">
-                    <button form="resourceForm" type="submit" class="btn btn-primary">Add Resource</button>
+                    <button form="resourceForm" [disabled]="resourceForm.invalid" type="submit" class="btn btn-primary">Add Resource</button>
                     <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
                 </div>
             </ng-template>
@@ -68,7 +68,7 @@
 
 <div class="list-group mt-3">
     <ng-container *ngIf="filteredResources.length > 0; else noResources;">
-        <div *ngFor="let resource of filteredResources; let i = index;" class="list-group-item">
+        <div *ngFor="let resource of filteredResources | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item">
             <div class="row">
                 <div class="col-12 col-md-6 d-flex align-items-center">
                     <strong class="me-2">Resource:</strong> {{resource.title}}

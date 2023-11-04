@@ -3,7 +3,7 @@ import { Message } from '@app/@core/models/messages/message.model';
 import { FromNowPipe } from '@app/@core/pipes/from-now.pipe';
 import { UserService } from '@app/features/admin/services/user.service';
 import { MessageService } from '@app/@shared/services/message.service';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, map, of, take } from 'rxjs';
 
 @Component({
   selector: 'app-admin-unread',
@@ -44,7 +44,6 @@ export class AdminUnreadComponent {
     this.messagesService
       .removeAdminUnreadMessage(message.id)
       .subscribe({
-        next: () => console.log('message removed'),
         error: (err) => this.error = err
       })
   }
@@ -52,6 +51,7 @@ export class AdminUnreadComponent {
   setSelectedUser(userId: string){
     this.userService
       .getUserById(userId)
+      .pipe(take(1))
       .subscribe({
         next: (user) => this.userService.setSelectedUser(user),
         error: (err) => this.error = err
