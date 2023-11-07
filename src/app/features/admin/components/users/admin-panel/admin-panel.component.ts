@@ -122,7 +122,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
       email: "",
       username: "",
       password: "InsiderSignup!",
-      message: ""
+      message: "Welcome to Jochum Strength Insider! We're excited to start this journey with you. Please fill out your welcome questionnaire (found under your username in the nav bar) so we can get the ball rolling on your first program. Keep chopping wood!"
     });
   }
 
@@ -287,8 +287,9 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
         ]).pipe(map(() => user.uid))
       }),
       switchMap((uid) => {
-        const WELCOME_MESSAGE = new Message("Welcome Message", "welcome_message_id", message.length > 0 ? message : "Welcome");
-        return this.messagesService.addUserMessage(uid, WELCOME_MESSAGE)
+        if(message.length > 0){
+          const WELCOME_MESSAGE = new Message(message, this.authUser.id, this.authUser.username);
+          return this.messagesService.addUserMessage(uid, WELCOME_MESSAGE)
           .pipe(switchMap((key) => {
             if(key){
               return this.messagesService.addUserUnreadMessage(uid, key, WELCOME_MESSAGE)
@@ -296,6 +297,9 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
               return of("")
             }
           }))
+        } else {
+          return of("");
+        }
       }),
       finalize(() => {
         this.modalService.dismissAll();
@@ -303,13 +307,12 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe({
-      next: (result) => {
-        console.log('user created');
+      next: () => {
         this.toastService.showSuccess("New User Added");
       },
       error: (err) => {
         console.log(err)
-        this.toastService.showError("Add Error Occured Adding New User")
+        this.toastService.showError("An Error Occured Adding New User")
       }
     })
   }
