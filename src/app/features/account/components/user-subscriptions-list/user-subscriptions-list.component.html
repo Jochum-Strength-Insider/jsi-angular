@@ -17,7 +17,7 @@
         </div>
         <div class="modal-footer">
             <div class="w-100 d-flex justify-content-between">
-                <button type="button" class="btn btn-danger" (click)="cancelAccount()">Cancel Subscription</button>
+                <a [href]="url" target="_blank" class="btn btn-danger" (click)="cancelAccount()">Cancel Subscription</a>
                 <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
             </div>
         </div>
@@ -28,7 +28,9 @@
     <div *ngFor="let subscription of subscriptions; let i = index;" class="list-group-item">
         <div class="row">
             <div class="col-12 col-md-3">
-                Status: {{ subscription.active ? "Active" : "Cancelled" }}
+                Statuses:
+                <span *ngIf="subscription.active">Active</span>
+                <a *ngIf="!subscription.active" [href]="paypalUrl+subscription.billingId" target="_blank">Cancelled</a>
             </div>
             <div class="col-12 col-md-3">
                 Subscribed: {{ subscription.createdAt | date:'shortDate' }}
