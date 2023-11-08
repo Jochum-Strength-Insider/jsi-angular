@@ -1,5 +1,5 @@
 [build]
-  command="ng build --outputHashing=all"
+  command="ng build"
   publish="dist/client"
 
 [[redirects]]
@@ -8,7 +8,7 @@
   status = 200
 
 [context.development]
-  command="ng build  --outputHashing=all --configuration=development"
+  command="ng build --configuration=development"
 
 [context.staging]
-  command="ng build --outputHashing=all --configuration=staging"
+  command="ng build --configuration=staging"
