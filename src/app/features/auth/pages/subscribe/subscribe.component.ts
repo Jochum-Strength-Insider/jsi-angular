@@ -148,10 +148,13 @@ export class SubscribeComponent implements OnInit, OnDestroy {
     .pipe(
       switchMap((credential) => {
         const { user } = credential;
+        return this.userService.addNewUser(user.uid, email, username)
+          .pipe(map(() => user))
+      }),
+      switchMap((user) => {
         const USER_SIGN_UP_MESSAGE = new Message(`${username} just created a new account!`, user.uid, "New User")
         return forkJoin([
           this.authService.sendEmailVerification(user),
-          this.userService.addNewUser(user.uid, email, username),
           this.userService.addUserSubscription(user.uid, submission.plan_id, this.subscriptionId)
             .pipe(catchError(error => of(error))),
           this.messageService.addAdminUnreadMessage(USER_SIGN_UP_MESSAGE)

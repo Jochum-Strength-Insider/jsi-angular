@@ -23,12 +23,11 @@ export class ProgramContainerComponent implements OnDestroy {
     private lsService: LocalStorageService,
     private errorService: ErrorHandlingService
   ){
-    this.program = this.lsService.getParseData('program');
+    // this.program = this.lsService.getParseData('program');
   }
 
   ngOnInit(): void {
-    this.program = this.lsService.getParseData('program');
-
+    // this.program = this.lsService.getParseData('program');
     this.programSub = this.service
       .getActiveWorkoutId(this.user.id)
       .pipe(
@@ -36,17 +35,17 @@ export class ProgramContainerComponent implements OnDestroy {
           if(wid.length > 0){
             return this.service.getWorkout(this.user.id, wid[0].id)
           } else {
-            this.lsService.removeData('program');
+            // this.lsService.removeData('program');
             return of();
           }
         })
       )
       .subscribe({
-        next: result => {
+        next: (result) => {
             this.program = result;
             this.programKey = result?.id;
-            this.lsService.saveStringifyData('program', result);
-            this.lsService.saveData('programKey', result.id);
+            // this.lsService.saveStringifyData('program', result);
+            // this.lsService.saveData('programKey', result.id);
             this.loaded = true;
         },
         error: (err) => {
@@ -54,15 +53,15 @@ export class ProgramContainerComponent implements OnDestroy {
           this.errorService.generateError(
             err,
             'Get Program',
-            'An error occurred while trying to retreive your program. Please refresh the page and reach out to your Jochum Strengh trainer if the error continues.'
+            `An error occurred while trying to retreive your program. Please refresh the page and reach out to your Jochum Strengh trainer if the error continues: ${err.message}`
           );
         }
       })
   }
 
   clearWorkout() {
-    this.lsService.removeData('program');
-    this.lsService.removeData('programKey');
+    // this.lsService.removeData('program');
+    // this.lsService.removeData('programKey');
     this.programKey = '';
   }
 
