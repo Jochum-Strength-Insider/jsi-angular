@@ -8,7 +8,7 @@
   status = 200
 
 [context.development]
-  command="ng build --configuration=development --outputHashing=all"
+  command="ng build  --outputHashing=all --configuration=development"
 
 [context.staging]
-  command="ng build --configuration=staging --outputHashing=all"
+  command="ng build --outputHashing=all --configuration=staging"
