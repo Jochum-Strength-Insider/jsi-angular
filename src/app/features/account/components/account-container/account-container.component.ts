@@ -224,9 +224,6 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     )
     .subscribe({
       next: () => {
-        const paypalUrl = environment.userSubscriptionUrl || "https://www.paypal.com/myaccount/autopay/connect/";
-        const url = `${paypalUrl}${subscription.billingId}`;
-        window.open(url, '_blank');
         this.toastService.showSuccess("A Jochum Strength trainer has been notified that you intend to cancel your current subscription.");
         this.cancelled = true;
         this.fetchUserSubscriptions();
