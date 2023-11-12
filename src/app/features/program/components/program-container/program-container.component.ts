@@ -2,8 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { User } from '@app/@core/models/auth/user.model';
 import { Workout } from '@app/@core/models/program/workout.model';
 import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
-import { LocalStorageService } from '@app/@shared/services/local-storage.service';
-import { Subscription, of, switchMap } from 'rxjs';
+import { Subscription, of, switchMap, take } from 'rxjs';
 import { WorkoutService } from '../../services/workout.service';
 
 @Component({
@@ -15,41 +14,37 @@ export class ProgramContainerComponent implements OnDestroy {
   @Input() user: User;
   programSub: Subscription;
   program: Workout;
-  programKey: string;
   loaded: boolean = false;
 
   constructor(
     private service: WorkoutService,
-    private lsService: LocalStorageService,
     private errorService: ErrorHandlingService
-  ){
-    // this.program = this.lsService.getParseData('program');
-  }
+  ){}
 
   ngOnInit(): void {
-    // this.program = this.lsService.getParseData('program');
     this.programSub = this.service
       .getActiveWorkoutId(this.user.id)
       .pipe(
-        switchMap((wid) => {
-          if(wid.length > 0){
-            return this.service.getWorkout(this.user.id, wid[0].id)
+        // Leave take(1) commented out until you can verify
+        // that the oninit will fire consistently on mobile
+        // take(1),
+        switchMap((ids) => {
+          if(ids.length > 0){
+            console.log('Program Id: ', ids.map(wid => wid.id));
+            return this.service.getWorkout(this.user.id, ids[0].id)
           } else {
-            // this.lsService.removeData('program');
+            console.log('No Active Programs')
             return of();
           }
         })
       )
       .subscribe({
         next: (result) => {
-            this.program = result;
-            this.programKey = result?.id;
-            // this.lsService.saveStringifyData('program', result);
-            // this.lsService.saveData('programKey', result.id);
-            this.loaded = true;
+          console.log('Program: ', result.title);
+          this.program = result;
+          this.loaded = true;
         },
         error: (err) => {
-          this.clearWorkout();
           this.errorService.generateError(
             err,
             'Get Program',
@@ -57,12 +52,6 @@ export class ProgramContainerComponent implements OnDestroy {
           );
         }
       })
-  }
-
-  clearWorkout() {
-    // this.lsService.removeData('program');
-    // this.lsService.removeData('programKey');
-    this.programKey = '';
   }
 
   ngOnDestroy(): void {

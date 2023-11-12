@@ -48,6 +48,7 @@ export class AuthService {
   onAuthStatusListener(){
     this.auth.onAuthStateChanged((credential) => {
       if(credential) {
+        console.log('User is logged in: ', credential.email);
         this.getUserById(credential.uid)
           .subscribe(( userResponse: UserModel ) => {
             if(userResponse){
