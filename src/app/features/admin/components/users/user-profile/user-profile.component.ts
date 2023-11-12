@@ -196,7 +196,10 @@ export class UserProfileComponent implements OnInit, OnChanges {
   }
 
   clearUserMessages() {
-    this.messagesService.removeUserMessages(this.user.id)
+    forkJoin([
+      this.messagesService.clearUserUnreadMessage(this.user.id),
+      this.messagesService.removeUserMessages(this.user.id)
+    ])
     .pipe(finalize(() => this.modalService.dismissAll()))
     .subscribe({
       next: () => this.toastService.showSuccess('User Messages Cleared'),
@@ -207,6 +210,7 @@ export class UserProfileComponent implements OnInit, OnChanges {
   clearUserData() {
      const clearUserDataObservables = forkJoin([
       this.messagesService.removeUserMessages(this.user.id),
+      this.messagesService.clearUserUnreadMessage(this.user.id),
       this.workoutService.removeUserWorkouts(this.user.id),
       this.dietService.removeUserDiets(this.user.id),
       this.weighInService.removeUserWeighIns(this.user.id)

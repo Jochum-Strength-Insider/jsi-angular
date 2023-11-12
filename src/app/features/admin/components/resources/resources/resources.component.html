@@ -32,7 +32,7 @@
             </ng-container>
             <ng-template #addButton>
                 <div class="w-100 d-flex justify-content-between">
-                    <button form="resourceForm" type="submit" class="btn btn-primary">Add Resource</button>
+                    <button form="resourceForm" [disabled]="resourceForm.invalid" type="submit" class="btn btn-primary">Add Resource</button>
                     <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
                 </div>
             </ng-template>
@@ -68,19 +68,24 @@
 
 <div class="list-group mt-3">
     <ng-container *ngIf="filteredResources.length > 0; else noResources;">
-        <div *ngFor="let resource of filteredResources; let i = index;" class="list-group-item d-flex justify-content-between">
-            <span class="d-flex align-items-center">
-                <strong class="me-2">Resource:</strong> {{resource.title}}
-            </span>
-            <span>
-                <button class="btn active-state-button me-3" [ngClass]="resource.active ? 'btn-outline-warning' : 'btn-outline-success'" (click)="toggleResourceIsActive(resource)">
-                    {{ resource.active ? "Deactivate" : "Activate" }}
-                </button>
-                <button class="ml-2 btn btn-outline-primary ms-2" (click)="openResourceModal(addModal, resource)">Details</button>
-                <button class="ml-2 btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(resource)">
-                    Delete
-                </button>
-            </span>
+        <div *ngFor="let resource of filteredResources | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-md-6 d-flex align-items-center">
+                    <strong class="me-2">Resource:</strong> {{resource.title}}
+                </div>
+                <div class="col-10 offset-1 d-md-none">
+                    <hr>
+                </div>
+                <div class="col-12 col-md-auto ms-md-auto">
+                    <button class="btn active-state-button me-3" [ngClass]="resource.active ? 'btn-outline-warning' : 'btn-outline-success'" (click)="toggleResourceIsActive(resource)">
+                        {{ resource.active ? "Deactivate" : "Activate" }}
+                    </button> 
+                    <button class="btn btn-outline-primary ms-2" (click)="openResourceModal(addModal, resource)">Details</button>
+                    <button class="btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(resource)">
+                        Delete
+                    </button>
+                </div>
+            </div>
         </div>
     </ng-container>
     <ng-template #noResources>

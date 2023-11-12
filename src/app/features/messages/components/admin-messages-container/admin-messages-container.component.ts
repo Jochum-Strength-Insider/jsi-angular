@@ -2,7 +2,6 @@ import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, O
 import { User } from '@app/@core/models/auth/user.model';
 import { Message } from '@app/@core/models/messages/message.model';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
-import { UserService } from '@app/features/admin/services/user.service';
 import { BehaviorSubject, Subject, Subscription, finalize, map, of, switchMap } from 'rxjs';
 import { MessageService } from '../../../../@shared/services/message.service';
 import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
@@ -21,7 +20,7 @@ export class AdminMessagesContainerComponent implements OnInit, AfterViewInit, O
   @ViewChild('scrollBottom') scrollBottom: ElementRef;
 
   @HostListener('window:beforeunload', ['$event'])
-  unloadHandler(event: Event) {
+  unloadHandler() {
     // Clear currentlyMessaging on window unload
     this.ngOnDestroy();
   }

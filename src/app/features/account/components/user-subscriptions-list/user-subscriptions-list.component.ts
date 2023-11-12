@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { UserSubscription } from '@app/@core/models/auth/user-subscription.model';
 import { User } from '@app/@core/models/auth/user.model';
 import { ifPropChanged } from '@app/@core/utilities/property-changed.utilities';
+import { environment } from '@env/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -19,6 +20,8 @@ export class UserSubscriptionsListComponent implements OnChanges {
   @Output() subscribeClicked = new EventEmitter();
   selectedSubscription: UserSubscription | null = null;
   noActiveSubs: boolean = false;
+  paypalUrl = environment.userSubscriptionUrl || "https://www.paypal.com/myaccount/autopay/connect/";
+  url = "";
 
   constructor(private modalService: NgbModal){ }
 
@@ -29,6 +32,7 @@ export class UserSubscriptionsListComponent implements OnChanges {
   }
 
   handleOpenModal(content: any, subscription: UserSubscription){
+    this.url = `${this.paypalUrl}${subscription.billingId}`;
     this.selectedSubscription = subscription;
     this.modalService.open(content, {
       size: 'lg',

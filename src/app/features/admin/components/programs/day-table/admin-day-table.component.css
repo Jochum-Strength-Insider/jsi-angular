@@ -75,18 +75,18 @@
 }
 
 .dth-description {
-   min-width: 13rem;
-   width: 13rem;
+   min-width: 16rem;
+   width: 16rem;
 }
 
 .dth-link {
-   min-width: 10rem;
-   width: 10rem;
+   min-width: 12rem;
+   width: 12rem;
 }
 
 .dth-sets {
-   min-width: 3rem;
-   width: 3rem;
+   min-width: 4rem;
+   width: 4rem;
 }
 
 .dth-reps {
@@ -104,19 +104,11 @@
    width: 6rem;
 }
 
-.dth-w1 {
-   min-width: 6rem;
-   width: 6rem;
-}
-
-.dth-w2 {
-   min-width: 6rem;
-   width: 6rem;
-}
-
+.dth-w1,
+.dth-w2, 
 .dth-w3 {
-   min-width: 6rem;
-   width: 6rem;
+   min-width: 18rem;
+   width: 18rem;
 }
 
 .dth-btn {

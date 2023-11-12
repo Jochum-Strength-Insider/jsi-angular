@@ -16,6 +16,7 @@
                     <button class="dropdown-item" [class.disabled]="selectedUsers.length === 0" (click)="sendUserMessages()">Group Message</button>
                     <button class="dropdown-item" [class.disabled]="selectedUsers.length === 0" (click)="setUserPrograms()">Group Programs</button>
                     <li><hr class="dropdown-divider"></li>
+                    <button class="dropdown-item" (click)="selectVisible()">Select Visible</button>
                     <button class="dropdown-item" [class.disabled]="selectedUsers.length === 0" (click)="clearSelection()">Clear Selection</button>
                 </ul>
             </div>
@@ -48,7 +49,7 @@
                     <div class="user-list-item">
                         <a [routerLink]="[user.id]"
                             [state]="user"
-                            class="btn btn-link px-0 py-0"
+                            class="btn btn-link px-0 py-0 text-start"
                             (click)="setCurrentUser(user)"
                         >
                             {{user.username}}

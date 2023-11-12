@@ -189,7 +189,6 @@ export class CodesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.selectedCode = null;
       }))
       .subscribe({
-        next: () => console.log('remove'),
         error: (err: Error) => console.log(err),
       })
     }

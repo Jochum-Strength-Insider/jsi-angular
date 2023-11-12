@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '@app/@core/models/auth/user.model';
@@ -12,7 +12,7 @@ import { FOLDERS_STRING, PROGRAM_IDS_STRING, ProgramService, QUICK_SAVE_ID_STRIN
 import { UserService } from '@app/features/admin/services/user.service';
 import { WorkoutService } from '@app/features/program/services/workout.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription, finalize, of, switchMap } from 'rxjs';
+import { Subject, Subscription, finalize, of, switchMap } from 'rxjs';
 
 
 @Component({
@@ -23,10 +23,16 @@ import { Subscription, finalize, of, switchMap } from 'rxjs';
 export class UserProgramsListComponent implements OnInit, OnDestroy, OnChanges {
   @Input() user: User;
   @Input() adminUser: User;
-
   @ViewChild('addProgramModal') addProgramModal: any;
   @ViewChild('deleteProgramModal') deleteProgramModal: any;
 
+  @HostListener('window:beforeunload', ['$event'])
+  unloadHandler() {
+    // Clear subscriptions on window unload
+    this.ngOnDestroy();
+  }
+  
+  currentUserId$ = new Subject<string>();
   workoutIdsSub: Subscription;
   workoutIds: WorkoutId[] = [];
   filteredWorkouts: WorkoutId[] = [];
@@ -79,6 +85,7 @@ export class UserProgramsListComponent implements OnInit, OnDestroy, OnChanges {
     this.fetchFolders();
     this.fetchUserWorkouts();
     this.fetchQuickSave();
+    this.switchCurrentUser(this.user.id);
   }
   
   ngAfterViewInit(){   
@@ -91,7 +98,7 @@ export class UserProgramsListComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if(!changes['user'].firstChange) {
-      ifPropChanged(changes['user'], () => this.fetchUserWorkouts());
+      ifPropChanged(changes['user'], (user) => this.switchCurrentUser(user.id));
     }
   }
   
@@ -101,6 +108,10 @@ export class UserProgramsListComponent implements OnInit, OnDestroy, OnChanges {
     this.workoutIdsSub?.unsubscribe();
     this.foldersSub?.unsubscribe();
     this.quickSaveSub?.unsubscribe();
+  }
+
+  switchCurrentUser(uid: string){
+    this.currentUserId$.next(uid);
   }
 
   fetchProgramsIds() {
@@ -127,7 +138,10 @@ export class UserProgramsListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   fetchUserWorkouts() {
-    this.workoutIdsSub = this.workoutService.getWorkoutIds(this.user.id)
+    this.workoutIdsSub = 
+    this.currentUserId$.pipe(
+      switchMap((uid) => this.workoutService.getWorkoutIds(uid))
+    )
     .subscribe({
       next: results => {
         this.workoutIds = results.sort((a, b) => b.createdAt - a.createdAt);

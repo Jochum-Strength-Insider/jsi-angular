@@ -5,11 +5,19 @@
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
         </div>
         <div class="modal-body submissions-modal-body">
-            <p>Are you sure you want to cancel your Insider subscription? Clicking "Cancel Subscription" will open a link to your active paypal subsciption. After signing in to paypal you can cancel the subscription and stop payments from recurring. To cancel click the "(Update)" link next to "Status: Active" or the three vertical dots button to the right of "Status: Active". It will also notify an Insider trainer that you have cancelled your account. You will have access to all Insider content until the end of your current program cycle.</p>
+            <p>
+                Are you sure you want to cancel your Insider subscription? Clicking "Cancel Subscription" will open a link to your active Paypal subscription. After signing in to Paypal you can cancel the subscription and stop payments from recurring.
+            </p>
+            <p>
+                On the Paypal subscription scroll to the bottom of the page and click "Remove Paypal As Payment Method", then click "Remove". The subscription should now be listed under the "Inactive" Autopay tab. If you have a Paypal Business account click the "(Update)" link next to "Status: Active" or the three vertical dots button to the right of "Status: Active".
+            </p>
+            <p>
+                An Insider trainer will be notified that you cancelled your account and you will have access to all Insider content until the end of your current program cycle.
+            </p>
         </div>
         <div class="modal-footer">
             <div class="w-100 d-flex justify-content-between">
-                <button type="button" class="btn btn-danger" (click)="cancelAccount()">Cancel Subscription</button>
+                <a [href]="url" target="_blank" class="btn btn-danger" (click)="cancelAccount()">Cancel Subscription</a>
                 <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
             </div>
         </div>
@@ -20,7 +28,9 @@
     <div *ngFor="let subscription of subscriptions; let i = index;" class="list-group-item">
         <div class="row">
             <div class="col-12 col-md-3">
-                Status: {{ subscription.active ? "Active" : "Cancelled" }}
+                Statuses:
+                <span *ngIf="subscription.active">Active</span>
+                <a *ngIf="!subscription.active" [href]="paypalUrl+subscription.billingId" target="_blank">Cancelled</a>
             </div>
             <div class="col-12 col-md-3">
                 Subscribed: {{ subscription.createdAt | date:'shortDate' }}

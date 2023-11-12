@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Resource } from '@app/@core/models/resources/resources.model';
 import { ToastService } from '@app/@core/services/toast.service';
-import { CodesService } from '@app/@shared/services/codes.service';
 import { ResourcesService } from '@app/features/resources/services/resources.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription, finalize } from 'rxjs';
@@ -20,7 +19,7 @@ export class AdminResourcesComponent implements OnInit, AfterViewInit, OnDestroy
   resourceForm: FormGroup = this.fb.group({
     title: ["", Validators.required],
     link: ["", Validators.required],
-    description: ["", Validators.required],
+    description: [""],
   });
 
   searchSub: Subscription;

@@ -64,16 +64,21 @@
 </form>
 <div class="list-group mt-3 mb-5">
     <ng-container *ngIf="filteredTasks.length > 0; else noTasks;">
-        <div *ngFor="let task of filteredTasks | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item d-flex justify-content-between">
-            <span class="d-flex align-items-center">
-                <strong class="mr-2">{{task.e}}</strong>
-            </span>
-            <span>
-                <button class="ml-2 btn btn-outline-primary ms-2" (click)="openTasksModal(addModal, task)">Edit</button>
-                <button class="ml-2 btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(task)">
-                    Delete
-                </button>
-            </span>
+        <div *ngFor="let task of filteredTasks | slice: (page-1) * pageSize : page * pageSize; let i = index;" class="list-group-item">
+            <div class="row">
+                <div class="col-12 col-sm-8 d-flex align-items-center">
+                    <strong class="me-2">Title:</strong><span>{{task.e}}</span>
+                </div>
+                <div class="col-10 offset-1 d-sm-none">
+                    <hr>
+                </div>
+                <div class="col-12 col-sm-auto ms-sm-auto">
+                    <button class="ml-2 btn btn-outline-primary ms-2" (click)="openTasksModal(addModal, task)">Edit</button>
+                    <button class="ml-2 btn btn-outline-danger ms-2" type="button" (click)="openRemoveModal(task)">
+                        Delete
+                    </button>
+                </div>
+            </div>
         </div>
     </ng-container>
     <ng-template #noTasks>

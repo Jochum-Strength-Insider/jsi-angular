@@ -86,7 +86,7 @@
             </div>
         </div>
         <hr />
-        <form #form class="form" id="messageForm" [formGroup]="messageForm" (ngSubmit)="sendGroupMessages()" autocomplete="off">
+        <form class="form" id="groupMessageForm" [formGroup]="messageForm" (ngSubmit)="sendGroupMessages()" autocomplete="off">
             <div class="form-group mb-3">
                 <label for="message">Group Message</label>
                 <textarea class="form-control" formControlName="message" id="message" type="text" placeholder="Message..."></textarea>
@@ -95,7 +95,7 @@
     </div>
     <div class="modal-footer">
         <div class="w-100 d-flex justify-content-between">
-            <button form="messageForm" [disabled]="!messageForm.valid" type="submit" class="btn btn-primary">Send</button>
+            <button form="groupMessageForm" [disabled]="!messageForm.valid" type="submit" class="btn btn-primary">Send</button>
             <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Close</button>
         </div>
     </div>

@@ -12,7 +12,7 @@ import { LocalStorageService } from '@app/@shared/services/local-storage.service
 import { MessageService } from '@app/@shared/services/message.service';
 import { WorkoutService } from '@app/features/program/services/workout.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EMPTY, Observable, Subscription, catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
+import { EMPTY, Observable, Subscription, catchError, finalize, forkJoin, map, of, switchMap, take } from 'rxjs';
 import { AFTER_STRING, AccountService, BEFORE_STRING } from '../../services/account.service';
 import { environment } from '@env/environment';
 import { ErrorHandlingService } from '@app/@core/services/error-handling.service';
@@ -57,24 +57,13 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.workoutIds$ = this.workoutService.getWorkoutIds(this.user.id)
       .pipe(
+        take(1),
         map((workoutIds: WorkoutId[]) => workoutIds !== null ? workoutIds : []),
         catchError(() => of([]))
       );
 
-    this.userSubscriptionsSub = this.userService.getUserSubscriptions(this.user.id)
-    .pipe(map(subscriptions => subscriptions.reverse()))
-    .subscribe({
-      next: (subscriptions) => this.userSubscriptions = subscriptions,
-      error: (err) => {
-        this.errorService.generateError(
-          err,
-          'Get Subscriptions',
-          'An error occurred while trying to get your subscriptions. Please refresh the page and reach out to support if the error continues.'
-        );
-      }
-    })
-     
-
+ 
+    this.fetchUserSubscriptions();
     this.getUserImages();
   }
 
@@ -235,11 +224,9 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
     )
     .subscribe({
       next: () => {
-        const paypalUrl = environment.userSubscriptionUrl || "https://www.paypal.com/myaccount/autopay/connect/";
-        const url = `${paypalUrl}${subscription.billingId}`;
-        window.open(url, '_blank');
         this.toastService.showSuccess("A Jochum Strength trainer has been notified that you intend to cancel your current subscription.");
         this.cancelled = true;
+        this.fetchUserSubscriptions();
       },
       error: (err) => {
         this.errorService.generateError(
@@ -249,6 +236,25 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  fetchUserSubscriptions(){
+    this.userSubscriptionsSub?.unsubscribe();
+    this.userSubscriptionsSub = this.userService.getUserSubscriptions(this.user.id)
+    .pipe(
+      take(1),
+      map(subscriptions => subscriptions.reverse())
+    )
+    .subscribe({
+      next: (subscriptions) => this.userSubscriptions = subscriptions,
+      error: (err) => {
+        this.errorService.generateError(
+          err,
+          'Get Subscriptions',
+          'An error occurred while trying to get your subscriptions. Please refresh the page and reach out to support if the error continues.'
+        );
+      }
+    })
   }
 
   handleSubscribe(){

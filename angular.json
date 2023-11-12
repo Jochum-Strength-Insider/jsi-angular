@@ -55,7 +55,8 @@
               "src/favicon.ico",
               "src/logo192.png",
               "src/logo512.png",
-              "src/assets"
+              "src/assets",
+              "src/manifest.json"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",

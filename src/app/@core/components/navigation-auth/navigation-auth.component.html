@@ -1,6 +1,6 @@
 <ng-template #template>
     <div class="d-flex">
-        <a *ngIf="authUser.ACTIVE" [routerLink]="['/messages']" class="d-flex justify-content-center align-items-center me-3 px-2">
+        <a *ngIf="authUser.ACTIVE" [routerLink]="['/messages']" aria-label="Navigate to the messages page" class="d-flex justify-content-center align-items-center me-3 px-2">
             <app-message-icon [uid]="authUser.id" [unread]="messages"/>
         </a>
         <button class="navbar-toggler"
@@ -12,12 +12,33 @@
     </div>
     <div [ngbCollapse]="collapsed" class="collapse navbar-collapse">
         <div class="navbar-nav me-auto">
-            <a class="nav-link" [routerLink]="['/program']" (click)="onSelect()">Program</a>
-            <a *ngIf="!authUser.ACTIVE" class="nav-link" [routerLink]="['/auth/resubscribe']" (click)="onSelect()">Resubscribe</a>
-            <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/weigh-in']" (click)="onSelect()">Weight</a>
-            <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/diet-sheet']" (click)="onSelect()">Diet</a>
-            <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/messages']" (click)="onSelect()">Messages</a>
-            <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/resources']" (click)="onSelect()">Resources</a>
+            <ng-container *ngIf="!authUser.ADMIN">
+                <a class="nav-link" [routerLink]="['/program']" (click)="onSelect()">Program</a>
+                <a *ngIf="!authUser.ACTIVE" class="nav-link" [routerLink]="['/auth/resubscribe']" (click)="onSelect()">Resubscribe</a>
+                <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/weigh-in']" (click)="onSelect()">Weight</a>
+                <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/diet-sheet']" (click)="onSelect()">Diet</a>
+                <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/messages']" (click)="onSelect()">Messages</a>
+                <a *ngIf="authUser.ACTIVE" class="nav-link" [routerLink]="['/resources']" (click)="onSelect()">Resources</a>
+            </ng-container>
+
+            <div *ngIf="authUser.ADMIN" class="d-inline-block" ngbDropdown #userPageDrop="ngbDropdown">
+                <button 
+                    id="userPageDropdown"
+                    type="button"
+                    class="nav-link dropdown-toggle btn btn-link"
+                    ngbDropdownAnchor
+                    (click)="userPageDrop.toggle()"
+                    >
+                    User Pages
+                </button>
+                <div ngbDropdownMenu aria-labelledby="adminDropdown" class="dropdown-menu dropdown-menu-end">
+                    <a ngbDropdownItem [routerLink]="['/program']" (click)="onSelect()">Program</a>
+                    <a ngbDropdownItem [routerLink]="['/weigh-in']" (click)="onSelect()">Weight</a>
+                    <a ngbDropdownItem [routerLink]="['/diet-sheet']" (click)="onSelect()">Diet</a>
+                    <a ngbDropdownItem [routerLink]="['/messages']" (click)="onSelect()">Messages</a>
+                    <a ngbDropdownItem [routerLink]="['/resources']" (click)="onSelect()">Resources</a>
+                </div>
+            </div>
 
             <div *ngIf="authUser.ADMIN" class="d-inline-block" ngbDropdown #adminDrop="ngbDropdown">
                 <button 
