@@ -17,10 +17,21 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild('scrollContain') scrollContain: ElementRef;
   @ViewChild('scrollBottom') scrollBottom: ElementRef;
 
+  // Clear currentlyMessaging on window unload
   @HostListener('window:beforeunload', ['$event'])
-  unloadHandler(event: Event) {
-    // Clear currentlyMessaging on window unload
+  unloadHandler() {
     this.ngOnDestroy();
+  }
+
+  @HostListener('document:visibilitychange', ['$event']) 
+  visibilityChange() {
+    if (document.visibilityState === 'hidden') {
+      this.unsetUserCurrentlyMessaging();
+    }
+    if(document.visibilityState === 'visible'){
+      this.setUserCurrentlyMessaging();
+      this.clearUserUnreadMessages();
+    }
   }
 
   limit: number = 15;
@@ -73,9 +84,7 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
   }
 
   ngOnDestroy(): void {
-    this.messageService
-      .removeUserCurrentlyMessaging(this.user.id)
-      .subscribe();
+    this.unsetUserCurrentlyMessaging();
     this.messagesSub?.unsubscribe();
     this.scrollSubscription?.unsubscribe();
     this.currentlyMessagingSub?.unsubscribe();
@@ -123,14 +132,15 @@ export class MessagesContainerComponent implements OnInit, AfterViewInit, OnDest
       });
   }
 
-  setAdminCurrentlyMessaging(){
-    this.messageService.setAdminCurrentlyMessaging(this.user.id)
+  setUserCurrentlyMessaging(){
+    this.messageService.addUserCurrentlyMessaging(this.user.id)
       .pipe(catchError(() => of('')))
       .subscribe();
   }
 
-  setUserCurrentlyMessaging(){
-    this.messageService.addUserCurrentlyMessaging(this.user.id)
+  unsetUserCurrentlyMessaging(){
+    this.messageService
+      .removeUserCurrentlyMessaging(this.user.id)
       .pipe(catchError(() => of('')))
       .subscribe();
   }
