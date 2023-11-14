@@ -312,7 +312,7 @@ export class AdminPanelComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.log(err)
-        this.toastService.showError("An Error Occured Adding New User")
+        this.toastService.showError("An Error Occurred Adding New User")
       }
     })
   }

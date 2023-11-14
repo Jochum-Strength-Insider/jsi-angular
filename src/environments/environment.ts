@@ -24,7 +24,7 @@ export const environment = {
     confirmationEmailRedirect: process.env['CONFIRMATION_EMAIL_REDIRECT_DEV']
   },
   production: false,
-  version: '1.0',
+  version: '1.0.3',
   serverUrl: 'http://localhost:3000',
   crytoKey: 'Ins1d3r!',
   login: process.env['TEST_USER_LOGIN'],
