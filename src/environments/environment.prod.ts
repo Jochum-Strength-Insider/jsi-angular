@@ -12,7 +12,7 @@ export const environment = {
     confirmationEmailRedirect: process.env['CONFIRMATION_EMAIL_REDIRECT_PROD']
   },
   production: true,
-  version: '1.0.3',
+  version: '1.0.4',
   serverUrl: 'https://api.jochumstrengthinsider.com',
   crytoKey: 'Ins1d3r!',
   login: '',
