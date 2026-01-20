@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Event, NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { NavigationEnd, Router, Event as RouterEvent } from '@angular/router';
 import { environment } from '@env/environment';
-import { filter } from 'rxjs';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -20,17 +20,21 @@ export class AppComponent {
   showNav: boolean = true;
 
   constructor(private router: Router) {
-    router.events
-      .pipe(filter((e: Event): e is RouterEvent => e instanceof NavigationEnd))
-      .subscribe((e: RouterEvent) => {
-          this.showNav = !e.url.includes('/auth/subscribe')
-            && !e.url.includes('/auth/signup')
-            && !e.url.includes('/auth/resubscribe')
+    this.router.events
+      .pipe(
+        filter((e: RouterEvent): e is NavigationEnd => e instanceof NavigationEnd),
+        map(e => e.urlAfterRedirects ?? e.url)
+      )
+      .subscribe(url => {
+        this.showNav =
+          !url.includes('/auth/subscribe') &&
+          !url.includes('/auth/signup') &&
+          !url.includes('/auth/resubscribe');
       });
-  }  
+  }
 
-  ngOnInit(){
-    if(!environment.production){
+  ngOnInit() {
+    if (!environment.production) {
       console.log("APP_INIT", environment.firebase)
     }
   }
