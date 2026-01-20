@@ -87,7 +87,7 @@ export class PaymentComponent implements OnInit, OnChanges {
         this.errorService.generateError(
           err,
           'Create Paypal Subscription',
-          'An Error occured creating the paypal Subscription. Please try again and reach out to support if the error continues.'
+          'An Error occurred creating the paypal Subscription. Please try again and reach out to support if the error continues.'
         )
       }
     };

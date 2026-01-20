@@ -199,7 +199,7 @@ export class AccountContainerComponent implements OnInit, OnDestroy {
         this.toastService.showSuccess();
       },
       error: (error: Error) => {
-        let errorMessage = "An error occured changing your password. Please try again and reach out to support if the error continues."
+        let errorMessage = "An error occurred changing your password. Please try again and reach out to support if the error continues."
         if(error.message?.includes(WRONG_PASSWORD)){
           errorMessage = "Your password is incorrect."
         } else if (error.message?.includes(TOO_MANY_REQUESTS)) {
